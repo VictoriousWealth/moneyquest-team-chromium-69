@@ -24,7 +24,7 @@ const ProfileSection = () => {
     return (
         <Card className="p-5 h-full flex flex-col relative overflow-hidden">
             <h3 className="text-xl font-semibold mb-3">Profile</h3>
-
+            
             <div className="flex items-center gap-4 mb-3">
                 <button className="relative group flex-shrink-0 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500">
                     <img
@@ -34,65 +34,84 @@ const ProfileSection = () => {
                     />
                     <div className="absolute inset-0 bg-black/60 rounded-full flex flex-col items-center justify-center text-white opacity-0 group-hover:opacity-100 group-focus:opacity-100 transition-opacity">
                         <Camera size={24} />
-                        <span className="text-xs mt-1">Edit</span>
+                        <span className="text-xs font-semibold mt-1">Change</span>
                     </div>
                 </button>
+                
+                <div className="flex-grow">
+                    <h2 className="text-2xl font-semibold text-text">{demoStudent.name}</h2>
+                    <p className="small mt-1">
+                        {demoStudent.year} &bull; {demoStudent.school} &bull; {demoStudent.id}
+                    </p>
+                </div>
+            </div>
 
-                <div className="flex-grow min-w-0">
-                    <h2 className="font-bold text-lg text-text truncate">{demoStudent.name}</h2>
-                    <p className="text-subtext text-sm">Level {demoStudent.level}</p>
-                    <div className="mt-1 flex items-center gap-2">
-                        <div className="flex-1 bg-muted rounded-full h-2 overflow-hidden">
-                            <div 
-                                className="h-full bg-gradient-to-r from-[var(--blue-500)] to-[var(--teal-400)] transition-all duration-300"
-                                style={{width: `${Math.min((demoStudent.xp % 1000) / 10, 100)}%`}}
-                            />
+            <div className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-1.5 items-baseline mb-4">
+                {[
+                    { label: 'Year group', value: demoStudent.year },
+                    { label: 'School', value: demoStudent.school },
+                    { label: 'District', value: demoStudent.district },
+                    { label: 'Student ID', value: demoStudent.id },
+                ].map(({ label, value }) => (
+                    <React.Fragment key={label}>
+                        <p className="font-semibold text-sm text-subtext">{label}</p>
+                        <p className="text-base font-medium text-text">{value}</p>
+                    </React.Fragment>
+                ))}
+            </div>
+
+            {/* Consolidated Stats & Activity Block */}
+            <div className="flex-grow flex flex-col pt-4 mt-4 border-t border-muted">
+                {/* Stats */}
+                <div className="space-y-4 mb-4">
+                    <div className="flex justify-around items-center text-center">
+                        <div>
+                            <p className="font-bold text-lg text-text">{stats.episodesCompleted}</p>
+                            <p className="text-sm text-subtext">Episodes passed</p>
                         </div>
-                        <span className="text-xs text-subtext whitespace-nowrap">{demoStudent.xp} XP</span>
+                        <div>
+                            <p className="font-bold text-lg text-text">{Math.floor(stats.timeSpent / 60)}h {stats.timeSpent % 60}m</p>
+                            <p className="text-sm text-subtext">Time spent</p>
+                        </div>
+                        <div>
+                            <p className="font-bold text-lg text-text">{stats.activeDays}</p>
+                            <p className="text-sm text-subtext">Active days</p>
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-muted p-3 rounded-xl border flex flex-col items-center justify-center gap-2 shadow-sm">
+                            <img src="/assets/placeholders/money-saved-64.png" alt="Money Saved icon" className="w-12 h-12 rounded-md bg-white object-contain p-1" />
+                            <div className="flex items-baseline gap-1.5 whitespace-nowrap">
+                                <p className="font-semibold text-lg text-text">{formatGBP(demoStudent.moneySaved)}</p>
+                                <p className="text-sm text-subtext">Money Saved</p>
+                            </div>
+                        </div>
+                        <div className="bg-muted p-3 rounded-xl border flex flex-col items-center justify-center gap-2 shadow-sm">
+                            <img src="/assets/placeholders/class-rank-64.png" alt="Class Rank icon" className="w-12 h-12 rounded-md bg-white object-contain p-1" />
+                            <div className="flex items-baseline gap-1.5 whitespace-nowrap">
+                                <p className="font-semibold text-lg text-text">#{demoStudent.rank}</p>
+                                <p className="text-sm text-subtext">Class rank</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div className="bg-muted/50 rounded-lg p-3 mb-4">
-                <div className="grid grid-cols-3 gap-3 text-center">
-                    <div>
-                        <div className="font-bold text-lg text-text">{stats.episodesCompleted}</div>
-                        <div className="text-xs text-subtext">Episodes</div>
-                    </div>
-                    <div>
-                        <div className="font-bold text-lg text-text">{Math.round(stats.timeSpent / 60)}h</div>
-                        <div className="text-xs text-subtext">Study Time</div>
-                    </div>
-                    <div>
-                        <div className="font-bold text-lg text-text">{demoStudent.streakDays}</div>
-                        <div className="text-xs text-subtext">Day Streak</div>
+                {/* Activity Ticker - Flex container ensures title and ticker are separate */}
+                <div className="flex-grow flex flex-col border-t border-muted pt-3">
+                    <h4 className="font-semibold text-sm text-subtext mb-2 flex-shrink-0">Class Activity</h4>
+                    <div className="relative flex-1 group overflow-hidden" aria-live="off">
+                        <div className="absolute top-0 w-full animate-[vertical-ticker-scroll_12s_linear_infinite] group-hover:[animation-play-state:paused]">
+                            {[...demoClassActivity, ...demoClassActivity].map((activity, index) => (
+                                <Link to={activity.link} key={`${activity.id}-${index}`} className="flex w-full items-center gap-3 rounded-lg px-1 h-[40px] text-sm">
+                                    <img src={activity.avatarUrl} alt={activity.peerName} className="w-8 h-8 rounded-full flex-shrink-0" />
+                                    <p className="text-subtext text-left truncate">
+                                        <span className="font-semibold text-text">{activity.peerName}</span> {activity.text}
+                                    </p>
+                                </Link>
+                            ))}
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div className="space-y-3 flex-grow">
-                <div className="flex justify-between items-center text-sm">
-                    <span className="text-subtext">Profile Completeness</span>
-                    <span className="font-medium text-text">{demoStudent.profileCompleteness}%</span>
-                </div>
-                <div className="bg-muted rounded-full h-2 overflow-hidden">
-                    <div 
-                        className="h-full bg-[var(--accent)] transition-all duration-300"
-                        style={{width: `${demoStudent.profileCompleteness}%`}}
-                    />
-                </div>
-                <p className="text-xs text-subtext">
-                    Complete your profile to unlock achievements and personalized recommendations.
-                </p>
-            </div>
-
-            <div className="mt-4 pt-4 border-t border-[var(--ring)]">
-                <Link 
-                    to="/student/achievements" 
-                    className="block text-center text-sm font-medium text-[var(--blue-500)] hover:text-[var(--blue-800)] transition-colors"
-                >
-                    View All Achievements →
-                </Link>
             </div>
         </Card>
     );

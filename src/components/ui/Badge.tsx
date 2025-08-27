@@ -1,26 +1,25 @@
 import React from 'react';
 
-type BadgeVariant = 'mint' | 'teal' | 'blue' | 'muted' | 'default' | 'secondary';
-
-interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: BadgeVariant;
+interface BadgeProps {
   children: React.ReactNode;
+  variant?: 'blue' | 'teal' | 'mint' | 'muted';
+  className?: string;
+  icon?: React.ReactNode;
 }
 
-const Badge: React.FC<BadgeProps> = ({ variant = 'default', children, className = '', ...props }) => {
-  const base = 'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium';
-  
-  const styles: Record<BadgeVariant, string> = {
-    mint: 'bg-[var(--mint-400)]/10 text-[var(--mint-400)] ring-1 ring-inset ring-[var(--mint-400)]/20',
-    teal: 'bg-[var(--teal-400)]/10 text-[var(--teal-400)] ring-1 ring-inset ring-[var(--teal-400)]/20',
-    blue: 'bg-[var(--blue-500)]/10 text-[var(--blue-500)] ring-1 ring-inset ring-[var(--blue-500)]/20',
-    muted: 'bg-[var(--muted)] text-[var(--subtext)]',
-    default: 'bg-[var(--muted)] text-[var(--text)]',
-    secondary: 'bg-[var(--muted)] text-[var(--subtext)]',
+const Badge: React.FC<BadgeProps> = ({ children, variant = 'muted', className = '', icon }) => {
+  const variantClasses = {
+    blue: 'bg-blue-500/20 text-blue-900 ring-blue-500/30',
+    teal: 'bg-teal-400/20 text-blue-900 ring-teal-400/30',
+    mint: 'bg-mint-400/20 text-blue-900 ring-mint-400/30',
+    muted: 'bg-muted text-subtext ring-subtext/20',
   };
 
   return (
-    <span className={`${base} ${styles[variant]} ${className}`} {...props}>
+    <span
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ring-1 ring-inset ${variantClasses[variant]} ${className}`}
+    >
+      {icon && <span className="flex-shrink-0">{icon}</span>}
       {children}
     </span>
   );

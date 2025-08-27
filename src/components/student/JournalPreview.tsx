@@ -1,74 +1,35 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../ui/Card';
-import Button from '../ui/Button';
-import { PenTool, TrendingUp } from 'lucide-react';
+import UIBadge from '../ui/Badge';
+import { demoJournalTop3 } from '../../lib/demoData';
+import { ArrowRight } from 'lucide-react';
 
 const JournalPreview = () => {
-    const recentEntries = [
-        {
-            id: 1,
-            date: '2024-08-26',
-            mood: '😊',
-            preview: 'Learned about compound interest today. Amazing how money can grow over time...',
-            lessonCompleted: 'Investment Basics'
-        },
-        {
-            id: 2,
-            date: '2024-08-25',
-            mood: '🤔',
-            preview: 'Budget planning session. Need to work on my spending habits...',
-            lessonCompleted: 'Budget Basics'
-        }
-    ];
-
     return (
         <Card className="p-5 h-full flex flex-col">
-            <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-semibold">Learning Journal</h3>
-                <Link to="/student/journal">
-                    <Button variant="ghost" className="text-[var(--blue-500)] hover:text-[var(--blue-800)]">
-                        <PenTool size={16} />
-                        Write
-                    </Button>
+            <div className="flex justify-between items-center mb-3">
+                <h3 className="text-xl font-semibold">Journal Preview</h3>
+                <Link to="/student/journal" className="inline-flex items-center gap-1 text-sm font-medium text-blue-500 hover:underline">
+                    See all in Journal <ArrowRight size={14} />
                 </Link>
             </div>
-
-            <div className="flex-grow space-y-3">
-                {recentEntries.map(entry => (
-                    <div key={entry.id} className="p-3 bg-muted/50 rounded-lg">
-                        <div className="flex items-center justify-between mb-2">
-                            <div className="flex items-center gap-2">
-                                <span className="text-lg">{entry.mood}</span>
-                                <span className="text-xs text-subtext">
-                                    {new Date(entry.date).toLocaleDateString()}
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-1 text-xs text-[var(--teal-400)]">
-                                <TrendingUp size={12} />
-                                {entry.lessonCompleted}
-                            </div>
+            <div className="space-y-2 flex-grow overflow-hidden">
+                {demoJournalTop3.slice(0, 3).map(entry => (
+                    <Link to={`/student/journal?entry=${entry.id}`} key={entry.id} className="block p-2 -mx-2 group hover:bg-muted/50 rounded-md transition-colors">
+                        <div className="flex justify-between items-start gap-4">
+                           <div className="flex-grow">
+                                <div className="flex items-baseline gap-3 mb-1">
+                                    <p className="font-medium text-text">{entry.episode}</p>
+                                    <UIBadge variant={entry.result === 'Pass' ? 'mint' : 'muted'}>{entry.result}</UIBadge>
+                                </div>
+                                <p className="small">{entry.summary}</p>
+                           </div>
+                           <span className="small text-right flex-shrink-0 pt-1">{entry.ts}</span>
                         </div>
-                        <p className="text-sm text-text line-clamp-2">{entry.preview}</p>
-                    </div>
+                    </Link>
                 ))}
-
-                {recentEntries.length === 0 && (
-                    <div className="text-center py-8 text-subtext">
-                        <PenTool size={32} className="mx-auto mb-2 opacity-50" />
-                        <p className="text-sm">Start your learning journal</p>
-                        <p className="text-xs">Reflect on your financial learning journey</p>
-                    </div>
-                )}
-            </div>
-
-            <div className="mt-4 pt-4 border-t border-[var(--ring)]">
-                <Link 
-                    to="/student/journal" 
-                    className="block text-center text-sm font-medium text-[var(--blue-500)] hover:text-[var(--blue-800)] transition-colors"
-                >
-                    View Full Journal →
-                </Link>
             </div>
         </Card>
     );

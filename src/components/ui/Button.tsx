@@ -1,6 +1,9 @@
 import React from 'react';
 
+// @notes: Extended to support lg size used across the app
+
 type Variant = 'primary' | 'accent' | 'muted' | 'outline' | 'ghost';
+// Extend size to include 'lg'
 type Size = 'default' | 'sm' | 'lg';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -9,13 +12,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   fullWidth?: boolean;
 }
 
-export const Button: React.FC<ButtonProps> = ({ 
-  variant = 'primary', 
-  size = 'default', 
-  fullWidth = false,
-  className = '', 
-  ...props 
-}) => {
+export const Button: React.FC<ButtonProps> = ({ variant = 'primary', size = 'default', fullWidth, className = '', ...props }) => {
   const base = 'inline-flex items-center justify-center gap-2 rounded-full font-semibold transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--blue-500)] disabled:opacity-50 disabled:cursor-not-allowed transform active:scale-95';
 
   const styles: Record<Variant, string> = {
@@ -32,9 +29,8 @@ export const Button: React.FC<ButtonProps> = ({
     lg: 'px-6 py-3 text-base',
   };
 
-  const widthClass = fullWidth ? 'w-full' : '';
-
-  return <button className={`${base} ${styles[variant]} ${sizeStyles[size]} ${widthClass} ${className}`} {...props} />;
+  const width = fullWidth ? 'w-full' : '';
+  return <button className={`${base} ${styles[variant]} ${sizeStyles[size]} ${width} ${className}`} {...props} />;
 };
 
 export default Button;
