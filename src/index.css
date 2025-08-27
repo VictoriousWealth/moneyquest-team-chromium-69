@@ -2,41 +2,57 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* MoneyQuest FinTech Educational Platform Design System */
 
 @layer base {
   :root {
+    /* Core FinTech Color Palette */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 220 15% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 15% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 220 15% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* FinTech Primary - Professional Blue */
+    --primary: 212 100% 45%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 212 100% 60%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Success Green for Achievements */
+    --secondary: 142 72% 48%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
+    /* Warm Educational Accent */
+    --accent: 35 95% 55%;
+    --accent-foreground: 0 0% 100%;
+
+    --muted: 210 40% 98%;
     --muted-foreground: 215.4 16.3% 46.9%;
-
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 212 100% 45%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
+
+    /* FinTech Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(212 100% 45%), hsl(212 100% 60%));
+    --gradient-success: linear-gradient(135deg, hsl(142 72% 48%), hsl(142 72% 60%));
+    --gradient-warm: linear-gradient(135deg, hsl(35 95% 55%), hsl(45 95% 65%));
+    --gradient-hero: linear-gradient(135deg, hsl(212 100% 45%), hsl(35 95% 55%));
+
+    /* Shadows */
+    --shadow-elegant: 0 10px 30px -10px hsl(212 100% 45% / 0.2);
+    --shadow-glow: 0 0 40px hsl(212 100% 60% / 0.3);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
     --sidebar-background: 0 0% 98%;
 
@@ -56,33 +72,43 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 220 15% 8%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 220 15% 10%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 220 15% 10%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 212 100% 60%;
+    --primary-foreground: 220 15% 8%;
+    --primary-glow: 212 100% 70%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 142 72% 55%;
+    --secondary-foreground: 220 15% 8%;
+
+    --accent: 35 95% 60%;
+    --accent-foreground: 220 15% 8%;
 
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
+    --destructive: 0 62.8% 50.6%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
+    --ring: 212 100% 60%;
+
+    /* Dark Mode Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(212 100% 50%), hsl(212 100% 70%));
+    --gradient-success: linear-gradient(135deg, hsl(142 72% 50%), hsl(142 72% 65%));
+    --gradient-warm: linear-gradient(135deg, hsl(35 95% 60%), hsl(45 95% 70%));
+    --gradient-hero: linear-gradient(135deg, hsl(212 100% 50%), hsl(35 95% 60%));
+
+    --shadow-elegant: 0 10px 30px -10px hsl(212 100% 50% / 0.3);
+    --shadow-glow: 0 0 40px hsl(212 100% 70% / 0.4);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
@@ -100,6 +126,35 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  /* Custom Classes for MoneyQuest */
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+  
+  .gradient-success {
+    background: var(--gradient-success);
+  }
+  
+  .gradient-warm {
+    background: var(--gradient-warm);
+  }
+  
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+  
+  .shadow-elegant {
+    box-shadow: var(--shadow-elegant);
+  }
+  
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  .transition-smooth {
+    transition: var(--transition-smooth);
   }
 }
