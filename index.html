@@ -1,24 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MoneyQuest - Financial Literacy Platform</title>
-    <meta name="description" content="Master financial literacy through gamified learning with AI-powered mentorship" />
-    <meta name="author" content="Team Chromium" />
-
-    <meta property="og:title" content="folder-friend-revive" />
-    <meta property="og:description" content="Lovable Generated Project" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@lovable_dev" />
-    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
-  </head>
-
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MoneyQuest</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: ['class'],
+      content: ['./src/**/*.{ts,tsx}'],
+      theme: {
+        extend: {
+          colors: {
+            bg: 'var(--bg)',
+            surface: 'var(--surface)',
+            muted: 'var(--muted)',
+            text: 'var(--text)',
+            subtext: 'var(--subtext)',
+            blue900: 'var(--blue-900)',
+            blue800: 'var(--blue-800)',
+            blue500: 'var(--blue-500)',
+            teal400: 'var(--teal-400)',
+            mint400: 'var(--mint-400)',
+            accent: 'var(--accent)',
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
 </html>

@@ -1,0 +1,80 @@
+// Mock data for episodes and learning content
+export const episodes = [
+  {
+    id: 1,
+    title: 'Budget Basics',
+    status: 'Completed' as const,
+    concepts: ['Income', 'Expenses', '50/30/20 Rule'],
+    xpReward: 150,
+    estimatedTime: '15 min',
+  },
+  {
+    id: 2,
+    title: 'Saving Strategies',
+    status: 'In progress' as const,
+    concepts: ['Emergency Fund', 'High-Yield Savings', 'Compound Interest'],
+    xpReward: 200,
+    estimatedTime: '20 min',
+  },
+  {
+    id: 3,
+    title: 'Credit Card Fundamentals',
+    status: 'Not started' as const,
+    concepts: ['Credit Score', 'APR', 'Payment History'],
+    xpReward: 180,
+    estimatedTime: '18 min',
+  },
+  {
+    id: 4,
+    title: 'Investment Basics',
+    status: 'Not started' as const,
+    concepts: ['Stocks', 'Bonds', 'Diversification'],
+    xpReward: 250,
+    estimatedTime: '25 min',
+  },
+  {
+    id: 5,
+    title: 'Debt Management',
+    status: 'Failed' as const,
+    concepts: ['Debt Snowball', 'Debt Avalanche', 'Consolidation'],
+    xpReward: 200,
+    estimatedTime: '22 min',
+  },
+  {
+    id: 6,
+    title: 'Retirement Planning',
+    status: 'Not started' as const,
+    concepts: ['401k', 'IRA', 'Pension'],
+    xpReward: 300,
+    estimatedTime: '30 min',
+  },
+];
+
+export const achievements = [
+  {
+    id: 1,
+    title: 'First Steps',
+    description: 'Complete your first episode',
+    icon: '🎯',
+    category: 'Progress',
+    earned: true,
+    earnedDate: new Date('2024-01-16'),
+  },
+  {
+    id: 2,
+    title: 'Week Warrior',
+    description: 'Study for 7 consecutive days',
+    icon: '🔥',
+    category: 'Streak',
+    earned: true,
+    earnedDate: new Date('2024-01-22'),
+  },
+  {
+    id: 3,
+    title: 'Budget Master',
+    description: 'Master all budgeting concepts',
+    icon: '💰',
+    category: 'Mastery',
+    earned: false,
+  },
+];

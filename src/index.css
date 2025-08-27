@@ -1,160 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* MoneyQuest FinTech Educational Platform Design System */
-
-@layer base {
-  :root {
-    /* Core FinTech Color Palette */
-    --background: 0 0% 100%;
-    --foreground: 220 15% 15%;
-
-    --card: 0 0% 100%;
-    --card-foreground: 220 15% 15%;
-
-    --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 15%;
-
-    /* FinTech Primary - Professional Blue */
-    --primary: 212 100% 45%;
-    --primary-foreground: 0 0% 100%;
-    --primary-glow: 212 100% 60%;
-
-    /* Success Green for Achievements */
-    --secondary: 142 72% 48%;
-    --secondary-foreground: 0 0% 100%;
-
-    /* Warm Educational Accent */
-    --accent: 35 95% 55%;
-    --accent-foreground: 0 0% 100%;
-
-    --muted: 210 40% 98%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 212 100% 45%;
-
-    --radius: 0.75rem;
-
-    /* FinTech Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(212 100% 45%), hsl(212 100% 60%));
-    --gradient-success: linear-gradient(135deg, hsl(142 72% 48%), hsl(142 72% 60%));
-    --gradient-warm: linear-gradient(135deg, hsl(35 95% 55%), hsl(45 95% 65%));
-    --gradient-hero: linear-gradient(135deg, hsl(212 100% 45%), hsl(35 95% 55%));
-
-    /* Shadows */
-    --shadow-elegant: 0 10px 30px -10px hsl(212 100% 45% / 0.2);
-    --shadow-glow: 0 0 40px hsl(212 100% 60% / 0.3);
-
-    /* Animations */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 220 15% 8%;
-    --foreground: 210 40% 98%;
-
-    --card: 220 15% 10%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 220 15% 10%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 212 100% 60%;
-    --primary-foreground: 220 15% 8%;
-    --primary-glow: 212 100% 70%;
-
-    --secondary: 142 72% 55%;
-    --secondary-foreground: 220 15% 8%;
-
-    --accent: 35 95% 60%;
-    --accent-foreground: 220 15% 8%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --destructive: 0 62.8% 50.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212 100% 60%;
-
-    /* Dark Mode Gradients */
-    --gradient-primary: linear-gradient(135deg, hsl(212 100% 50%), hsl(212 100% 70%));
-    --gradient-success: linear-gradient(135deg, hsl(142 72% 50%), hsl(142 72% 65%));
-    --gradient-warm: linear-gradient(135deg, hsl(35 95% 60%), hsl(45 95% 70%));
-    --gradient-hero: linear-gradient(135deg, hsl(212 100% 50%), hsl(35 95% 60%));
-
-    --shadow-elegant: 0 10px 30px -10px hsl(212 100% 50% / 0.3);
-    --shadow-glow: 0 0 40px hsl(212 100% 70% / 0.4);
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
+:root {
+  --bg: #f7f9fc;
+  --surface: #ffffff;
+  --muted: #eef2f7;
+  --text: #0b1220;
+  --subtext: #5c667a;
+  --blue-900: #191834;
+  --blue-800: #2b2c68;
+  --blue-500: #338aca;
+  --teal-400: #26b7cd;
+  --mint-400: #61bdaf;
+  --accent: #D7FF7A;
+  --accent-ink: #0B1220;
+  --primary: #338ACA;
+  --primary-ink: #FFFFFF;
+  --shadow-soft: 0 10px 30px rgba(15, 17, 23, 0.06);
+  --ring: #e3e9f3;
+  --radius-inner: 16px;
+  --radius-outer: 24px;
+  --radius-pill: 999px;
+  --h1: 36px;
+  --h2: 32px;
+  --h3: 24px;
+  --body: 17px;
+  --small: 15px;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
-
-  body {
-    @apply bg-background text-foreground font-sans antialiased;
-  }
-
-  /* Custom Classes for MoneyQuest */
-  .gradient-primary {
-    background: var(--gradient-primary);
-  }
-  
-  .gradient-success {
-    background: var(--gradient-success);
-  }
-  
-  .gradient-warm {
-    background: var(--gradient-warm);
-  }
-  
-  .gradient-hero {
-    background: var(--gradient-hero);
-  }
-  
-  .shadow-elegant {
-    box-shadow: var(--shadow-elegant);
-  }
-  
-  .shadow-glow {
-    box-shadow: var(--shadow-glow);
-  }
-
-  .transition-smooth {
-    transition: var(--transition-smooth);
-  }
+.dark {
+  --bg: #0f1117;
+  --surface: #161a24;
+  --muted: #212838;
+  --text: #e7ecf3;
+  --subtext: #a9b3c7;
+  --shadow-soft: 0 6px 20px rgba(18,23,38,0.35);
+  --ring: #424f63;
 }
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html, body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  font-family: 'Inter', ui-sans-serif, system-ui;
+  background-color: var(--bg);
+  color: var(--text);
+  font-size: var(--body);
+  line-height: 1.5;
+}
+
+h1 { font-size: var(--h1); font-weight: 600; }
+h2 { font-size: var(--h2); font-weight: 600; }
+h3 { font-size: var(--h3); font-weight: 600; }
+.h1 { font-size: var(--h1); font-weight: 600; }
+.h2 { font-size: var(--h2); font-weight: 600; }
+.h3 { font-size: var(--h3); font-weight: 600; }
+small { font-size: var(--small); }
