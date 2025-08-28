@@ -41,9 +41,9 @@ const JuiceQuestPage = () => {
     );
   }
 
-  const handleQuestComplete = async (score: number, summary: string) => {
+  const handleQuestComplete = async (score: number, choice: string, wasCorrect: boolean) => {
     try {
-      // Update quest progress
+      const coinsEarned = wasCorrect ? 1.0 : 0.5;
       await updateGameState({
         coins: (gameState?.coins || 0) + (score > 0 ? 10 : 0),
         day: gameState?.day || 1,
@@ -51,7 +51,7 @@ const JuiceQuestPage = () => {
       });
 
       // Show completion effects
-      if (score > 0) {
+      if (wasCorrect) {
         confetti({
           particleCount: 100,
           spread: 70,
@@ -107,7 +107,10 @@ const JuiceQuestPage = () => {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <JuiceStand
+            isActive={true}
             onComplete={handleQuestComplete}
+            onUseScanner={() => setScannerOpen(true)}
+            scannedItem={scannedItem}
           />
         </div>
       </div>
