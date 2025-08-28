@@ -8,7 +8,7 @@ import { ArrowRight } from 'lucide-react';
 
 const JournalPreview = () => {
     return (
-        <Card className="p-3 h-[140px] flex flex-col rounded-xl overflow-hidden">
+        <Card className="p-3 h-full flex flex-col rounded-xl overflow-hidden">
             <div className="flex justify-between items-center mb-2 flex-shrink-0">
                 <h3 className="text-base font-semibold">Journal Preview</h3>
                 <Link to="/student/journal" className="inline-flex items-center gap-1 text-sm font-medium text-blue-500 hover:underline">

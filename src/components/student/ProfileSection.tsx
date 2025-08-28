@@ -22,7 +22,7 @@ const ProfileSection = () => {
     }, []);
 
     return (
-        <Card className="p-3 h-[360px] flex flex-col relative overflow-hidden rounded-xl">
+        <Card className="p-3 h-full flex flex-col relative overflow-hidden rounded-xl">
             <h3 className="text-base font-semibold mb-2">Profile</h3>
             <div className="mb-2">
                 <h2 className="text-lg font-semibold text-text">Alex Johnson</h2>
