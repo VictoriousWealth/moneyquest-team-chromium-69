@@ -17,7 +17,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="aurora flex min-h-screen items-center justify-center bg-bg p-4">
-        <div className="relative w-full max-w-md space-y-8 rounded-lg bg-surface p-8 shadow-soft ring-1 ring-[var(--ring)]">
+        <div className="relative w-full max-w-md space-y-8 bg-surface p-8 shadow-soft ring-1 ring-[var(--ring)]" style={{ borderRadius: '12px' }}>
             <div className="text-center">
                 <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-[var(--blue-500)]/10 ring-1 ring-[var(--ring)]">
                     <Rocket className="h-6 w-6 text-[var(--blue-500)]" />
