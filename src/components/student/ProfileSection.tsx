@@ -52,21 +52,21 @@ const ProfileSection = () => {
                     <div className="grid grid-cols-3 gap-2 text-center">
                         <div>
                             <div className="flex items-center justify-center gap-1 mb-1">
-                                <Trophy size={12} className="text-blue-500" />
+                                <Trophy size={16} className="text-blue-500" />
                                 <p className="font-semibold text-sm text-text">20</p>
                             </div>
                             <p className="text-xs text-subtext">Episodes passed</p>
                         </div>
                         <div>
                             <div className="flex items-center justify-center gap-1 mb-1">
-                                <Clock size={12} className="text-blue-500" />
+                                <Clock size={16} className="text-blue-500" />
                                 <p className="font-semibold text-sm text-text">8h 33m</p>
                             </div>
                             <p className="text-xs text-subtext">Time spent</p>
                         </div>
                         <div>
                             <div className="flex items-center justify-center gap-1 mb-1">
-                                <Calendar size={12} className="text-blue-500" />
+                                <Calendar size={16} className="text-blue-500" />
                                 <p className="font-semibold text-sm text-text">29</p>
                             </div>
                             <p className="text-xs text-subtext">Active days</p>
@@ -75,14 +75,14 @@ const ProfileSection = () => {
                     <div className="grid grid-cols-2 gap-2 text-center">
                         <div>
                             <div className="flex items-center justify-center gap-1 mb-1">
-                                <PiggyBank size={12} className="text-mint-400" />
+                                <PiggyBank size={16} className="text-mint-400" />
                                 <p className="font-semibold text-sm text-text">£125.50</p>
                             </div>
                             <p className="text-xs text-subtext">Money saved</p>
                         </div>
                         <div>
                             <div className="flex items-center justify-center gap-1 mb-1">
-                                <Award size={12} className="text-blue-500" />
+                                <Award size={16} className="text-blue-500" />
                                 <p className="font-semibold text-sm text-text">#12</p>
                             </div>
                             <p className="text-xs text-subtext">Class rank</p>
