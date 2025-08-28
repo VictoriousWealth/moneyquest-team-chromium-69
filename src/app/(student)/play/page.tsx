@@ -266,7 +266,6 @@ const StudentPlay: React.FC = () => {
 
   return (
     <div>
-      <h1 className="h1 mb-6">Financial Quest Journey</h1>
       
       {/* Search and Filter Controls */}
       <div className="mb-6 space-y-4">
