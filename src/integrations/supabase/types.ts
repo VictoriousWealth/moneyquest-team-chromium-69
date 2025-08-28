@@ -91,42 +91,6 @@ export type Database = {
           },
         ]
       }
-      daily_activities: {
-        Row: {
-          activity_date: string
-          attempts: number
-          concepts: string[] | null
-          created_at: string
-          id: string
-          passes: number
-          time_spent_minutes: number
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          activity_date: string
-          attempts?: number
-          concepts?: string[] | null
-          created_at?: string
-          id?: string
-          passes?: number
-          time_spent_minutes?: number
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          activity_date?: string
-          attempts?: number
-          concepts?: string[] | null
-          created_at?: string
-          id?: string
-          passes?: number
-          time_spent_minutes?: number
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       game_states: {
         Row: {
           coin_multiplier: number
@@ -166,49 +130,11 @@ export type Database = {
         }
         Relationships: []
       }
-      journal_entries: {
-        Row: {
-          concepts: string[] | null
-          created_at: string
-          episode_title: string
-          id: string
-          result: string
-          summary: string
-          time_spent_minutes: number | null
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          concepts?: string[] | null
-          created_at?: string
-          episode_title: string
-          id?: string
-          result: string
-          summary: string
-          time_spent_minutes?: number | null
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          concepts?: string[] | null
-          created_at?: string
-          episode_title?: string
-          id?: string
-          result?: string
-          summary?: string
-          time_spent_minutes?: number | null
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           created_at: string
-          district: string | null
           id: string
           school: string | null
-          student_id: string | null
           updated_at: string
           user_id: string
           username: string
@@ -216,10 +142,8 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          district?: string | null
           id?: string
           school?: string | null
-          student_id?: string | null
           updated_at?: string
           user_id: string
           username: string
@@ -227,10 +151,8 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          district?: string | null
           id?: string
           school?: string | null
-          student_id?: string | null
           updated_at?: string
           user_id?: string
           username?: string
@@ -310,75 +232,6 @@ export type Database = {
           reward_xp?: number
           title?: string
           zone?: string
-        }
-        Relationships: []
-      }
-      streaks: {
-        Row: {
-          best_count: number
-          created_at: string
-          current_count: number
-          id: string
-          last_activity_date: string | null
-          streak_type: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          best_count?: number
-          created_at?: string
-          current_count?: number
-          id?: string
-          last_activity_date?: string | null
-          streak_type: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          best_count?: number
-          created_at?: string
-          current_count?: number
-          id?: string
-          last_activity_date?: string | null
-          streak_type?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
-      }
-      student_progress: {
-        Row: {
-          active_days: number
-          class_rank: number | null
-          created_at: string
-          episodes_passed: number
-          id: string
-          money_saved: number
-          time_spent_minutes: number
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          active_days?: number
-          class_rank?: number | null
-          created_at?: string
-          episodes_passed?: number
-          id?: string
-          money_saved?: number
-          time_spent_minutes?: number
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          active_days?: number
-          class_rank?: number | null
-          created_at?: string
-          episodes_passed?: number
-          id?: string
-          money_saved?: number
-          time_spent_minutes?: number
-          updated_at?: string
-          user_id?: string
         }
         Relationships: []
       }

@@ -15,7 +15,7 @@ const studentNavItems = [
 const StudentLayout: React.FC = () => {
   return (
     <div className="flex flex-col h-screen overflow-hidden">
-      <Header userType="student" />
+      <Header role={Role.STUDENT} />
       <NavTabs tabs={studentNavItems} />
       <main className="mx-auto w-full max-w-[1400px] px-4 py-4 md:px-8 flex-1 min-h-0 overflow-y-auto">
         <Outlet />

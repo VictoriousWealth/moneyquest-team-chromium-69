@@ -1,9 +1,7 @@
 import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../ui/Card';
-import { useStudentProfile } from '../../hooks/useStudentProfile';
-import { useStreaks } from '../../hooks/useStreaks';
-import { demoClassActivity } from '../../lib/demoData';
+import { demoStudent, demoPrefs, demoClassActivity, dailyActivity } from '../../lib/demoData';
 import { Camera, Trophy, Clock, Calendar, PiggyBank, Award } from 'lucide-react';
 
 // Util for GBP currency formatting
@@ -15,8 +13,13 @@ const formatGBP = (amount: number) => {
 };
 
 const ProfileSection = () => {
-    const { profile, progress, loading, error, formatTimeSpent, formatCurrency } = useStudentProfile();
-    const { getCurrentStreak } = useStreaks();
+    const stats = useMemo(() => {
+        return {
+            episodesCompleted: dailyActivity.reduce((sum, day) => sum + day.pass, 0),
+            timeSpent: dailyActivity.reduce((sum, day) => sum + day.time, 0),
+            activeDays: dailyActivity.filter(day => day.attempts > 0).length
+        };
+    }, []);
 
     const activities = [
         { seed: 'Maria', name: 'Maria', text: 'is learning "The Stock Market Maze"' },
@@ -32,46 +35,14 @@ const ProfileSection = () => {
     
     // Create tripled array for seamless infinite loop
     const infiniteActivities = [...activities, ...activities, ...activities];
-    
-    if (loading) {
-        return (
-            <Card className="p-3 h-full flex flex-col relative overflow-hidden rounded-xl">
-                <div className="animate-pulse">
-                    <div className="h-4 bg-muted rounded w-20 mb-4"></div>
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className="w-16 h-16 bg-muted rounded-full"></div>
-                        <div className="h-4 bg-muted rounded w-32"></div>
-                    </div>
-                    <div className="space-y-2">
-                        {Array.from({ length: 4 }).map((_, i) => (
-                            <div key={i} className="grid grid-cols-2 gap-3">
-                                <div className="h-3 bg-muted rounded"></div>
-                                <div className="h-3 bg-muted rounded"></div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </Card>
-        );
-    }
-
-    if (error) {
-        return (
-            <Card className="p-3 h-full flex flex-col relative overflow-hidden rounded-xl">
-                <h3 className="text-base font-semibold mb-2">Profile</h3>
-                <div className="text-sm text-red-500">Error loading profile: {error}</div>
-            </Card>
-        );
-    }
-
     return (
         <Card className="p-3 h-full flex flex-col relative overflow-hidden rounded-xl">
             <h3 className="text-base font-semibold mb-2">Profile</h3>
             <div className="flex items-center gap-3 mb-2">
                 <div className="relative group cursor-pointer">
                     <img 
-                        src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${profile?.username || 'Alex'}`}
-                        alt={profile?.username || 'Student'} 
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex" 
+                        alt="Alex Johnson" 
                         className="w-16 h-16 rounded-full bg-muted object-cover shadow-sm ring-2 ring-surface transition-opacity group-hover:opacity-75" 
                     />
                     <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -83,16 +54,16 @@ const ProfileSection = () => {
                     </div>
                 </div>
                 <div>
-                    <h4 className="text-base font-semibold text-text">{profile?.username || 'Student'}</h4>
+                    <h4 className="text-base font-semibold text-text">Alex Johnson</h4>
                 </div>
             </div>
 
             <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 items-baseline mb-2 text-xs">
                 {[
-                    { label: 'Year group', value: profile?.year || 'Year 9' },
-                    { label: 'School', value: profile?.school || 'Northwood High' },
-                    { label: 'District', value: profile?.district || 'Northwood' },
-                    { label: 'Student ID', value: profile?.student_id || 'STU-001' },
+                    { label: 'Year group', value: 'Year 9' },
+                    { label: 'School', value: 'Northwood High' },
+                    { label: 'District', value: 'Northwood' },
+                    { label: 'Student ID', value: 'STU-001' },
                 ].map(({ label, value }) => (
                     <React.Fragment key={label}>
                         <p className="font-medium text-subtext text-xs leading-relaxed">{label}</p>
@@ -109,21 +80,21 @@ const ProfileSection = () => {
                         <div>
                             <div className="flex items-center justify-center gap-1 mb-1">
                                 <Trophy size={16} className="text-blue-500" />
-                                <p className="font-semibold text-sm text-text">{progress?.episodes_passed || 0}</p>
+                                <p className="font-semibold text-sm text-text">20</p>
                             </div>
                             <p className="text-xs text-subtext">Episodes passed</p>
                         </div>
                         <div>
                             <div className="flex items-center justify-center gap-1 mb-1">
                                 <Clock size={16} className="text-blue-500" />
-                                <p className="font-semibold text-sm text-text">{progress ? formatTimeSpent(progress.time_spent_minutes) : '0h 0m'}</p>
+                                <p className="font-semibold text-sm text-text">8h 33m</p>
                             </div>
                             <p className="text-xs text-subtext">Time spent</p>
                         </div>
                         <div>
                             <div className="flex items-center justify-center gap-1 mb-1">
                                 <Calendar size={16} className="text-blue-500" />
-                                <p className="font-semibold text-sm text-text">{progress?.active_days || 0}</p>
+                                <p className="font-semibold text-sm text-text">29</p>
                             </div>
                             <p className="text-xs text-subtext">Active days</p>
                         </div>
@@ -132,14 +103,14 @@ const ProfileSection = () => {
                         <div>
                             <div className="flex items-center justify-center gap-1 mb-1">
                                 <PiggyBank size={16} className="text-mint-400" />
-                                <p className="font-semibold text-sm text-text">{progress ? formatCurrency(progress.money_saved) : '£0.00'}</p>
+                                <p className="font-semibold text-sm text-text">£125.50</p>
                             </div>
                             <p className="text-xs text-subtext">Money saved</p>
                         </div>
                         <div>
                             <div className="flex items-center justify-center gap-1 mb-1">
                                 <Award size={16} className="text-blue-500" />
-                                <p className="font-semibold text-sm text-text">#{progress?.class_rank || '-'}</p>
+                                <p className="font-semibold text-sm text-text">#12</p>
                             </div>
                             <p className="text-xs text-subtext">Class rank</p>
                         </div>
