@@ -81,6 +81,7 @@ const MonthSummary = ({ activity, currentDate }: { activity: any[]; currentDate:
     // Compute streaks from the same monthly calendar activity
     const dayMs = 24 * 60 * 60 * 1000;
     const normalize = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    
     const activeDates = activity
       .filter((d: any) => d.attempts > 0)
       .map((d: any) => normalize(new Date(d.date)))
@@ -89,23 +90,33 @@ const MonthSummary = ({ activity, currentDate }: { activity: any[]; currentDate:
     // Remove duplicates
     const uniqueDates: Date[] = [];
     for (const d of activeDates) {
-      if (!uniqueDates.length || uniqueDates[uniqueDates.length - 1].getTime() !== d.getTime()) uniqueDates.push(d);
-    }
-
-    let best = 0;
-    let current = 0;
-    let prev: Date | null = null;
-    for (const d of uniqueDates) {
-      if (prev && d.getTime() - prev.getTime() === dayMs) {
-        current += 1;
-      } else {
-        current = 1;
+      if (!uniqueDates.length || uniqueDates[uniqueDates.length - 1].getTime() !== d.getTime()) {
+        uniqueDates.push(d);
       }
-      best = Math.max(best, current);
-      prev = d;
     }
 
-    const mainStreak = { current_count: uniqueDates.length ? current : 0, best_count: best };
+    // Calculate streaks - if no active dates in this month, streaks should be 0
+    let mainStreak;
+    if (uniqueDates.length === 0) {
+      mainStreak = { current_count: 0, best_count: 0 };
+    } else {
+      // Calculate streaks only from active dates in this month
+      let best = 0;
+      let current = 0;
+      let prev: Date | null = null;
+      
+      for (const d of uniqueDates) {
+        if (prev && d.getTime() - prev.getTime() === dayMs) {
+          current += 1;
+        } else {
+          current = 1;
+        }
+        best = Math.max(best, current);
+        prev = d;
+      }
+      
+      mainStreak = { current_count: current, best_count: best };
+    }
 
     return (
         <div className="flex flex-col h-full py-3">
