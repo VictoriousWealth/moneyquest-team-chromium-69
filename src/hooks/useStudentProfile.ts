@@ -29,9 +29,7 @@ export const useStudentProfile = () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
-          // Demo fallback for unauthenticated sessions
-          setProfile({ id: 'demo', username: 'Alex Johnson', school: 'Northwood High', year: 'Year 9', district: 'Northwood', student_id: 'STU-001' });
-          setProgress({ episodes_passed: 20, time_spent_minutes: 513, active_days: 29, money_saved: 125.5, class_rank: 12 });
+          setError('No authenticated user');
           return;
         }
 

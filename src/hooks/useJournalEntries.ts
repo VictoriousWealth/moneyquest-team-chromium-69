@@ -21,29 +21,7 @@ export const useJournalEntries = () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
-          // Demo fallback
-          const now = new Date();
-          const entriesDemo: JournalEntry[] = [
-            {
-              id: 'demo-1',
-              episode_title: 'The Stock Market Maze',
-              result: 'Pass',
-              summary: 'Learned about diversification and risk vs reward; practiced choosing ETFs.',
-              concepts: ['Investment', 'Risk Management', 'Portfolio'],
-              time_spent_minutes: 45,
-              created_at: new Date(now.getTime() - 1000 * 60 * 60 * 2).toISOString(),
-            },
-            {
-              id: 'demo-2',
-              episode_title: 'Budget Boss Challenge',
-              result: 'Pass',
-              summary: 'Built a monthly budget and found extra savings in subscriptions.',
-              concepts: ['Budgeting', 'Expense Tracking'],
-              time_spent_minutes: 30,
-              created_at: new Date(now.getTime() - 1000 * 60 * 60 * 26).toISOString(),
-            },
-          ];
-          setEntries(entriesDemo);
+          setError('No authenticated user');
           return;
         }
 
