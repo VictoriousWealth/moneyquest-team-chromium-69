@@ -47,7 +47,7 @@ const QuestCard: React.FC<{ quest: Quest; onClick?: () => void }> = ({ quest, on
     const status = quest.status || 'Not started';
     
     // Check if this quest should use popup (only for the 4 specific quests)
-    const usePopup = ["The Juice That Shrunk", "Pancake Price Storm", "Momo Summer Job Dilemma", "Pippa's Business Challenge"].includes(quest.title);
+    const usePopup = ["The Juice That Shrunk", "Pancake Price Storm", "Momo's Summer Job Dilemma", "Pippa's Business Challenge"].includes(quest.title);
 
     return (
         <Card className="flex flex-col justify-between rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
@@ -406,7 +406,7 @@ const StudentPlay: React.FC = () => {
               {/* Quest Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 ml-4">
                 {group.quests.map(quest => {
-                  const usePopup = ["The Juice That Shrunk", "Pancake Price Storm", "Momo Summer Job Dilemma", "Pippa\'s Business Challenge"].includes(quest.title);
+                  const usePopup = ["The Juice That Shrunk", "Pancake Price Storm", "Momo's Summer Job Dilemma", "Pippa\'s Business Challenge"].includes(quest.title);
                   return (
                     <QuestCard 
                       key={quest.id} 
