@@ -67,40 +67,45 @@ const LoginPage: React.FC = () => {
       }
 
       if (data.user) {
-        // Create or update profile
-        await supabase
-          .from('profiles')
-          .upsert({
-            user_id: data.user.id,
-            ...account.profile
-          });
-
-        // For student, also create progress and game state
-        if (role === Role.STUDENT) {
+        // Only create profile data if this is a new user or if the profile doesn't exist
+        try {
           await supabase
-            .from('student_progress')
+            .from('profiles')
             .upsert({
               user_id: data.user.id,
-              episodes_passed: 12,
-              time_spent_minutes: 180,
-              active_days: 15,
-              money_saved: 25.50,
-              class_rank: 3
+              ...account.profile
             });
 
-          await supabase
-            .from('game_states')
-            .upsert({
-              user_id: data.user.id,
-              day: 15,
-              coins: 150.00,
-              streak_days: 7,
-              coin_multiplier: 1.2,
-              xp_multiplier: 1.1,
-              last_played_date: new Date().toISOString().split('T')[0]
-            });
+          // For student, also create progress and game state
+          if (role === Role.STUDENT) {
+            await supabase
+              .from('student_progress')
+              .upsert({
+                user_id: data.user.id,
+                episodes_passed: 12,
+                time_spent_minutes: 180,
+                active_days: 15,
+                money_saved: 25.50,
+                class_rank: 3
+              });
+
+            await supabase
+              .from('game_states')
+              .upsert({
+                user_id: data.user.id,
+                day: 15,
+                coins: 150.00,
+                streak_days: 7,
+                coin_multiplier: 1.2,
+                xp_multiplier: 1.1,
+                last_played_date: new Date().toISOString().split('T')[0]
+              });
+          }
+        } catch (profileError) {
+          console.log('Profile creation error (might already exist):', profileError);
         }
 
+        // Navigate after successful authentication
         navigate(role === Role.STUDENT ? '/student/play' : '/teacher/dashboard');
       }
     } catch (error) {
