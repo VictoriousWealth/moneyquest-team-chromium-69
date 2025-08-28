@@ -197,7 +197,7 @@ const TeacherStudents: React.FC = () => {
             </thead>
             <tbody>
               {filteredStudents.map((student, index) => {
-                const MasteryIcon = getMasteryIcon(student.masteryProgress);
+                
                 const progress = parseInt(student.masteryProgress, 10);
                 
                 return (
@@ -224,24 +224,14 @@ const TeacherStudents: React.FC = () => {
                       <span className="text-xs text-text font-mono">RA{String(index + 91).padStart(3, '0')}</span>
                     </td>
                     <td className="p-4">
-                      <div className="flex items-center gap-3">
-                        <div className="flex-1">
-                          <div className="w-20 bg-muted rounded-full h-2">
-                            <div 
-                              className={`h-2 rounded-full transition-all ${
-                                progress >= 80 ? 'bg-mint-400' : 
-                                progress >= 40 ? 'bg-teal-400' : 'bg-subtext'
-                              }`}
-                              style={{ width: `${progress}%` }}
-                            />
-                          </div>
-                          <div className="text-xs text-subtext mt-1">
-                            {(student as any).completedQuests || 0} of {(student as any).totalQuests || allQuests.length} quests
-                          </div>
-                        </div>
-                        <Badge variant={getMasteryColor(student.masteryProgress)} icon={<MasteryIcon size={12} />}>
-                          {student.masteryProgress}
-                        </Badge>
+                      <div className="w-20 bg-muted rounded-full h-2">
+                        <div 
+                          className={`h-2 rounded-full transition-all ${
+                            progress >= 80 ? 'bg-mint-400' : 
+                            progress >= 40 ? 'bg-teal-400' : 'bg-subtext'
+                          }`}
+                          style={{ width: `${progress}%` }}
+                        />
                       </div>
                     </td>
                     <td className="p-4">
