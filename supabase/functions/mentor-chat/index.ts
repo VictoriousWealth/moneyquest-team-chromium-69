@@ -103,12 +103,22 @@ GUIDELINES:
 
     console.log('Raw Gemini response:', generatedText);
 
-    // Try to parse JSON response
+    // Try to parse JSON response - handle markdown wrapping
     let mentorResponse: MentorResponse;
     try {
-      mentorResponse = JSON.parse(generatedText);
+      // Remove markdown code block wrapper if present
+      let cleanedText = generatedText.trim();
+      if (cleanedText.startsWith('```json')) {
+        cleanedText = cleanedText.replace(/^```json\n?/, '').replace(/\n?```$/, '');
+      } else if (cleanedText.startsWith('```')) {
+        cleanedText = cleanedText.replace(/^```\n?/, '').replace(/\n?```$/, '');
+      }
+      
+      mentorResponse = JSON.parse(cleanedText);
+      console.log('Successfully parsed JSON response:', mentorResponse);
     } catch (parseError) {
-      console.log('Failed to parse JSON, creating fallback response');
+      console.log('Failed to parse JSON, creating fallback response. Parse error:', parseError);
+      console.log('Attempted to parse:', generatedText.substring(0, 200) + '...');
       // Fallback to plain text response
       mentorResponse = {
         mood: 'gentle',
