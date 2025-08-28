@@ -3,7 +3,7 @@ import { supabase } from '../../../integrations/supabase/client';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
-import { Coins, Zap, MapPin, Users } from 'lucide-react';
+import { Coins, Zap, MapPin, Users, Search, Filter, X } from 'lucide-react';
 
 interface CurriculumSection {
     id: number;
@@ -106,6 +106,10 @@ const StudentPlay: React.FC = () => {
   console.log('StudentPlay component loaded - using curriculum structure');
   const [groupedQuests, setGroupedQuests] = useState<GroupedQuests[]>([]);
   const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [sectionFilter, setSectionFilter] = useState<string>('all');
+  
   const quests = React.useMemo(() => groupedQuests.flatMap(g => g.quests), [groupedQuests]);
 
   useEffect(() => {
@@ -191,6 +195,44 @@ const StudentPlay: React.FC = () => {
     fetchCurriculumData();
   }, []);
 
+  // Filter and search logic
+  const filteredGroupedQuests = React.useMemo(() => {
+    return groupedQuests.map(group => {
+      const filteredQuests = group.quests.filter(quest => {
+        // Search filter
+        const matchesSearch = searchTerm === '' || 
+          quest.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          quest.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          quest.concepts.some(concept => concept.toLowerCase().includes(searchTerm.toLowerCase())) ||
+          quest.zone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          quest.npc.toLowerCase().includes(searchTerm.toLowerCase());
+
+        // Status filter
+        const matchesStatus = statusFilter === 'all' || quest.status === statusFilter;
+
+        // Section filter
+        const matchesSection = sectionFilter === 'all' || group.section.id.toString() === sectionFilter;
+
+        return matchesSearch && matchesStatus && matchesSection;
+      });
+
+      return {
+        ...group,
+        quests: filteredQuests,
+        totalCount: filteredQuests.length,
+        completedCount: filteredQuests.filter(q => q.status === 'Completed').length
+      };
+    }).filter(group => group.quests.length > 0); // Only show sections with matching quests
+  }, [groupedQuests, searchTerm, statusFilter, sectionFilter]);
+
+  const clearFilters = () => {
+    setSearchTerm('');
+    setStatusFilter('all');
+    setSectionFilter('all');
+  };
+
+  const hasActiveFilters = searchTerm !== '' || statusFilter !== 'all' || sectionFilter !== 'all';
+
   if (loading) {
     return (
       <div>
@@ -225,45 +267,131 @@ const StudentPlay: React.FC = () => {
   return (
     <div>
       <h1 className="h1 mb-6">Financial Quest Journey</h1>
+      
+      {/* Search and Filter Controls */}
+      <div className="mb-6 space-y-4">
+        {/* Search Bar */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+          <input
+            type="text"
+            placeholder="Search quests, concepts, zones, or NPCs..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+          />
+        </div>
+        
+        {/* Filters */}
+        <div className="flex flex-wrap gap-4 items-center">
+          {/* Status Filter */}
+          <div className="flex items-center gap-2">
+            <Filter className="w-4 h-4 text-muted-foreground" />
+            <select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              className="px-3 py-1 border border-border rounded-md bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              <option value="all">All Status</option>
+              <option value="Not started">Not Started</option>
+              <option value="In progress">In Progress</option>
+              <option value="Completed">Completed</option>
+            </select>
+          </div>
+          
+          {/* Section Filter */}
+          <div className="flex items-center gap-2">
+            <select
+              value={sectionFilter}
+              onChange={(e) => setSectionFilter(e.target.value)}
+              className="px-3 py-1 border border-border rounded-md bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+            >
+              <option value="all">All Sections</option>
+              {groupedQuests.map(group => (
+                <option key={group.section.id} value={group.section.id.toString()}>
+                  {group.section.curriculum_order}. {group.section.title}
+                </option>
+              ))}
+            </select>
+          </div>
+          
+          {/* Clear Filters */}
+          {hasActiveFilters && (
+            <Button 
+              variant="outline" 
+              onClick={clearFilters}
+              className="flex items-center gap-1 text-sm"
+            >
+              <X className="w-3 h-3" />
+              Clear Filters
+            </Button>
+          )}
+        </div>
+        
+        {/* Results Summary */}
+        {hasActiveFilters && (
+          <div className="text-sm text-muted-foreground">
+            Showing {filteredGroupedQuests.reduce((acc, group) => acc + group.quests.length, 0)} quests
+            {filteredGroupedQuests.length !== groupedQuests.length && 
+              ` across ${filteredGroupedQuests.length} sections`
+            }
+          </div>
+        )}
+      </div>
+      
+      {/* Quest Sections */}
       <div className="space-y-8">
-        {groupedQuests.map(group => (
-          <div key={group.section.id} className="space-y-4">
-            {/* Section Header */}
-            <div className="border-l-4 border-primary pl-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <h2 className="text-xl font-semibold text-foreground mb-1">
-                    {group.section.curriculum_order}. {group.section.title}
-                  </h2>
-                  <p className="text-muted-foreground text-sm mb-2">
-                    {group.section.description}
-                  </p>
+        {filteredGroupedQuests.length === 0 ? (
+          <Card className="p-6 text-center">
+            <p className="text-muted-foreground">No quests match your current filters.</p>
+            <Button 
+              variant="outline" 
+              onClick={clearFilters}
+              className="mt-3"
+            >
+              Clear Filters
+            </Button>
+          </Card>
+        ) : (
+          filteredGroupedQuests.map(group => (
+            <div key={group.section.id} className="space-y-4">
+              {/* Section Header */}
+              <div className="border-l-4 border-primary pl-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-xl font-semibold text-foreground mb-1">
+                      {group.section.curriculum_order}. {group.section.title}
+                    </h2>
+                    <p className="text-muted-foreground text-sm mb-2">
+                      {group.section.description}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <Badge variant={group.completedCount === group.totalCount ? 'mint' : 'muted'}>
+                      {group.completedCount}/{group.totalCount} completed
+                    </Badge>
+                  </div>
                 </div>
-                <div className="text-right">
-                  <Badge variant={group.completedCount === group.totalCount ? 'mint' : 'muted'}>
-                    {group.completedCount}/{group.totalCount} completed
-                  </Badge>
+                
+                {/* Section Concepts */}
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {group.section.concepts?.map(concept => (
+                    <Badge key={concept} variant="teal" className="text-xs">
+                      {concept}
+                    </Badge>
+                  ))}
                 </div>
               </div>
               
-              {/* Section Concepts */}
-              <div className="flex flex-wrap gap-2 mt-2">
-                {group.section.concepts?.map(concept => (
-                  <Badge key={concept} variant="teal" className="text-xs">
-                    {concept}
-                  </Badge>
+              {/* Quest Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ml-4">
+                {group.quests.map(quest => (
+                  <QuestCard key={quest.id} quest={quest} />
                 ))}
               </div>
             </div>
-            
-            {/* Quest Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ml-4">
-              {group.quests.map(quest => (
-                <QuestCard key={quest.id} quest={quest} />
-              ))}
-            </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
