@@ -87,6 +87,7 @@ const QuestCard: React.FC<{ quest: Quest }> = ({ quest }) => {
 }
 
 const StudentPlay: React.FC = () => {
+  console.log('StudentPlay component loaded - using quests from database');
   const [quests, setQuests] = useState<Quest[]>([]);
   const [loading, setLoading] = useState(true);
 
