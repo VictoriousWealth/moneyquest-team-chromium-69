@@ -18,12 +18,12 @@ const StudentMentor: React.FC = () => {
       </div>
 
       {/* Chat Section */}
-      <section className="flex flex-col bg-surface rounded-lg shadow-soft ring-1 ring-[var(--ring)] overflow-hidden">
+      <section className="flex flex-col bg-surface rounded-lg shadow-soft ring-1 ring-[var(--ring)] overflow-hidden min-h-0">
         <header className="p-4 border-b border-muted flex-shrink-0">
           <h2 className="h2">AI Mentor Chat</h2>
         </header>
         
-        <div className="flex-1 p-4 flex items-center justify-center">
+        <div className="flex-1 p-4 flex items-center justify-center min-h-0 overflow-y-auto">
           <div className="text-center">
             <Bot className="mx-auto mb-4 text-blue-500" size={64} />
             <h3 className="h3 mb-2">AI Mentor Coming Soon</h3>
