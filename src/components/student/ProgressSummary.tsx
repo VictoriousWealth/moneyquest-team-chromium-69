@@ -2,7 +2,6 @@ import React, { useState, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../ui/Card';
 import UIBadge from '../ui/Badge';
-import { dailyActivity, progressSummaryData, demoBadgesMonth, allStreaks } from '../../lib/demoData';
 import type { DailyActivity } from '../../lib/demoData';
 import { Flame, Clock, BookOpen, ArrowRight, ChevronLeft, ChevronRight, Trophy, Eye } from 'lucide-react';
 import Button from '../ui/Button';
@@ -69,16 +68,44 @@ const generateMonthGrid = (date: Date) => {
 
 // --- RIGHT PANEL COMPONENTS ---
 
-const MonthSummary = ({ activity }: { activity: DailyActivity[] }) => {
+const MonthSummary = ({ activity, currentDate }: { activity: any[]; currentDate: Date }) => {
     const { badges } = useDatabaseAchievements();
-    const { streaks } = useCompleteStudentData();
-    const badgesToShow = badges.filter(b => b.isEarned).slice(0, 3); // Show 3 most recent earned badges
-    
-    // Get daily play streak from same backend data as calendar
-    const mainStreak = streaks.find(s => s.streak_type === 'daily_play') || { 
-        current_count: 0, 
-        best_count: 0 
-    };
+    // Filter badges to the selected month
+    const month = currentDate.getMonth();
+    const year = currentDate.getFullYear();
+    const badgesToShow = badges
+      .filter(b => b.isEarned && b.earnedAt && new Date(b.earnedAt).getMonth() === month && new Date(b.earnedAt).getFullYear() === year)
+      .sort((a, b) => new Date(b.earnedAt!).getTime() - new Date(a.earnedAt!).getTime())
+      .slice(0, 3);
+
+    // Compute streaks from the same monthly calendar activity
+    const dayMs = 24 * 60 * 60 * 1000;
+    const normalize = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    const activeDates = activity
+      .filter((d: any) => d.attempts > 0)
+      .map((d: any) => normalize(new Date(d.date)))
+      .sort((a: Date, b: Date) => a.getTime() - b.getTime());
+
+    // Remove duplicates
+    const uniqueDates: Date[] = [];
+    for (const d of activeDates) {
+      if (!uniqueDates.length || uniqueDates[uniqueDates.length - 1].getTime() !== d.getTime()) uniqueDates.push(d);
+    }
+
+    let best = 0;
+    let current = 0;
+    let prev: Date | null = null;
+    for (const d of uniqueDates) {
+      if (prev && d.getTime() - prev.getTime() === dayMs) {
+        current += 1;
+      } else {
+        current = 1;
+      }
+      best = Math.max(best, current);
+      prev = d;
+    }
+
+    const mainStreak = { current_count: uniqueDates.length ? current : 0, best_count: best };
 
     return (
         <div className="flex flex-col h-full py-3">
@@ -201,7 +228,11 @@ const ProgressSummary = () => {
 
     const activityForMonth = useMemo(() => {
         const month = currentDate.getMonth();
-        return formattedActivities.filter(d => new Date(d.date).getMonth() === month);
+        const year = currentDate.getFullYear();
+        return formattedActivities.filter(d => {
+            const dt = new Date(d.date);
+            return dt.getMonth() === month && dt.getFullYear() === year;
+        });
     }, [currentDate, formattedActivities]);
 
     const selectedDayActivity = selectedDay ? activityMap.get(selectedDay) : null;
@@ -309,7 +340,7 @@ const ProgressSummary = () => {
                 <div className="flex-1 lg:border-l lg:pl-6 xl:pl-8 border-muted lg:border-t-0 border-t pt-6 lg:pt-0">
                     {selectedDayActivity && selectedDayActivity.attempts > 0
                         ? <DayDetail activity={selectedDayActivity} />
-                        : <MonthSummary activity={activityForMonth} />
+                        : <MonthSummary activity={activityForMonth} currentDate={currentDate} />
                     }
                 </div>
             </div>
