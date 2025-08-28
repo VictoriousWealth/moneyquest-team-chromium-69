@@ -189,7 +189,7 @@ const TeacherStudents: React.FC = () => {
               <tr className="border-b border-[var(--ring)] bg-muted/50">
                 <th className="text-left p-4 font-medium text-sm text-text">Student</th>
                 <th className="text-left p-4 font-medium text-sm text-text">Student ID</th>
-                <th className="text-left p-4 font-medium text-sm text-text">Mastery</th>
+                <th className="text-left p-4 font-medium text-sm text-text">Quests Completed</th>
                 <th className="text-left p-4 font-medium text-sm text-text">Badges</th>
                 <th className="text-left p-4 font-medium text-sm text-text">Streak</th>
                 <th className="text-right p-4 font-medium text-sm text-text">Actions</th>
@@ -197,8 +197,11 @@ const TeacherStudents: React.FC = () => {
             </thead>
             <tbody>
               {filteredStudents.map((student, index) => {
-                
                 const progress = parseInt(student.masteryProgress, 10);
+                const totalQuests = allQuests.length || 37;
+                const completedQuests = (student as any).completedQuests !== undefined 
+                  ? (student as any).completedQuests 
+                  : Math.round((progress / 100) * totalQuests);
                 
                 return (
                   <tr 
@@ -224,14 +227,21 @@ const TeacherStudents: React.FC = () => {
                       <span className="text-xs text-text font-mono">RA{String(index + 91).padStart(3, '0')}</span>
                     </td>
                     <td className="p-4">
-                      <div className="w-20 bg-muted rounded-full h-2">
-                        <div 
-                          className={`h-2 rounded-full transition-all ${
-                            progress >= 80 ? 'bg-mint-400' : 
-                            progress >= 40 ? 'bg-teal-400' : 'bg-subtext'
-                          }`}
-                          style={{ width: `${progress}%` }}
-                        />
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1">
+                          <div className="w-20 bg-muted rounded-full h-2">
+                            <div 
+                              className={`h-2 rounded-full transition-all ${
+                                progress >= 80 ? 'bg-mint-400' : 
+                                progress >= 40 ? 'bg-teal-400' : 'bg-subtext'
+                              }`}
+                              style={{ width: `${progress}%` }}
+                            />
+                          </div>
+                          <div className="text-xs text-subtext mt-1">
+                            {completedQuests} of {totalQuests} quests
+                          </div>
+                        </div>
                       </div>
                     </td>
                     <td className="p-4">
