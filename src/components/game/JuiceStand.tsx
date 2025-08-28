@@ -267,7 +267,7 @@ export const JuiceStand = ({ isActive, onComplete, onUseScanner }: JuiceStandPro
               <h2 className="text-2xl font-bold text-foreground">Momo's Juice Stand</h2>
             </div>
             <p className="text-muted-foreground mb-3">Help craft the perfect smoothie and spot the best value!</p>
-            <img src="/lovable-uploads/3b64b2f0-5c29-48c1-b570-dbbebf4d417d.png" alt="Momo the Juice Maker" className="mx-auto mb-4 rounded-lg max-w-32" />
+            <img src="/src/assets/the-juice-that-shrunk-story-image.png" alt="Momo the Juice Maker" className="mx-auto mb-4 rounded-lg max-w-32" />
           </div>
 
           {gamePhase === "intro" && (
