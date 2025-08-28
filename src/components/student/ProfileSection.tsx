@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../ui/Card';
 import { demoStudent, demoPrefs, demoClassActivity, dailyActivity } from '../../lib/demoData';
@@ -21,6 +21,24 @@ const ProfileSection = () => {
         };
     }, []);
 
+    const activities = [
+        { seed: 'Maria', name: 'Maria', text: 'is learning "The Stock Market Maze"' },
+        { seed: 'Sam', name: 'Sam', text: 'just earned "Budget Boss"' },
+        { seed: 'Ava', name: 'Ava', text: 'continued a 10-day streak' },
+        { seed: 'Jake', name: 'Jake', text: 'completed "Investment Basics"' },
+        { seed: 'Emma', name: 'Emma', text: 'reached level 5 in Savings' },
+        { seed: 'Oliver', name: 'Oliver', text: 'unlocked "Crypto Explorer"' },
+        { seed: 'Lily', name: 'Lily', text: 'mastered "Tax Basics"' },
+        { seed: 'Noah', name: 'Noah', text: 'started "Real Estate Basics"' },
+    ];
+    const ROW_H = 25; // px, must match each row height
+    const [idx, setIdx] = useState(0);
+    useEffect(() => {
+        const id = setInterval(() => {
+            setIdx((i) => (i + 1) % activities.length);
+        }, 2000);
+        return () => clearInterval(id);
+    }, []);
     return (
         <Card className="p-3 h-full flex flex-col relative overflow-hidden rounded-xl">
             <h3 className="text-base font-semibold mb-2">Profile</h3>
@@ -109,56 +127,19 @@ const ProfileSection = () => {
                 {/* Activity Ticker - Flex container ensures title and ticker are separate */}
                 <div className="flex-grow flex flex-col border-t border-muted pt-2 min-h-0">
                     <h4 className="font-medium text-xs text-subtext mb-1 flex-shrink-0">Class Activity</h4>
-                    <div className="relative overflow-hidden h-6" aria-live="off">
-                        <div className="animate-[activity-ticker_16s_linear_infinite]">
-                            <div className="flex w-full items-center gap-2 px-1 h-[25px] text-xs">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Maria" alt="Maria" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                <p className="text-subtext text-left truncate">
-                                    <span className="font-medium text-text">Maria</span> is learning "The Stock Market Maze"
-                                </p>
+                    <div className="relative overflow-hidden h-[25px]" aria-live="off">
+                        <div
+                          className="will-change-transform"
+                          style={{ transform: `translateY(-${idx * ROW_H}px)`, transition: 'transform 600ms linear' }}
+                        >
+                          {activities.map((a) => (
+                            <div key={a.seed} className="flex w-full items-center gap-2 px-1 h-[25px] text-xs">
+                              <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${a.seed}`} alt={a.name} className="w-5 h-5 rounded-full flex-shrink-0" />
+                              <p className="text-subtext text-left truncate">
+                                <span className="font-medium text-text">{a.name}</span> {a.text}
+                              </p>
                             </div>
-                            <div className="flex w-full items-center gap-2 px-1 h-[25px] text-xs">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sam" alt="Sam" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                <p className="text-subtext text-left truncate">
-                                    <span className="font-medium text-text">Sam</span> just earned "Budget Boss"
-                                </p>
-                            </div>
-                            <div className="flex w-full items-center gap-2 px-1 h-[25px] text-xs">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ava" alt="Ava" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                <p className="text-subtext text-left truncate">
-                                    <span className="font-medium text-text">Ava</span> continued a 10-day streak
-                                </p>
-                            </div>
-                            <div className="flex w-full items-center gap-2 px-1 h-[25px] text-xs">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jake" alt="Jake" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                <p className="text-subtext text-left truncate">
-                                    <span className="font-medium text-text">Jake</span> completed "Investment Basics"
-                                </p>
-                            </div>
-                            <div className="flex w-full items-center gap-2 px-1 h-[25px] text-xs">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Emma" alt="Emma" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                <p className="text-subtext text-left truncate">
-                                    <span className="font-medium text-text">Emma</span> reached level 5 in Savings
-                                </p>
-                            </div>
-                            <div className="flex w-full items-center gap-2 px-1 h-[25px] text-xs">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver" alt="Oliver" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                <p className="text-subtext text-left truncate">
-                                    <span className="font-medium text-text">Oliver</span> unlocked "Crypto Explorer"
-                                </p>
-                            </div>
-                            <div className="flex w-full items-center gap-2 px-1 h-[25px] text-xs">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lily" alt="Lily" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                <p className="text-subtext text-left truncate">
-                                    <span className="font-medium text-text">Lily</span> mastered "Tax Basics"
-                                </p>
-                            </div>
-                            <div className="flex w-full items-center gap-2 px-1 h-[25px] text-xs">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Noah" alt="Noah" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                <p className="text-subtext text-left truncate">
-                                    <span className="font-medium text-text">Noah</span> started "Real Estate Basics"
-                                </p>
-                            </div>
+                          ))}
                         </div>
                     </div>
                 </div>
