@@ -35,7 +35,7 @@ export interface Attempt {
 
 export type Tier = 'none' | 'bronze' | 'silver' | 'gold';
 export type EarnState = 'earned' | 'locked';
-export type BadgeCategory = 'Milestone' | 'Skill' | 'Habit' | 'Fun';
+export type BadgeCategory = 'Milestone' | 'Skill' | 'Habit' | 'Fun' | 'Quest';
 
 export interface Streak {
   id: string;                // e.g., "daily_play"

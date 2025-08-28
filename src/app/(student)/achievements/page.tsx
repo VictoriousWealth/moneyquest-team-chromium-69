@@ -188,7 +188,7 @@ const StudentAchievements: React.FC = () => {
   const { achievements: backendAchievements } = useAchievements();
   const [badgeFilter, setBadgeFilter] = usePersistentState<'all' | 'earned' | 'locked'>('mq-achievements-filter', 'all');
   
-  const badgeCategories: BadgeCategory[] = ['Milestone', 'Skill', 'Habit', 'Fun'];
+  const badgeCategories: BadgeCategory[] = ['Milestone', 'Skill', 'Habit', 'Fun', 'Quest'];
   const [selectedTags, setSelectedTags] = usePersistentState<BadgeCategory[]>('mq-achievements-tags', [...badgeCategories]);
   
   const [searchTerm, setSearchTerm] = useState('');
@@ -207,7 +207,8 @@ const StudentAchievements: React.FC = () => {
           'milestone': 'Milestone',
           'skill': 'Skill', 
           'habit': 'Habit',
-          'fun': 'Fun'
+          'fun': 'Fun',
+          'quest': 'Quest'
         };
         
         frontendBadges.push({
@@ -274,7 +275,7 @@ const StudentAchievements: React.FC = () => {
             });
             break;
         case 'rarest':
-            const categoryOrder: Record<BadgeCategory, number> = { 'Milestone': 1, 'Skill': 2, 'Habit': 3, 'Fun': 4 };
+            const categoryOrder: Record<BadgeCategory, number> = { 'Milestone': 1, 'Skill': 2, 'Habit': 3, 'Fun': 4, 'Quest': 5 };
             badges.sort((a, b) => categoryOrder[a.category] - categoryOrder[b.category] || a.name.localeCompare(b.name));
             break;
         case 'category':
