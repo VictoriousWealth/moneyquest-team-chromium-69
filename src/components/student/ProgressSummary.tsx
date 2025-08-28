@@ -73,7 +73,12 @@ const MonthSummary = ({ activity }: { activity: DailyActivity[] }) => {
     const { badges } = useDatabaseAchievements();
     const { streaks } = useCompleteStudentData();
     const badgesToShow = badges.filter(b => b.isEarned).slice(0, 3); // Show 3 most recent earned badges
-    const mainStreak = streaks.find(s => s.streak_type === 'daily_play') || { current_count: 0, best_count: 0 };
+    
+    // Get daily play streak from same backend data as calendar
+    const mainStreak = streaks.find(s => s.streak_type === 'daily_play') || { 
+        current_count: 0, 
+        best_count: 0 
+    };
 
     return (
         <div className="flex flex-col h-full py-3">
