@@ -91,6 +91,36 @@ export type Database = {
           },
         ]
       }
+      curriculum_sections: {
+        Row: {
+          concepts: string[] | null
+          created_at: string
+          curriculum_order: number
+          description: string
+          id: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          concepts?: string[] | null
+          created_at?: string
+          curriculum_order: number
+          description: string
+          id?: number
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          concepts?: string[] | null
+          created_at?: string
+          curriculum_order?: number
+          description?: string
+          id?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       daily_activities: {
         Row: {
           activity_date: string
@@ -284,9 +314,11 @@ export type Database = {
         Row: {
           concepts: string[] | null
           created_at: string
+          curriculum_section_id: number | null
           description: string
           id: string
           npc: string
+          order_in_section: number | null
           reward_coins: number
           reward_xp: number
           title: string
@@ -295,9 +327,11 @@ export type Database = {
         Insert: {
           concepts?: string[] | null
           created_at?: string
+          curriculum_section_id?: number | null
           description: string
           id?: string
           npc: string
+          order_in_section?: number | null
           reward_coins?: number
           reward_xp?: number
           title: string
@@ -306,15 +340,25 @@ export type Database = {
         Update: {
           concepts?: string[] | null
           created_at?: string
+          curriculum_section_id?: number | null
           description?: string
           id?: string
           npc?: string
+          order_in_section?: number | null
           reward_coins?: number
           reward_xp?: number
           title?: string
           zone?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "quests_curriculum_section_id_fkey"
+            columns: ["curriculum_section_id"]
+            isOneToOne: false
+            referencedRelation: "curriculum_sections"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       streaks: {
         Row: {

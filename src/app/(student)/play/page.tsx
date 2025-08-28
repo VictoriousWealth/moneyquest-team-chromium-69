@@ -5,6 +5,14 @@ import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
 import { Coins, Zap, MapPin, Users } from 'lucide-react';
 
+interface CurriculumSection {
+    id: number;
+    title: string;
+    description: string;
+    curriculum_order: number;
+    concepts: string[];
+}
+
 interface Quest {
     id: string;
     title: string;
@@ -14,7 +22,16 @@ interface Quest {
     reward_coins: number;
     reward_xp: number;
     concepts: string[];
+    curriculum_section_id: number;
+    order_in_section: number;
     status?: 'Completed' | 'In progress' | 'Not started';
+}
+
+interface GroupedQuests {
+    section: CurriculumSection;
+    quests: Quest[];
+    completedCount: number;
+    totalCount: number;
 }
 
 const QuestCard: React.FC<{ quest: Quest }> = ({ quest }) => {
@@ -86,21 +103,31 @@ const QuestCard: React.FC<{ quest: Quest }> = ({ quest }) => {
 }
 
 const StudentPlay: React.FC = () => {
-  console.log('StudentPlay component loaded - using quests from database');
-  const [quests, setQuests] = useState<Quest[]>([]);
+  console.log('StudentPlay component loaded - using curriculum structure');
+  const [groupedQuests, setGroupedQuests] = useState<GroupedQuests[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchQuestsWithProgress = async () => {
+    const fetchCurriculumData = async () => {
       try {
-        // Fetch all quests
+        // Fetch curriculum sections and quests with joins
         const { data: questsData, error: questsError } = await supabase
           .from('quests')
-          .select('*')
-          .order('created_at', { ascending: true });
+          .select(`
+            *,
+            curriculum_sections!inner (
+              id,
+              title,
+              description,
+              curriculum_order,
+              concepts
+            )
+          `)
+          .order('curriculum_sections.curriculum_order', { ascending: true })
+          .order('order_in_section', { ascending: true });
 
         if (questsError) {
-          console.error('Error fetching quests:', questsError);
+          console.error('Error fetching quests with curriculum:', questsError);
           return;
         }
 
@@ -119,8 +146,8 @@ const StudentPlay: React.FC = () => {
           progressData?.map(p => [p.quest_id, p]) || []
         );
 
-        // Combine quests with user progress
-        const questsWithStatus: Quest[] = (questsData || []).map(quest => {
+        // Process quests with status
+        const questsWithStatus = (questsData || []).map(quest => {
           const progress = progressMap.get(quest.id);
           let status: 'Completed' | 'In progress' | 'Not started' = 'Not started';
           
@@ -138,15 +165,41 @@ const StudentPlay: React.FC = () => {
           };
         });
 
-        setQuests(questsWithStatus);
+        // Group quests by curriculum section
+        const grouped = questsWithStatus.reduce((acc, quest) => {
+          const section = quest.curriculum_sections;
+          const existingGroup = acc.find(g => g.section.id === section.id);
+          
+          if (existingGroup) {
+            existingGroup.quests.push(quest);
+            existingGroup.totalCount++;
+            if (quest.status === 'Completed') {
+              existingGroup.completedCount++;
+            }
+          } else {
+            acc.push({
+              section,
+              quests: [quest],
+              completedCount: quest.status === 'Completed' ? 1 : 0,
+              totalCount: 1
+            });
+          }
+          
+          return acc;
+        }, [] as GroupedQuests[]);
+
+        // Sort by curriculum order
+        grouped.sort((a, b) => a.section.curriculum_order - b.section.curriculum_order);
+
+        setGroupedQuests(grouped);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching curriculum data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchQuestsWithProgress();
+    fetchCurriculumData();
   }, []);
 
   if (loading) {
@@ -171,10 +224,45 @@ const StudentPlay: React.FC = () => {
 
   return (
     <div>
-      <h1 className="h1 mb-6">Play Episodes</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {quests.map(quest => (
-          <QuestCard key={quest.id} quest={quest} />
+      <h1 className="h1 mb-6">Financial Quest Journey</h1>
+      <div className="space-y-8">
+        {groupedQuests.map(group => (
+          <div key={group.section.id} className="space-y-4">
+            {/* Section Header */}
+            <div className="border-l-4 border-primary pl-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold text-foreground mb-1">
+                    📚 {group.section.title}
+                  </h2>
+                  <p className="text-muted-foreground text-sm mb-2">
+                    {group.section.description}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <Badge variant={group.completedCount === group.totalCount ? 'mint' : 'muted'}>
+                    {group.completedCount}/{group.totalCount} completed
+                  </Badge>
+                </div>
+              </div>
+              
+              {/* Section Concepts */}
+              <div className="flex flex-wrap gap-2 mt-2">
+                {group.section.concepts?.map(concept => (
+                  <Badge key={concept} variant="teal" className="text-xs">
+                    {concept}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+            
+            {/* Quest Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ml-4">
+              {group.quests.map(quest => (
+                <QuestCard key={quest.id} quest={quest} />
+              ))}
+            </div>
+          </div>
         ))}
       </div>
     </div>
