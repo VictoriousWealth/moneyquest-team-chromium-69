@@ -64,3 +64,22 @@ h3 { font-size: var(--h3); font-weight: 600; }
 .h2 { font-size: var(--h2); font-weight: 600; }
 .h3 { font-size: var(--h3); font-weight: 600; }
 small { font-size: var(--small); }
+
+/* Class Activity Ticker Animation */
+@keyframes vertical-ticker-scroll {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes fade-in-out {
+  0%, 20% {
+    opacity: 1;
+  }
+  80%, 100% {
+    opacity: 0;
+  }
+}
