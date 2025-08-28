@@ -3,6 +3,7 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
 import { Loader2, Brain, CheckCircle, XCircle, Lightbulb, Target } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 interface AIReviewDialogProps {
@@ -110,5 +111,4 @@ export const AIReviewDialog = ({ isOpen, onClose, questId, questTitle }: AIRevie
       {/* AI Review content would go here */}
     </div>
   );
-};
 };
