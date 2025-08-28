@@ -12,7 +12,7 @@ const LoginPage: React.FC = () => {
   // Demo credentials - fixed accounts to avoid creating duplicates
   const DEMO_ACCOUNTS = {
     [Role.STUDENT]: {
-      email: 'student.demo@moneyquest.com',
+      email: 'alex.johnson@demo.com', // Use existing Alex Johnson account
       password: 'moneyquest123',
       profile: {
         username: 'Alex Johnson',
@@ -44,23 +44,11 @@ const LoginPage: React.FC = () => {
         password: account.password,
       });
 
-      // If user doesn't exist, create the account
+      // If user doesn't exist, show error instead of creating new account
       if (error && error.message.includes('Invalid login credentials')) {
-        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
-          email: account.email,
-          password: account.password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/`,
-            data: account.profile
-          }
-        });
-
-        if (signUpError) {
-          console.error('Sign up error:', signUpError);
-          return;
-        }
-
-        data = signUpData;
+        console.error('Invalid credentials for existing account:', account.email);
+        alert('Login failed. This demo account may not exist or password is incorrect.');
+        return;
       } else if (error) {
         console.error('Sign in error:', error);
         return;
