@@ -71,8 +71,9 @@ const generateMonthGrid = (date: Date) => {
 
 const MonthSummary = ({ activity }: { activity: DailyActivity[] }) => {
     const { badges } = useDatabaseAchievements();
+    const { streaks } = useCompleteStudentData();
     const badgesToShow = badges.filter(b => b.isEarned).slice(0, 3); // Show 3 most recent earned badges
-    const mainStreak = allStreaks[0]; // Daily Play Streak
+    const mainStreak = streaks.find(s => s.streak_type === 'daily_play') || { current_count: 0, best_count: 0 };
 
     return (
         <div className="flex flex-col h-full py-3">
@@ -81,14 +82,14 @@ const MonthSummary = ({ activity }: { activity: DailyActivity[] }) => {
                 <div className="flex items-center gap-2 p-3 rounded-md bg-muted text-sm">
                     <Flame className="text-orange-500" size={20} />
                     <div>
-                        <p className="font-bold text-lg">{mainStreak.currentCount}</p>
-                        <p className="text-xs text-subtext capitalize">{mainStreak.name}</p>
+                        <p className="font-bold text-lg">{mainStreak.current_count}</p>
+                        <p className="text-xs text-subtext capitalize">Daily Play Streak</p>
                     </div>
                 </div>
                 <div className="flex items-center gap-2 p-3 rounded-md bg-muted text-sm">
                     <Trophy className="text-subtext" size={20} />
                     <div>
-                        <p className="font-bold text-lg">{mainStreak.bestCount}</p>
+                        <p className="font-bold text-lg">{mainStreak.best_count}</p>
                         <p className="text-xs text-subtext">Longest streak</p>
                     </div>
                 </div>
