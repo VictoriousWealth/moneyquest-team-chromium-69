@@ -169,15 +169,18 @@ export const allBadges: Badge[] = [
     { id: 'marathon', name: 'Marathon Learner', category: 'Milestone', state: 'locked', unlockHint: 'Pass 25 episodes.', artKey: 'milestone' },
     // Skills
     { id: 'value_detective', name: 'Value Detective', category: 'Skill', state: 'earned', earnedAt: dateThisMonth(5), unlockHint: 'Choose the best unit price 5 times.', contextStat: 'You saved £14 by comparing!', artKey: 'skill' },
-    { id: 'paycheck_pro', name: 'Paycheck Pro', category: 'Skill', state: 'locked', unlockHint: 'Decode a full payslip, including NI and tax.', artKey: 'skill' },
     { id: 'apr_unmasker', name: 'APR Unmasker', category: 'Skill', state: 'locked', unlockHint: 'Pick the cheaper loan plan 3 times.', artKey: 'skill' },
-    { id: 'risk_ranger', name: 'Risk Ranger', category: 'Skill', state: 'earned', earnedAt: dateThisMonth(2), unlockHint: 'Build a diversified portfolio in the Stock Market Maze.', artKey: 'skill' },
+    // Quest-based achievements
+    { id: 'pancake_pro', name: 'Pancake Pro', category: 'Quest', state: 'locked', unlockHint: 'Complete the Pancake Inflation quest.', artKey: 'quest' },
+    { id: 'paycheck_pro', name: 'Paycheck Pro', category: 'Quest', state: 'locked', unlockHint: 'Complete the Payslip Master quest to decode NI and tax.', artKey: 'quest' },
+    { id: 'payslip_pro', name: 'Payslip Pro', category: 'Quest', state: 'locked', unlockHint: 'Successfully completed Momo\'s Summer Job Dilemma.', artKey: 'quest' },
+    { id: 'risk_ranger', name: 'Risk Ranger', category: 'Quest', state: 'earned', earnedAt: dateThisMonth(2), unlockHint: 'Complete the Stock Market Maze quest.', artKey: 'quest' },
+    { id: 'lemonade_tycoon', name: 'Lemonade Tycoon', category: 'Quest', state: 'earned', earnedAt: dateLastMonth(5), unlockHint: 'Complete the Lemonade Stand quest with high profit.', isPrivate: true, artKey: 'quest' },
     // Habits
     { id: 'goal_setter', name: 'Goal Setter', category: 'Habit', state: 'earned', earnedAt: dateThisMonth(8), unlockHint: 'Set and meet a weekly goal.', artKey: 'habit' },
     { id: 'comeback_kid', name: 'Comeback Kid', category: 'Habit', state: 'locked', unlockHint: 'Pass an episode that you previously failed.', artKey: 'habit' },
     // Fun (Private by default)
     { id: 'latte_factor', name: 'Latte Factor', category: 'Fun', state: 'locked', unlockHint: 'Oops! Blew the budget on small purchases.', isPrivate: true, artKey: 'fun' }, // Previously earned, now locked
-    { id: 'lemonade_tycoon', name: 'Lemonade Tycoon', category: 'Fun', state: 'earned', earnedAt: dateLastMonth(5), unlockHint: 'Make over £20 profit in the Lemonade Stand.', isPrivate: true, artKey: 'fun' },
     { id: 'bogof_boss', name: 'BOGOF Boss', category: 'Fun', state: 'locked', unlockHint: 'Win big using multi-buy or unit-price logic.', isPrivate: true, artKey: 'fun' },
 ];
 
