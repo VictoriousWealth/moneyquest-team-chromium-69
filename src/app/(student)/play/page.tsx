@@ -5,6 +5,7 @@ import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from '../../../components/ui/dialog';
 import { Coins, Zap, MapPin, Users, Search, Filter, X } from 'lucide-react';
+import { QuestImage } from '../../../components/ui/QuestImage';
 
 interface CurriculumSection {
     id: number;
@@ -26,6 +27,7 @@ interface Quest {
     curriculum_section_id: number;
     order_in_section: number;
     status?: 'Completed' | 'In progress' | 'Not started';
+    image_url?: string;
 }
 
 interface GroupedQuests {
@@ -50,10 +52,9 @@ const QuestCard: React.FC<{ quest: Quest; onClick?: () => void }> = ({ quest, on
     return (
         <Card className="flex flex-col justify-between rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
             <div>
-                <img 
-                    src={`https://picsum.photos/seed/${quest.id}/500/240`} 
-                    alt={quest.title} 
-                    className="w-full h-40 object-cover" 
+                <QuestImage 
+                    quest={quest}
+                    className="w-full h-40"
                 />
                 <div className="p-4">
                     {/* Header with title and status */}
@@ -432,11 +433,10 @@ const StudentPlay: React.FC = () => {
             <div className="p-3 rounded-xl">
               <DialogHeader className="mb-3">
                 <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0">
-                    <img 
-                      src={`https://picsum.photos/seed/${selectedQuest.id}/50/50`} 
-                      alt={selectedQuest.title} 
-                      className="w-12 h-12 rounded-xl object-cover ring-1 ring-[var(--ring)]" 
+                   <div className="flex-shrink-0">
+                    <QuestImage 
+                      quest={selectedQuest}
+                      className="w-12 h-12 rounded-xl ring-1 ring-[var(--ring)]"
                     />
                   </div>
                   <div className="flex-1 min-w-0">

@@ -317,6 +317,7 @@ export type Database = {
           curriculum_section_id: number | null
           description: string
           id: string
+          image_url: string | null
           npc: string
           order_in_section: number | null
           reward_coins: number
@@ -330,6 +331,7 @@ export type Database = {
           curriculum_section_id?: number | null
           description: string
           id?: string
+          image_url?: string | null
           npc: string
           order_in_section?: number | null
           reward_coins?: number
@@ -343,6 +345,7 @@ export type Database = {
           curriculum_section_id?: number | null
           description?: string
           id?: string
+          image_url?: string | null
           npc?: string
           order_in_section?: number | null
           reward_coins?: number
