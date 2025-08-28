@@ -22,7 +22,7 @@ const ProfileSection = () => {
     }, []);
 
     return (
-        <Card className="p-5 h-full flex flex-col relative overflow-hidden">
+        <Card className="p-5 h-full flex flex-col relative overflow-hidden rounded-xl">
             <h3 className="text-xl font-semibold mb-3">Profile</h3>
             <div className="mb-3">
                 <h2 className="text-2xl font-semibold text-text">{demoStudent.name}</h2>
