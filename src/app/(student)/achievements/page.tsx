@@ -103,7 +103,12 @@ const BadgeTile: React.FC<{ badge: BadgeType }> = ({ badge }) => {
       
       {/* Title & Subline */}
       <div className="flex-grow flex flex-col justify-center mt-3">
-          <p className={`font-semibold text-sm ${isLocked ? 'text-subtext' : 'text-text'}`}>{badge.name}</p>
+          <div className="flex items-center justify-center gap-2 mb-1">
+            <p className={`font-semibold text-sm ${isLocked ? 'text-subtext' : 'text-text'}`}>{badge.name}</p>
+            <UIBadge variant="muted" className="text-[10px] px-1 py-0">
+              {badge.category}
+            </UIBadge>
+          </div>
           <p className="text-xs text-subtext mt-1 leading-tight">
             {isLocked ? `How to unlock: ${badge.unlockHint}` : `Earned: ${formatShortDate(badge.earnedAt!)}`}
           </p>
