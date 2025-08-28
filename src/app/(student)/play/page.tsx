@@ -35,7 +35,7 @@ interface GroupedQuests {
     totalCount: number;
 }
 
-const QuestCard: React.FC<{ quest: Quest; onClick: () => void }> = ({ quest, onClick }) => {
+const QuestCard: React.FC<{ quest: Quest; onClick?: () => void }> = ({ quest, onClick }) => {
     const statusColor = {
         'Completed': 'mint',
         'In progress': 'teal',
@@ -43,9 +43,15 @@ const QuestCard: React.FC<{ quest: Quest; onClick: () => void }> = ({ quest, onC
     } as const;
 
     const status = quest.status || 'Not started';
+    
+    // Check if this quest should use popup (only for the 3 specific quests)
+    const usePopup = ["The Juice That Shrunk", "Pancake Price Storm", "Momo Summer Job Dilemma"].includes(quest.title);
 
     return (
-        <Card className="flex flex-col justify-between rounded-lg overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" onClick={onClick}>
+        <Card 
+            className={`flex flex-col justify-between rounded-lg overflow-hidden hover:shadow-lg transition-shadow ${usePopup ? 'cursor-pointer' : ''}`} 
+            onClick={usePopup ? onClick : undefined}
+        >
             <div>
                 <img 
                     src={`https://picsum.photos/seed/${quest.id}/500/240`} 
@@ -94,6 +100,13 @@ const QuestCard: React.FC<{ quest: Quest; onClick: () => void }> = ({ quest, onC
                     </div>
                 </div>
             </div>
+            {!usePopup && (
+                <div className="p-4 pt-0">
+                    <Button variant="primary" className="w-full mt-2">
+                        {status === 'In progress' ? 'Resume' : 'Start'}
+                    </Button>
+                </div>
+            )}
         </Card>
     );
 }
@@ -392,9 +405,16 @@ const StudentPlay: React.FC = () => {
               
               {/* Quest Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 ml-4">
-                {group.quests.map(quest => (
-                  <QuestCard key={quest.id} quest={quest} onClick={() => setSelectedQuest(quest)} />
-                ))}
+                {group.quests.map(quest => {
+                  const usePopup = ["The Juice That Shrunk", "Pancake Price Storm", "Momo Summer Job Dilemma"].includes(quest.title);
+                  return (
+                    <QuestCard 
+                      key={quest.id} 
+                      quest={quest} 
+                      onClick={usePopup ? () => setSelectedQuest(quest) : undefined} 
+                    />
+                  );
+                })}
               </div>
             </div>
           ))
