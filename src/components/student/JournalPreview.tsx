@@ -24,7 +24,7 @@ const JournalPreview = () => {
                                     <p className="text-sm font-medium text-text">{entry.episode}</p>
                                     <UIBadge variant={entry.result === 'Pass' ? 'mint' : 'muted'}>{entry.result}</UIBadge>
                                 </div>
-                                <p className="small">{entry.summary}</p>
+                                <p className="text-xs text-subtext leading-relaxed">{entry.summary}</p>
                            </div>
                            <span className="text-xs text-subtext text-right flex-shrink-0 pt-1">{entry.ts}</span>
                         </div>
