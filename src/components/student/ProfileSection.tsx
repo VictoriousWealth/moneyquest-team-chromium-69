@@ -24,11 +24,27 @@ const ProfileSection = () => {
     return (
         <Card className="p-3 h-full flex flex-col relative overflow-hidden rounded-xl">
             <h3 className="text-base font-semibold mb-2">Profile</h3>
-            <div className="mb-2">
-                <h4 className="text-base font-semibold text-text">Alex Johnson</h4>
-                <p className="text-xs mt-1 text-subtext">
-                    Year 9 &bull; Northwood High &bull; STU-001
-                </p>
+            <div className="flex items-center gap-3 mb-2">
+                <div className="relative group cursor-pointer">
+                    <img 
+                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex" 
+                        alt="Alex Johnson" 
+                        className="w-16 h-16 rounded-full bg-muted object-cover shadow-sm ring-2 ring-surface transition-opacity group-hover:opacity-75" 
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Camera size={16} className="text-white" />
+                        <span className="sr-only">Change image</span>
+                    </div>
+                    <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 bg-black text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                        Change image
+                    </div>
+                </div>
+                <div>
+                    <h4 className="text-base font-semibold text-text">Alex Johnson</h4>
+                    <p className="text-xs mt-1 text-subtext">
+                        Year 9 &bull; Northwood High &bull; STU-001
+                    </p>
+                </div>
             </div>
 
             <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 items-baseline mb-2 text-xs">
