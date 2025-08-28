@@ -135,9 +135,9 @@ const DayDetail = ({ activity }: { activity: DailyActivity }) => {
                         <div className="flex items-center gap-2">
                             <UIBadge variant={attempt.result === 'Pass' ? 'mint' : attempt.result === 'Fail' ? 'muted' : 'teal'}>{attempt.result}</UIBadge>
                             <p className="font-medium text-text truncate">{attempt.episode}</p>
-                            {attempt.result === 'In progress' && <Link to="/student/play" className="ml-auto text-xs font-semibold text-blue-500 hover:underline">Resume</Link>}
+                            {attempt.result === 'In progress' && <Link to="/student/play" className="ml-auto text-xs font-medium text-blue-500 hover:underline">Resume</Link>}
                         </div>
-                        <div className="flex items-center gap-4 pl-2 mt-1.5 small">
+                        <div className="flex items-center gap-4 pl-2 mt-1.5 text-xs">
                             <span><Clock size={12} className="inline mr-1" />{attempt.time}m</span>
                              <div className="flex items-center gap-1.5 truncate">
                                 <BookOpen size={12} />
