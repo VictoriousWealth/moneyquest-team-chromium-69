@@ -69,10 +69,10 @@ export const students = [
   {
     id: "1",
     name: "Emily Chen",
-    avatarUrl: "/api/placeholder/64/64",
+    avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Emily",
     streak: 5,
     lastActivity: "2024-01-20",
-    school: "Greenfield Elementary",
+    school: "Riverside Academy",
     badges: [
       { id: "1", name: "Budget Master", icon: "💰", type: "concept" as const },
       { id: "2", name: "Week Warrior", icon: "🔥", type: "streak" as const },
@@ -82,10 +82,10 @@ export const students = [
   {
     id: "2", 
     name: "Marcus Johnson",
-    avatarUrl: "/api/placeholder/64/64",
+    avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Marcus",
     streak: 12,
     lastActivity: "2024-01-21",
-    school: "Greenfield Elementary",
+    school: "Riverside Academy",
     badges: [
       { id: "3", name: "Saving Star", icon: "⭐", type: "concept" as const },
     ],
@@ -94,10 +94,10 @@ export const students = [
   {
     id: "3", 
     name: "Sarah Kim",
-    avatarUrl: "/api/placeholder/64/64",
+    avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sarah",
     streak: 3,
     lastActivity: "2024-01-19",
-    school: "Oak Valley Middle School",
+    school: "Riverside Academy",
     badges: [
       { id: "4", name: "First Steps", icon: "🎯", type: "concept" as const },
     ],
@@ -106,15 +106,64 @@ export const students = [
   {
     id: "4", 
     name: "Alex Rodriguez",
-    avatarUrl: "/api/placeholder/64/64",
+    avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Alex",
     streak: 8,
     lastActivity: "2024-01-20",
-    school: "Central High School",
+    school: "Riverside Academy",
     badges: [
       { id: "5", name: "Streak Master", icon: "🔥", type: "streak" as const },
       { id: "6", name: "Credit Champion", icon: "💳", type: "concept" as const },
     ],
     masteryProgress: "78%",
+  },
+  {
+    id: "5",
+    name: "Sophie Miller",
+    avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Sophie",
+    streak: 6,
+    lastActivity: "2024-01-21",
+    school: "Riverside Academy",
+    badges: [
+      { id: "7", name: "Quiz Pro", icon: "🧠", type: "concept" as const },
+    ],
+    masteryProgress: "73%",
+  },
+  {
+    id: "6",
+    name: "David Thompson",
+    avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=David",
+    streak: 1,
+    lastActivity: "2024-01-22",
+    school: "Riverside Academy",
+    badges: [
+      { id: "8", name: "First Steps", icon: "🎯", type: "concept" as const },
+    ],
+    masteryProgress: "42%",
+  },
+  {
+    id: "7",
+    name: "Luna Martinez",
+    avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Luna",
+    streak: 9,
+    lastActivity: "2024-01-21",
+    school: "Riverside Academy",
+    badges: [
+      { id: "9", name: "Saving Star", icon: "⭐", type: "concept" as const },
+      { id: "10", name: "Week Warrior", icon: "🔥", type: "streak" as const },
+    ],
+    masteryProgress: "88%",
+  },
+  {
+    id: "8",
+    name: "Ryan Clark",
+    avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Ryan",
+    streak: 4,
+    lastActivity: "2024-01-20",
+    school: "Riverside Academy",
+    badges: [
+      { id: "11", name: "Budget Master", icon: "💰", type: "concept" as const },
+    ],
+    masteryProgress: "65%",
   },
 ];
 
