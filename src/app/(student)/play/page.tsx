@@ -268,42 +268,44 @@ const StudentPlay: React.FC = () => {
     <div>
       
       {/* Search and Filter Controls */}
-      <div className="mb-6 space-y-4">
-        {/* Search Bar */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-          <input
-            type="text"
-            placeholder="Search quests, concepts, zones, or NPCs..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-          />
-        </div>
-        
-        {/* Filters */}
-        <div className="flex flex-wrap gap-4 items-center">
-          {/* Status Filter */}
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-muted-foreground" />
+      <Card className="mb-6 p-4">
+        <div className="space-y-4">
+          {/* Search Bar */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Search quests, concepts, zones, or NPCs..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-3 rounded-xl border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+            />
+          </div>
+          
+          {/* Filters */}
+          <div className="flex flex-wrap gap-3 items-center">
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Filter className="w-4 h-4" />
+              <span>Filter by:</span>
+            </div>
+            
+            {/* Status Filter */}
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-1 border border-border rounded-md bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              className="px-4 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
             >
               <option value="all">All Status</option>
               <option value="Not started">Not Started</option>
               <option value="In progress">In Progress</option>
               <option value="Completed">Completed</option>
             </select>
-          </div>
-          
-          {/* Section Filter */}
-          <div className="flex items-center gap-2">
+            
+            {/* Section Filter */}
             <select
               value={sectionFilter}
               onChange={(e) => setSectionFilter(e.target.value)}
-              className="px-3 py-1 border border-border rounded-md bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+              className="px-4 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
             >
               <option value="all">All Sections</option>
               {groupedQuests.map(group => (
@@ -312,31 +314,33 @@ const StudentPlay: React.FC = () => {
                 </option>
               ))}
             </select>
+            
+            {/* Clear Filters */}
+            {hasActiveFilters && (
+              <Button 
+                variant="outline" 
+                onClick={clearFilters}
+                className="flex items-center gap-2 text-sm rounded-lg"
+              >
+                <X className="w-3 h-3" />
+                Clear Filters
+              </Button>
+            )}
           </div>
           
-          {/* Clear Filters */}
+          {/* Results Summary */}
           {hasActiveFilters && (
-            <Button 
-              variant="outline" 
-              onClick={clearFilters}
-              className="flex items-center gap-1 text-sm"
-            >
-              <X className="w-3 h-3" />
-              Clear Filters
-            </Button>
+            <div className="flex items-center gap-2 px-3 py-2 bg-muted/50 rounded-lg">
+              <div className="text-sm text-muted-foreground">
+                Showing <span className="font-medium text-foreground">{filteredGroupedQuests.reduce((acc, group) => acc + group.quests.length, 0)}</span> quests
+                {filteredGroupedQuests.length !== groupedQuests.length && 
+                  <span> across <span className="font-medium text-foreground">{filteredGroupedQuests.length}</span> sections</span>
+                }
+              </div>
+            </div>
           )}
         </div>
-        
-        {/* Results Summary */}
-        {hasActiveFilters && (
-          <div className="text-sm text-muted-foreground">
-            Showing {filteredGroupedQuests.reduce((acc, group) => acc + group.quests.length, 0)} quests
-            {filteredGroupedQuests.length !== groupedQuests.length && 
-              ` across ${filteredGroupedQuests.length} sections`
-            }
-          </div>
-        )}
-      </div>
+      </Card>
       
       {/* Quest Sections */}
       <div className="space-y-8">
