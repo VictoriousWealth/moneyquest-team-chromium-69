@@ -76,7 +76,7 @@ const generateMonthGrid = (date: Date) => {
 
 // --- RIGHT PANEL COMPONENTS ---
 
-const MonthSummary = ({ activity, currentDate }: { activity: any[]; currentDate: Date }) => {
+const MonthSummary = ({ activity, currentDate, streaks }: { activity: any[]; currentDate: Date; streaks: any[] }) => {
     const { badges } = useDatabaseAchievements();
     // Filter badges to the selected month
     const month = currentDate.getMonth();
@@ -86,46 +86,12 @@ const MonthSummary = ({ activity, currentDate }: { activity: any[]; currentDate:
       .sort((a, b) => new Date(b.earnedAt!).getTime() - new Date(a.earnedAt!).getTime())
       .slice(0, 3);
 
-    // Compute streaks from the monthly calendar activity - only count days with attempts > 0
-    const activeDaysInMonth = activity.filter((d: any) => d.attempts > 0);
-    
-    // If no active days in this month, streaks should be 0
-    let mainStreak;
-    if (activeDaysInMonth.length === 0) {
-      mainStreak = { current_count: 0, best_count: 0 };
-    } else {
-      // Calculate streaks from consecutive active days
-      const dayMs = 24 * 60 * 60 * 1000;
-      const normalize = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
-      
-      const activeDates = activeDaysInMonth
-        .map((d: any) => normalize(new Date(d.date + 'T00:00:00')))
-        .sort((a: Date, b: Date) => a.getTime() - b.getTime());
-
-      // Remove duplicates
-      const uniqueDates: Date[] = [];
-      for (const d of activeDates) {
-        if (!uniqueDates.length || uniqueDates[uniqueDates.length - 1].getTime() !== d.getTime()) {
-          uniqueDates.push(d);
-        }
-      }
-
-      let best = 0;
-      let current = 0;
-      let prev: Date | null = null;
-      
-      for (const d of uniqueDates) {
-        if (prev && d.getTime() - prev.getTime() === dayMs) {
-          current += 1;
-        } else {
-          current = 1;
-        }
-        best = Math.max(best, current);
-        prev = d;
-      }
-      
-      mainStreak = { current_count: current, best_count: best };
-    }
+    // Use actual streak data from Supabase database instead of calculating locally
+    const dailyStreak = streaks.find(s => s.streak_type === 'daily_activity');
+    const mainStreak = {
+      current_count: dailyStreak?.current_count || 0,
+      best_count: dailyStreak?.best_count || 0
+    };
 
     return (
         <div className="flex flex-col h-full py-3">
@@ -223,7 +189,7 @@ const DayDetail = ({ activity }: { activity: DailyActivity }) => {
 // --- MAIN COMPONENT ---
 
 const ProgressSummary = () => {
-    const { dailyActivities } = useCompleteStudentData();
+    const { dailyActivities, streaks } = useCompleteStudentData();
     const [currentDate, setCurrentDate] = useState(new Date(2025, 7, 1)); // August 2025
     const [selectedDay, setSelectedDay] = useState<string | null>(null);
     const [hoveredDay, setHoveredDay] = useState<DailyActivity | null>(null);
@@ -360,7 +326,7 @@ const ProgressSummary = () => {
                 <div className="flex-1 lg:border-l lg:pl-6 xl:pl-8 border-muted lg:border-t-0 border-t pt-6 lg:pt-0">
                     {selectedDayActivity && selectedDayActivity.attempts > 0
                         ? <DayDetail activity={selectedDayActivity} />
-                        : <MonthSummary activity={activityForMonth} currentDate={currentDate} />
+                        : <MonthSummary activity={activityForMonth} currentDate={currentDate} streaks={streaks} />
                     }
                 </div>
             </div>
