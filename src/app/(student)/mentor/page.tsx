@@ -304,7 +304,7 @@ const StudentMentor: React.FC = () => {
         </div>
 
         {/* Quick Action Chips */}
-        {quickChips.length > 0 && !isLoading && (
+        {!isLoading && (
           <div className="px-4 py-2 border-t border-muted">
             <QuickActionChips 
               chips={quickChips} 
