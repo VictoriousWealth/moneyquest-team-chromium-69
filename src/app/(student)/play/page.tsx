@@ -15,7 +15,7 @@ const EpisodeCard: React.FC<{ episode: typeof episodes[0] }> = ({ episode }) => 
     return (
         <Card className="flex flex-col justify-between">
             <div>
-                <img src={`https://picsum.photos/seed/${episode.id}/400/200`} alt={episode.title} className="w-full h-32 object-cover rounded-t-lg" />
+                <img src={`https://picsum.photos/seed/${episode.id}/400/200`} alt={episode.title} className="w-full h-32 object-cover" />
                 <div className="p-4">
                     <div className="flex justify-between items-start mb-2">
                         <h3 className="h3 mb-2">{episode.title}</h3>
