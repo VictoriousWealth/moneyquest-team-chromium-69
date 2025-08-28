@@ -268,95 +268,77 @@ const StudentPlay: React.FC = () => {
     <div>
       
       {/* Search and Filter Controls */}
-      <Card className="mb-6 p-4">
-        <div className="space-y-4">
-          {/* Search Bar */}
-        <div className="relative">
+      <div className="mb-6 space-y-4">
+        {/* Search Bar */}
+        <div className="relative max-w-md">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <input
             type="text"
-            placeholder="Search quests, concepts, zones, or NPCs..."
+            placeholder="Search quests..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 rounded-xl bg-background text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors border border-border/30"
+            className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all border-0"
           />
         </div>
-          
-          {/* Filters */}
-        <div className="flex flex-wrap items-center gap-3 p-3 bg-muted/30 rounded-xl border border-border/30">
-          <div className="flex items-center gap-2 px-2 py-1 bg-background/60 rounded-lg text-sm text-foreground/80 font-medium border border-border/40">
-            <Filter className="w-4 h-4" />
-            <span>Filter by:</span>
-          </div>
-          
-          {/* Status Filter */}
-          <div className="relative">
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 pr-8 bg-background/90 hover:bg-background text-foreground text-sm shadow-sm border border-border/40 hover:border-border focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all appearance-none cursor-pointer"
-              style={{ borderRadius: '0.75rem' }}
-            >
-              <option value="all" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>All Status</option>
-              <option value="Not started" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>Not Started</option>
-              <option value="In progress" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>In Progress</option>
-              <option value="Completed" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>Completed</option>
-            </select>
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-              <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
+        
+        {/* Status Filter Tabs */}
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex bg-muted/30 rounded-lg p-1">
+            {['all', 'Not started', 'In progress', 'Completed'].map((status) => (
+              <button
+                key={status}
+                onClick={() => setStatusFilter(status)}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                  statusFilter === status
+                    ? 'bg-background text-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground'
+                }`}
+              >
+                {status === 'all' ? 'All' : status}
+              </button>
+            ))}
           </div>
           
           {/* Section Filter */}
-          <div className="relative">
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Section:</span>
             <select
               value={sectionFilter}
               onChange={(e) => setSectionFilter(e.target.value)}
-              className="px-4 py-2 pr-8 bg-background/90 hover:bg-background text-foreground text-sm shadow-sm border border-border/40 hover:border-border focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all appearance-none cursor-pointer"
-              style={{ borderRadius: '0.75rem' }}
+              className="px-3 py-2 rounded-lg bg-muted/30 text-foreground text-sm focus:outline-none focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all border-0 cursor-pointer"
             >
-              <option value="all" style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>All Sections</option>
+              <option value="all">All Sections</option>
               {groupedQuests.map(group => (
-                <option key={group.section.id} value={group.section.id.toString()} style={{ backgroundColor: 'var(--background)', color: 'var(--foreground)' }}>
+                <option key={group.section.id} value={group.section.id.toString()}>
                   {group.section.curriculum_order}. {group.section.title}
                 </option>
               ))}
             </select>
-            <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
-              <svg className="w-4 h-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </div>
           </div>
           
           {/* Clear Filters */}
           {hasActiveFilters && (
             <Button 
-              variant="muted" 
+              variant="ghost" 
               onClick={clearFilters}
-              className="flex items-center gap-2 text-sm shadow-sm !rounded-xl"
+              className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground !rounded-lg"
             >
               <X className="w-3 h-3" />
-              Clear Filters
+              Clear
             </Button>
           )}
         </div>
-          
-          {/* Results Summary */}
-          {hasActiveFilters && (
-            <div className="flex items-center gap-2 px-3 py-2 bg-muted/50 rounded-lg">
-              <div className="text-sm text-muted-foreground">
-                Showing <span className="font-medium text-foreground">{filteredGroupedQuests.reduce((acc, group) => acc + group.quests.length, 0)}</span> quests
-                {filteredGroupedQuests.length !== groupedQuests.length && 
-                  <span> across <span className="font-medium text-foreground">{filteredGroupedQuests.length}</span> sections</span>
-                }
-              </div>
-            </div>
-          )}
-        </div>
-      </Card>
+        
+        {/* Results Summary */}
+        {hasActiveFilters && (
+          <div className="text-sm text-muted-foreground">
+            Showing <span className="font-medium text-foreground">{filteredGroupedQuests.reduce((acc, group) => acc + group.quests.length, 0)}</span> quests
+            {filteredGroupedQuests.length !== groupedQuests.length && 
+              <span> across <span className="font-medium text-foreground">{filteredGroupedQuests.length}</span> sections</span>
+            }
+          </div>
+        )}
+      </div>
       
       {/* Quest Sections */}
       <div className="space-y-8">
