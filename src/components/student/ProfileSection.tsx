@@ -32,18 +32,9 @@ const ProfileSection = () => {
         { seed: 'Noah', name: 'Noah', text: 'started "Real Estate Basics"' },
     ];
     const ROW_H = 25; // px, must match each row height
-    const [idx, setIdx] = useState(0);
-    const [instant, setInstant] = useState(false);
     
-    // Create duplicated array for seamless looping
-    const duplicatedActivities = [...activities, ...activities];
-    
-    useEffect(() => {
-        const id = setInterval(() => {
-            setIdx((i) => i + 1);
-        }, 2000);
-        return () => clearInterval(id);
-    }, []);
+    // Create tripled array for seamless infinite loop
+    const infiniteActivities = [...activities, ...activities, ...activities];
     return (
         <Card className="p-3 h-full flex flex-col relative overflow-hidden rounded-xl">
             <h3 className="text-base font-semibold mb-2">Profile</h3>
@@ -126,27 +117,14 @@ const ProfileSection = () => {
                     </div>
                 </div>
 
-                {/* Activity Ticker - Flex container ensures title and ticker are separate */}
+                {/* Activity Ticker - Pure CSS infinite animation */}
                 <div className="flex-grow flex flex-col border-t border-muted pt-2 min-h-0">
                     <h4 className="font-medium text-xs text-subtext mb-1 flex-shrink-0">Class Activity</h4>
                     <div className="relative overflow-hidden h-[25px]" aria-live="off">
                         <div
-                          className="will-change-transform"
-                          onTransitionEnd={() => {
-                            if (idx >= activities.length) {
-                              setInstant(true);
-                              setIdx(0);
-                              requestAnimationFrame(() => {
-                                requestAnimationFrame(() => setInstant(false));
-                              });
-                            }
-                          }}
-                          style={{ 
-                            transform: `translateY(-${idx * ROW_H}px)`,
-                            transition: instant ? 'none' : 'transform 600ms ease-in-out'
-                          }}
+                          className="animate-[activity-ticker_16s_linear_infinite] will-change-transform"
                         >
-                          {duplicatedActivities.map((a, index) => (
+                          {infiniteActivities.map((a, index) => (
                             <div key={`${a.seed}-${index}`} className="flex w-full items-center gap-2 px-1 h-[25px] text-xs">
                               <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${a.seed}`} alt={a.name} className="w-5 h-5 rounded-full flex-shrink-0" />
                               <p className="text-subtext text-left truncate">

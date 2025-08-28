@@ -65,31 +65,10 @@ h3 { font-size: var(--h3); font-weight: 600; }
 .h3 { font-size: var(--h3); font-weight: 600; }
 small { font-size: var(--small); }
 
-/* Class Activity Ticker Animation */
+/* Class Activity Ticker Animation - Seamless infinite loop */
 @keyframes activity-ticker {
   0% {
     transform: translateY(0);
-  }
-  12.5% {
-    transform: translateY(-25px);
-  }
-  25% {
-    transform: translateY(-50px);
-  }
-  37.5% {
-    transform: translateY(-75px);
-  }
-  50% {
-    transform: translateY(-100px);
-  }
-  62.5% {
-    transform: translateY(-125px);
-  }
-  75% {
-    transform: translateY(-150px);
-  }
-  87.5% {
-    transform: translateY(-175px);
   }
   100% {
     transform: translateY(-200px);
