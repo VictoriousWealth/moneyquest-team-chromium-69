@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Header from '../../components/shared/Header';
 import NavTabs from '../../components/shared/NavTabs';
 import { Role } from '../../lib/roles';
@@ -13,11 +13,21 @@ const studentNavItems = [
 ];
 
 const StudentLayout: React.FC = () => {
+  const location = useLocation();
+  const isDashboard = location.pathname === '/student/dashboard';
+  const isMentor = location.pathname === '/student/mentor';
+  
   return (
-    <div className="flex flex-col h-screen overflow-hidden">
+    <div className={`flex flex-col ${isDashboard || isMentor ? 'h-dvh' : 'min-h-dvh'} overflow-hidden`}>
       <Header role={Role.STUDENT} />
       <NavTabs tabs={studentNavItems} />
-      <main className="mx-auto w-full max-w-[1400px] px-4 py-4 md:px-8 flex-1 min-h-0 overflow-y-auto">
+      <main className={`mx-auto w-full max-w-[1400px] px-4 md:px-8 ${
+        isDashboard 
+          ? 'py-4 flex-1 min-h-0 overflow-hidden' 
+          : isMentor 
+            ? 'flex-1 min-h-0 overflow-hidden'
+            : 'py-4 overflow-y-auto'
+      }`}>
         <Outlet />
       </main>
     </div>
