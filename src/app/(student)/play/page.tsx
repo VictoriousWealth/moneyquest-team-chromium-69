@@ -405,8 +405,7 @@ const StudentPlay: React.FC = () => {
               {/* Quest Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 ml-4">
                 {group.quests.map(quest => {
-                  const usePopup = ["The Juice That Shrunk", "Pancake Price Storm", "Momo Summer Job Dilemma", "Pippa's Business Challenge
-"].includes(quest.title);
+                  const usePopup = ["The Juice That Shrunk", "Pancake Price Storm", "Momo Summer Job Dilemma", "Pippa\'s Business Challenge"].includes(quest.title);
                   return (
                     <QuestCard 
                       key={quest.id} 
