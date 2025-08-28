@@ -51,6 +51,11 @@ const ProtectedRoute: React.FC<{ allowedRole: Role }> = ({ allowedRole }) => {
     );
   }
 
+  // Allow teachers to access without authentication
+  if (allowedRole === Role.TEACHER) {
+    return <Outlet />;
+  }
+
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
