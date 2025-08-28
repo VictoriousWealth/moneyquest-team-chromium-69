@@ -75,7 +75,7 @@ const ProfileSection = () => {
             {/* Consolidated Stats & Activity Block */}
             <div className="flex-grow flex flex-col pt-2 mt-2 border-t border-muted min-h-0">
                 {/* Stats */}
-                <div className="space-y-4">
+                <div className="space-y-4 flex-shrink-0">
                     <div className="grid grid-cols-3 gap-2 text-center">
                         <div>
                             <div className="flex items-center justify-center gap-1 mb-1">
@@ -117,10 +117,10 @@ const ProfileSection = () => {
                     </div>
                 </div>
 
-                {/* Activity Ticker - Continuous rolling animation */}
+                {/* Activity Ticker - Continuous rolling animation - Takes remaining space */}
                 <div className="flex-grow flex flex-col border-t border-muted pt-4 min-h-0">
                     <h4 className="font-medium text-xs text-subtext mb-3 flex-shrink-0">Class Activity</h4>
-                    <div className="relative overflow-hidden h-[50px]" aria-live="off">
+                    <div className="relative overflow-hidden flex-grow" aria-live="off">
                         <div className="activity-ticker-scroll">
                           {infiniteActivities.map((a, index) => (
                             <div key={`${a.seed}-${index}`} className="flex w-full items-center gap-2 px-1 h-[25px] text-xs">
