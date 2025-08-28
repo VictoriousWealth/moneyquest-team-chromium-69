@@ -192,13 +192,13 @@ const TeacherStudents: React.FC = () => {
                           className="w-8 h-8 rounded-full ring-2 ring-surface shadow-sm" 
                         />
                         <div>
-                          <div className="font-medium text-text">{student.name}</div>
+                          <div className="text-sm font-medium text-text">{student.name}</div>
                           <div className="text-xs text-subtext">Year 9 Set 1</div>
                         </div>
                       </div>
                     </td>
                     <td className="p-4">
-                      <span className="text-sm text-text font-mono">RA{String(index + 91).padStart(3, '0')}</span>
+                      <span className="text-xs text-text font-mono">RA{String(index + 91).padStart(3, '0')}</span>
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-3">
@@ -220,23 +220,23 @@ const TeacherStudents: React.FC = () => {
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-1">
-                        <Award size={14} className="text-blue-500" />
-                        <span className="font-medium text-sm">{student.badges.length}</span>
+                        <Award size={12} className="text-blue-500" />
+                        <span className="text-xs font-medium">{student.badges.length}</span>
                       </div>
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-1">
-                        <Calendar size={14} className="text-mint-400" />
-                        <span className="font-medium text-sm">{student.streak} days</span>
+                        <Calendar size={12} className="text-mint-400" />
+                        <span className="text-xs font-medium">{student.streak} days</span>
                       </div>
                     </td>
                     <td className="p-4 text-right">
                       <Link 
                         to={`/teacher/students/${student.id}`}
-                        className="inline-flex items-center gap-1 text-blue-500 hover:text-blue-600 transition-colors text-sm font-medium"
+                        className="inline-flex items-center gap-1 text-blue-500 hover:text-blue-600 transition-colors text-xs font-medium"
                       >
                         View
-                        <ChevronRight size={14} />
+                        <ChevronRight size={12} />
                       </Link>
                     </td>
                   </tr>
