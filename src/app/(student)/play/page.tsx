@@ -283,50 +283,50 @@ const StudentPlay: React.FC = () => {
           </div>
           
           {/* Filters */}
-          <div className="flex flex-wrap gap-3 items-center">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Filter className="w-4 h-4" />
-              <span>Filter by:</span>
-            </div>
-            
-            {/* Status Filter */}
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-4 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            >
-              <option value="all">All Status</option>
-              <option value="Not started">Not Started</option>
-              <option value="In progress">In Progress</option>
-              <option value="Completed">Completed</option>
-            </select>
-            
-            {/* Section Filter */}
-            <select
-              value={sectionFilter}
-              onChange={(e) => setSectionFilter(e.target.value)}
-              className="px-4 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
-            >
-              <option value="all">All Sections</option>
-              {groupedQuests.map(group => (
-                <option key={group.section.id} value={group.section.id.toString()}>
-                  {group.section.curriculum_order}. {group.section.title}
-                </option>
-              ))}
-            </select>
-            
-            {/* Clear Filters */}
-            {hasActiveFilters && (
-              <Button 
-                variant="outline" 
-                onClick={clearFilters}
-                className="flex items-center gap-2 text-sm rounded-lg"
-              >
-                <X className="w-3 h-3" />
-                Clear Filters
-              </Button>
-            )}
+        <div className="flex flex-wrap items-center gap-3 p-3 bg-muted/50 rounded-xl shadow-sm">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Filter className="w-4 h-4" />
+            <span>Filter by:</span>
           </div>
+          
+          {/* Status Filter */}
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="px-4 py-2 rounded-lg bg-card text-foreground text-sm shadow-sm border border-transparent focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+          >
+            <option value="all">All Status</option>
+            <option value="Not started">Not Started</option>
+            <option value="In progress">In Progress</option>
+            <option value="Completed">Completed</option>
+          </select>
+          
+          {/* Section Filter */}
+          <select
+            value={sectionFilter}
+            onChange={(e) => setSectionFilter(e.target.value)}
+            className="px-4 py-2 rounded-lg bg-card text-foreground text-sm shadow-sm border border-transparent focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+          >
+            <option value="all">All Sections</option>
+            {groupedQuests.map(group => (
+              <option key={group.section.id} value={group.section.id.toString()}>
+                {group.section.curriculum_order}. {group.section.title}
+              </option>
+            ))}
+          </select>
+          
+          {/* Clear Filters */}
+          {hasActiveFilters && (
+            <Button 
+              variant="muted" 
+              onClick={clearFilters}
+              className="flex items-center gap-2 text-sm rounded-lg shadow-sm"
+            >
+              <X className="w-3 h-3" />
+              Clear Filters
+            </Button>
+          )}
+        </div>
           
           {/* Results Summary */}
           {hasActiveFilters && (
