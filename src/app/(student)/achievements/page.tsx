@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { allBadges, allStreaks } from '../../../lib/demoData';
 import { useAchievements } from '../../../hooks/useAchievements';
+import { useCompleteStudentData } from '../../../hooks/useCompleteStudentData';
 import type { Badge as BadgeType, Streak as StreakType, BadgeCategory, Tier } from '../../../types';
 import Card from '../../../components/ui/Card';
 import Button from '../../../components/ui/Button';
@@ -191,6 +192,7 @@ const StreakCard: React.FC<{ streak: StreakType }> = ({ streak }) => {
 
 const StudentAchievements: React.FC = () => {
   const { achievements: backendAchievements } = useAchievements();
+  const { achievements: completeAchievements } = useCompleteStudentData();
   const [badgeFilter, setBadgeFilter] = usePersistentState<'all' | 'earned' | 'locked'>('mq-achievements-filter', 'all');
   
   const badgeCategories: BadgeCategory[] = ['Milestone', 'Skill', 'Habit', 'Fun', 'Quest'];
@@ -199,38 +201,37 @@ const StudentAchievements: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = usePersistentState('mq-achievements-sort', 'newest');
 
-  // Merge frontend badges with backend achievements
+  // Create a map of earned achievements from complete data
+  const earnedAchievementsMap = useMemo(() => {
+    const map = new Map();
+    completeAchievements.forEach(achievement => {
+      map.set(achievement.achievement_definition_id || achievement.id, {
+        earned_at: achievement.earned_at,
+        achievement_data: achievement.achievement_data
+      });
+    });
+    return map;
+  }, [completeAchievements]);
+
+  // Merge frontend badges with database state
   const mergedBadges = useMemo(() => {
-    const frontendBadges = [...allBadges];
-    const backendAchievementIds = backendAchievements.map(ba => ba.id);
-    
-    // Remove frontend badges that exist in backend (to avoid duplicates)
-    const filteredFrontendBadges = frontendBadges.filter(fb => !backendAchievementIds.includes(fb.id));
-    
-    // Convert backend achievements to frontend badge format
-    const backendBadgesConverted = backendAchievements.map(backendAch => {
-      const categoryMap: { [key: string]: BadgeCategory } = {
-        'milestone': 'Milestone',
-        'skill': 'Skill', 
-        'habit': 'Habit',
-        'fun': 'Fun',
-        'quest': 'Quest'
-      };
-      
+    return allBadges.map(badge => {
+      const earnedData = earnedAchievementsMap.get(badge.id);
+      if (earnedData) {
+        return {
+          ...badge,
+          state: 'earned' as const,
+          earnedAt: earnedData.earned_at,
+          contextStat: earnedData.achievement_data?.contextStat || badge.contextStat
+        };
+      }
       return {
-        id: backendAch.id,
-        name: backendAch.title,
-        category: categoryMap[backendAch.achievement_type] || 'Skill',
-        state: backendAch.state,
-        earnedAt: backendAch.earned_at || undefined,
-        unlockHint: backendAch.description,
-        artKey: backendAch.achievement_type
+        ...badge,
+        state: 'locked' as const,
+        earnedAt: undefined
       };
     });
-    
-    // Combine filtered frontend badges with backend badges
-    return [...filteredFrontendBadges, ...backendBadgesConverted];
-  }, [backendAchievements]);
+  }, [earnedAchievementsMap]);
 
   const handleTagToggle = (tag: BadgeCategory) => {
     setSelectedTags(prev => 

@@ -41,22 +41,54 @@ export const useDataSync = () => {
           });
       }
 
-      // 3. Sync earned achievements/badges
-      const earnedBadges = allBadges.filter(badge => badge.state === 'earned');
-      for (const badge of earnedBadges) {
+      // 3. Sync earned achievements/badges - specifically August 2025 badges
+      const augustBadges = [
+        {
+          id: 'risk_ranger',
+          name: 'Risk Ranger',
+          earnedAt: '2025-08-02T14:30:00Z',
+          contextStat: 'Diversified portfolio saved 15% risk'
+        },
+        {
+          id: 'value_detective',
+          name: 'Value Detective', 
+          earnedAt: '2025-08-05T16:45:00Z',
+          contextStat: 'You saved £14 by comparing!'
+        },
+        {
+          id: 'goal_setter',
+          name: 'Goal Setter',
+          earnedAt: '2025-08-08T11:20:00Z',
+          contextStat: 'Weekly goal achieved!'
+        },
+        {
+          id: 'first_pound',
+          name: 'First Pound',
+          earnedAt: '2025-07-15T10:00:00Z',
+          contextStat: 'Your first earned pound!'
+        },
+        {
+          id: 'lemonade_tycoon',
+          name: 'Lemonade Tycoon',
+          earnedAt: '2025-07-25T13:30:00Z',
+          contextStat: 'Profit: £67.50'
+        }
+      ];
+
+      for (const badge of augustBadges) {
         await supabase
           .from('achievements')
           .upsert({
             user_id: user.id,
             achievement_definition_id: badge.id,
             title: badge.name,
-            description: badge.unlockHint,
-            achievement_type: badge.category.toLowerCase(),
-            reward_coins: badge.category === 'Milestone' ? 50 : 25,
-            earned_at: badge.earnedAt || new Date().toISOString(),
+            description: allBadges.find(b => b.id === badge.id)?.unlockHint || 'Achievement unlocked!',
+            achievement_type: allBadges.find(b => b.id === badge.id)?.category.toLowerCase() || 'skill',
+            reward_coins: 25,
+            earned_at: badge.earnedAt,
             achievement_data: {
-              contextStat: (badge as any).contextStat || null,
-              category: badge.category
+              contextStat: badge.contextStat,
+              category: allBadges.find(b => b.id === badge.id)?.category || 'Skill'
             }
           });
       }

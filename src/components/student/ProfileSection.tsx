@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import Card from '../ui/Card';
 import { demoStudent, demoPrefs, demoClassActivity, dailyActivity } from '../../lib/demoData';
 import { Camera, Trophy, Clock, Calendar, PiggyBank, Award } from 'lucide-react';
+import { useCompleteStudentData } from '../../hooks/useCompleteStudentData';
+import Badge from '../ui/Badge';
 
 // Util for GBP currency formatting
 const formatGBP = (amount: number) => {
@@ -13,13 +15,41 @@ const formatGBP = (amount: number) => {
 };
 
 const ProfileSection = () => {
+    const { achievements, progress, gameState, loading } = useCompleteStudentData();
+    
     const stats = useMemo(() => {
+        if (loading || !progress) {
+            return {
+                episodesCompleted: dailyActivity.reduce((sum, day) => sum + day.pass, 0),
+                timeSpent: dailyActivity.reduce((sum, day) => sum + day.time, 0),
+                activeDays: dailyActivity.filter(day => day.attempts > 0).length
+            };
+        }
         return {
-            episodesCompleted: dailyActivity.reduce((sum, day) => sum + day.pass, 0),
-            timeSpent: dailyActivity.reduce((sum, day) => sum + day.time, 0),
-            activeDays: dailyActivity.filter(day => day.attempts > 0).length
+            episodesCompleted: progress.episodes_passed || 0,
+            timeSpent: progress.time_spent_minutes || 0,
+            activeDays: progress.active_days || 0
         };
-    }, []);
+    }, [progress, loading]);
+
+    // Get achievements earned this month
+    const thisMonthAchievements = useMemo(() => {
+        const currentDate = new Date();
+        const currentMonth = currentDate.getMonth();
+        const currentYear = currentDate.getFullYear();
+        
+        return achievements.filter(achievement => {
+            if (!achievement.earned_at) return false;
+            const earnedDate = new Date(achievement.earned_at);
+            return earnedDate.getMonth() === currentMonth && earnedDate.getFullYear() === currentYear;
+        }).slice(0, 3); // Show up to 3 recent badges
+    }, [achievements]);
+
+    const formatTimeSpent = (minutes: number) => {
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        return `${hours}h ${mins}m`;
+    };
 
     const activities = [
         { seed: 'Maria', name: 'Maria', text: 'is learning "The Stock Market Maze"' },
@@ -76,46 +106,71 @@ const ProfileSection = () => {
             <div className="flex-grow flex flex-col pt-2 mt-4 border-t border-muted min-h-0">
                 {/* Stats */}
                 <div className="space-y-4 flex-shrink-0">
-                    <div className="grid grid-cols-3 gap-2 text-center">
-                        <div>
-                            <div className="flex items-center justify-center gap-1 mb-1">
-                                <Trophy size={16} className="text-blue-500" />
-                                <p className="font-semibold text-sm text-text">20</p>
-                            </div>
-                            <p className="text-xs text-subtext">Episodes passed</p>
-                        </div>
-                        <div>
-                            <div className="flex items-center justify-center gap-1 mb-1">
-                                <Clock size={16} className="text-blue-500" />
-                                <p className="font-semibold text-sm text-text">8h 33m</p>
-                            </div>
-                            <p className="text-xs text-subtext">Time spent</p>
-                        </div>
-                        <div>
-                            <div className="flex items-center justify-center gap-1 mb-1">
-                                <Calendar size={16} className="text-blue-500" />
-                                <p className="font-semibold text-sm text-text">29</p>
-                            </div>
-                            <p className="text-xs text-subtext">Active days</p>
-                        </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-2 text-center">
-                        <div>
-                            <div className="flex items-center justify-center gap-1 mb-1">
-                                <PiggyBank size={16} className="text-mint-400" />
-                                <p className="font-semibold text-sm text-text">£125.50</p>
-                            </div>
-                            <p className="text-xs text-subtext">Money saved</p>
-                        </div>
-                        <div>
-                            <div className="flex items-center justify-center gap-1 mb-1">
-                                <Award size={16} className="text-blue-500" />
-                                <p className="font-semibold text-sm text-text">#12</p>
-                            </div>
-                            <p className="text-xs text-subtext">Class rank</p>
-                        </div>
-                    </div>
-                </div>
+                     <div className="grid grid-cols-3 gap-2 text-center">
+                         <div>
+                             <div className="flex items-center justify-center gap-1 mb-1">
+                                 <Trophy size={16} className="text-blue-500" />
+                                 <p className="font-semibold text-sm text-text">{stats.episodesCompleted}</p>
+                             </div>
+                             <p className="text-xs text-subtext">Episodes passed</p>
+                         </div>
+                         <div>
+                             <div className="flex items-center justify-center gap-1 mb-1">
+                                 <Clock size={16} className="text-blue-500" />
+                                 <p className="font-semibold text-sm text-text">{formatTimeSpent(stats.timeSpent)}</p>
+                             </div>
+                             <p className="text-xs text-subtext">Time spent</p>
+                         </div>
+                         <div>
+                             <div className="flex items-center justify-center gap-1 mb-1">
+                                 <Calendar size={16} className="text-blue-500" />
+                                 <p className="font-semibold text-sm text-text">{stats.activeDays}</p>
+                             </div>
+                             <p className="text-xs text-subtext">Active days</p>
+                         </div>
+                     </div>
+                     <div className="grid grid-cols-2 gap-2 text-center">
+                         <div>
+                             <div className="flex items-center justify-center gap-1 mb-1">
+                                 <PiggyBank size={16} className="text-mint-400" />
+                                 <p className="font-semibold text-sm text-text">{formatGBP(progress?.money_saved || 125.50)}</p>
+                             </div>
+                             <p className="text-xs text-subtext">Money saved</p>
+                         </div>
+                         <div>
+                             <div className="flex items-center justify-center gap-1 mb-1">
+                                 <Award size={16} className="text-blue-500" />
+                                 <p className="font-semibold text-sm text-text">#{progress?.class_rank || 12}</p>
+                             </div>
+                             <p className="text-xs text-subtext">Class rank</p>
+                         </div>
+                     </div>
+                 </div>
+
+                 {/* Achievements Earned This Month */}
+                 {thisMonthAchievements.length > 0 && (
+                     <div className="mt-4 pt-4 border-t border-muted flex-shrink-0">
+                         <div className="flex items-center justify-between mb-3">
+                             <h4 className="font-medium text-xs text-subtext">Earned in August</h4>
+                             <Link to="/student/achievements" className="text-xs text-blue-500 hover:underline">
+                                 View all
+                             </Link>
+                         </div>
+                         <div className="space-y-2">
+                             {thisMonthAchievements.map((achievement) => (
+                                 <div key={achievement.id} className="flex items-center gap-2">
+                                     <Trophy size={12} className="text-mint-400 flex-shrink-0" />
+                                     <div className="flex-1 min-w-0">
+                                         <p className="text-xs font-medium text-text truncate">{achievement.title}</p>
+                                         <p className="text-xs text-subtext">
+                                             {new Date(achievement.earned_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                         </p>
+                                     </div>
+                                 </div>
+                             ))}
+                         </div>
+                     </div>
+                 )}
 
                 {/* Activity Ticker - Continuous rolling animation */}
                 <div className="mt-3 flex-grow flex flex-col border-t border-muted pt-4 min-h-0">
