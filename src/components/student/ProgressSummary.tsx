@@ -240,7 +240,13 @@ const ProgressSummary = () => {
         details: [] // Could be expanded to show more details
     }));
 
-    const activityMap = useMemo(() => new Map(formattedActivities.map(d => [d.date, d])), [formattedActivities]);
+    console.log('All formattedActivities:', formattedActivities);
+    
+    const activityMap = useMemo(() => {
+        const map = new Map(formattedActivities.map(d => [d.date, d]));
+        console.log('ActivityMap for current month:', currentDate.toLocaleDateString(), Array.from(map.entries()));
+        return map;
+    }, [formattedActivities]);
     const calendarGrid = useMemo(() => generateMonthGrid(currentDate), [currentDate]);
     const monthName = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
 
@@ -322,6 +328,11 @@ const ProgressSummary = () => {
                                 const activity = activityMap.get(dateStr);
                                 const isSelected = selectedDay === dateStr;
                                 const attempts = activity?.attempts || 0;
+                                
+                                // Debug log for problematic dates
+                                if (day.getDate() === 30 && currentDate.getMonth() === 5) { // June 30
+                                    console.log(`June 30 debug - dateStr: ${dateStr}, activity:`, activity, 'attempts:', attempts);
+                                }
 
                                 return (
                                     <button
