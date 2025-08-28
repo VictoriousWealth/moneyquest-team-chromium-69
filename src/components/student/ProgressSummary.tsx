@@ -40,7 +40,7 @@ const Tooltip = ({ activity, position }: { activity: DailyActivity; position: { 
 };
 
 const getIntensityClass = (attempts: number) => {
-    if (attempts === 0) return 'bg-[#E8F3FF] ring-1 ring-inset ring-slate-200/75 shadow-inner';
+    if (attempts === 0) return 'bg-surface ring-1 ring-inset ring-ring shadow-inner';
     if (attempts <= 1) return 'bg-[#d6e9fb]';
     if (attempts <= 3) return 'bg-[#a9d2f5]';
     if (attempts <= 5) return 'bg-[#6bb5ea]';
@@ -224,7 +224,7 @@ const ProgressSummary = () => {
                         {hoveredDay && <Tooltip activity={hoveredDay} position={tooltipPos} />}
                         <div className="grid grid-cols-7 gap-1.5 flex-grow" style={{ gridTemplateRows: `auto repeat(${numDateRows}, 1fr)` }}>
                              {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => 
-                                <div key={day} className="flex items-center justify-center text-center small h-8">{day}</div>
+                                <div key={day} className="flex items-center justify-center text-center text-xs h-8">{day}</div>
                              )}
                             {calendarGrid.map((day, index) => {
                                 if (!day) return <div key={`empty-${index}`} />;
@@ -269,11 +269,11 @@ const ProgressSummary = () => {
                             <span>Activity level (attempts/day)</span>
                             <div className="flex items-center gap-1.5">
                                 <span>Low</span>
-                                <div title="0 attempts" className="w-3.5 h-3.5 rounded-sm bg-[#E8F3FF] ring-1 ring-inset ring-slate-200" />
-                                <div title="1 attempt" className="w-3.5 h-3.5 rounded-sm bg-[#d6e9fb]" />
-                                <div title="2-3 attempts" className="w-3.5 h-3.5 rounded-sm bg-[#a9d2f5]" />
-                                <div title="4-5 attempts" className="w-3.5 h-3.5 rounded-sm bg-[#6bb5ea]" />
-                                <div title="6+ attempts" className="w-3.5 h-3.5 rounded-sm bg-[#338aca]" />
+                                <div title="0 attempts" className="w-3.5 h-3.5 rounded-md bg-surface ring-1 ring-inset ring-ring" />
+                                <div title="1 attempt" className="w-3.5 h-3.5 rounded-md bg-[#d6e9fb]" />
+                                <div title="2-3 attempts" className="w-3.5 h-3.5 rounded-md bg-[#a9d2f5]" />
+                                <div title="4-5 attempts" className="w-3.5 h-3.5 rounded-md bg-[#6bb5ea]" />
+                                <div title="6+ attempts" className="w-3.5 h-3.5 rounded-md bg-[#338aca]" />
                                 <span>High</span>
                             </div>
                         </div>

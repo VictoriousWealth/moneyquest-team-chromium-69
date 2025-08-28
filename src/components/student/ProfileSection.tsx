@@ -23,7 +23,7 @@ const ProfileSection = () => {
 
     return (
         <Card className="p-3 h-full flex flex-col relative overflow-hidden rounded-xl">
-            <h3 className="text-sm font-semibold mb-2">Profile</h3>
+            <h3 className="text-base font-semibold mb-2">Profile</h3>
             <div className="mb-2">
                 <h4 className="text-base font-semibold text-text">Alex Johnson</h4>
                 <p className="text-xs mt-1 text-subtext">
