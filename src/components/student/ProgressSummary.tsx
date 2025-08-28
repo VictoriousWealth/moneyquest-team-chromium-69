@@ -6,6 +6,8 @@ import { dailyActivity, progressSummaryData, demoBadgesMonth, allStreaks } from 
 import type { DailyActivity } from '../../lib/demoData';
 import { Flame, Clock, BookOpen, ArrowRight, ChevronLeft, ChevronRight, Trophy, Eye } from 'lucide-react';
 import Button from '../ui/Button';
+import { useCompleteStudentData } from '../../hooks/useCompleteStudentData';
+import { useDatabaseAchievements } from '../../hooks/useDatabaseAchievements';
 
 // --- HELPER FUNCTIONS & COMPONENTS ---
 
@@ -68,7 +70,8 @@ const generateMonthGrid = (date: Date) => {
 // --- RIGHT PANEL COMPONENTS ---
 
 const MonthSummary = ({ activity }: { activity: DailyActivity[] }) => {
-    const badgesToShow = demoBadgesMonth;
+    const { badges } = useDatabaseAchievements();
+    const badgesToShow = badges.filter(b => b.isEarned).slice(0, 3); // Show 3 most recent earned badges
     const mainStreak = allStreaks[0]; // Daily Play Streak
 
     return (
@@ -98,20 +101,24 @@ const MonthSummary = ({ activity }: { activity: DailyActivity[] }) => {
                 </Link>
             </div>
              <div className="flex items-start gap-4 mb-4">
-                {badgesToShow.map(badge => (
+                {badgesToShow.length > 0 ? badgesToShow.map(badge => (
                     <div 
                         key={badge.id} 
                         className="text-center group flex-1" 
                     >
-                        <img 
-                            src={`https://picsum.photos/seed/${badge.id}/64/64`} 
-                            alt={badge.name} 
-                            className="w-14 h-14 rounded-full mx-auto bg-muted object-cover shadow-sm ring-2 ring-surface transition-transform group-hover:scale-110" 
-                        />
-                        <p className="text-[11px] font-medium leading-tight text-text mt-1.5 truncate">{badge.name}</p>
-                        <p className="text-[11px] leading-tight text-subtext">{new Date(badge.earnedDate).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}</p>
+                        <div className="w-14 h-14 rounded-full mx-auto bg-muted flex items-center justify-center shadow-sm ring-2 ring-surface transition-transform group-hover:scale-110">
+                            <Trophy className="text-blue-500" size={20} />
+                        </div>
+                        <p className="text-[11px] font-medium leading-tight text-text mt-1.5 truncate">{badge.title}</p>
+                        <p className="text-[11px] leading-tight text-subtext">
+                            {badge.earnedAt ? new Date(badge.earnedAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Recently'}
+                        </p>
                     </div>
-                ))}
+                )) : (
+                    <div className="text-center text-subtext text-sm py-4">
+                        No badges earned this month yet
+                    </div>
+                )}
             </div>
 
 
