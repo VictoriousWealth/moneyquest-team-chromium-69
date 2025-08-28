@@ -6,20 +6,16 @@ import { supabase } from '@/integrations/supabase/client';
 import MascotAvatar from '@/components/mentor/MascotAvatar';
 import ChatMessage from '@/components/mentor/ChatMessage';
 import QuickActionChips from '@/components/mentor/QuickActionChips';
-
-interface Message {
-  role: 'user' | 'assistant';
-  content: string;
-  cards?: any[];
-  timestamp: Date;
-}
+import { useMentorState } from '@/hooks/useMentorState';
+import { Message, MoodType } from '@/types/mentor';
 
 const StudentMentor: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [mascotMood, setMascotMood] = useState<'cheer' | 'thinking' | 'proud' | 'curious' | 'gentle' | 'idle'>('idle');
+  const [mascotMood, setMascotMood] = useState<MoodType>('idle');
   const [quickChips, setQuickChips] = useState<string[]>([]);
+  const mentorState = useMentorState();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
@@ -45,7 +41,8 @@ const StudentMentor: React.FC = () => {
       const { data, error } = await supabase.functions.invoke('mentor-chat', {
         body: { 
           message: "Hi! I'm ready to learn about money and finance. Can you introduce yourself and tell me how you can help?",
-          conversationHistory: []
+          conversationHistory: [],
+          acceptProposalId: null
         }
       });
 
@@ -54,11 +51,18 @@ const StudentMentor: React.FC = () => {
       const mentorResponse = data;
       setMascotMood(mentorResponse.mood || 'gentle');
       setQuickChips(mentorResponse.chips || []);
+      
+      // Handle proposal if present
+      if (mentorResponse.proposal) {
+        mentorState.setPendingProposal(mentorResponse.proposal);
+      }
 
       setMessages([{
         role: 'assistant',
         content: mentorResponse.text || "Hi! I'm your AI financial mentor. I'm here to help you learn about money through fun quizzes, savings plans, and personalized advice!",
-        cards: mentorResponse.cards || [],
+        cards: mentorResponse.mode === 'final' ? mentorResponse.cards || [] : [],
+        proposal: mentorResponse.proposal,
+        mode: mentorResponse.mode,
         timestamp: new Date()
       }]);
     } catch (error) {
@@ -72,8 +76,13 @@ const StudentMentor: React.FC = () => {
     }
   };
 
-  const sendMessage = async (messageText: string) => {
+  const sendMessage = async (messageText: string, acceptProposalId?: string) => {
     if (!messageText.trim() || isLoading) return;
+
+    // Log consent for observability
+    if (acceptProposalId) {
+      console.log('User accepted proposal:', acceptProposalId, new Date().toISOString());
+    }
 
     const userMessage: Message = {
       role: 'user',
@@ -100,7 +109,8 @@ const StudentMentor: React.FC = () => {
       const { data, error } = await supabase.functions.invoke('mentor-chat', {
         body: { 
           message: messageText.trim(),
-          conversationHistory
+          conversationHistory,
+          acceptProposalId
         }
       });
 
@@ -109,11 +119,24 @@ const StudentMentor: React.FC = () => {
       const mentorResponse = data;
       setMascotMood(mentorResponse.mood || 'gentle');
       setQuickChips(mentorResponse.chips || []);
+      
+      // Handle state changes based on response
+      if (mentorResponse.proposal) {
+        mentorState.setPendingProposal(mentorResponse.proposal);
+      } else if (acceptProposalId) {
+        // If we accepted a proposal, we're now in an activity
+        const accepted = mentorState.acceptProposal();
+        if (accepted) {
+          console.log('Started activity:', accepted.type, accepted.id);
+        }
+      }
 
       const assistantMessage: Message = {
         role: 'assistant',
         content: mentorResponse.text || '',
-        cards: mentorResponse.cards || [],
+        cards: mentorResponse.mode === 'final' ? mentorResponse.cards || [] : [],
+        proposal: mentorResponse.proposal,
+        mode: mentorResponse.mode,
         timestamp: new Date()
       };
 
@@ -146,7 +169,17 @@ const StudentMentor: React.FC = () => {
   };
 
   const handleChipClick = (chipText: string) => {
-    sendMessage(chipText);
+    // Check if this is a confirmation chip for a pending proposal
+    if (mentorState.state.pendingProposal && chipText === mentorState.state.pendingProposal.confirmChip) {
+      sendMessage(chipText, mentorState.state.pendingProposal.id);
+    } else if (chipText.toLowerCase().includes('no thanks') || chipText.toLowerCase().includes('not now')) {
+      // Handle rejection
+      mentorState.rejectProposal();
+      sendMessage(chipText);
+    } else {
+      // Regular chip click
+      sendMessage(chipText);
+    }
   };
 
   const handleCardAction = (action: string, cardId: string, data?: any) => {
@@ -156,7 +189,7 @@ const StudentMentor: React.FC = () => {
       case 'export_pdf':
         toast({
           title: "Downloaded!",
-          description: "Your plan has been saved as a text file.",
+          description: "Your plan has been saved as a PDF file.",
         });
         break;
       case 'quiz_answer':
@@ -169,6 +202,11 @@ const StudentMentor: React.FC = () => {
         break;
       case 'try_again':
         sendMessage("Give me another practice question");
+        break;
+      case 'activity_complete':
+        // Reset to idle state after activity completion
+        mentorState.completeActivity();
+        console.log('Activity completed, returned to idle state');
         break;
       default:
         break;
@@ -202,9 +240,12 @@ const StudentMentor: React.FC = () => {
               role={message.role}
               content={message.content}
               cards={message.cards}
+              proposal={message.proposal}
+              mode={message.mode}
               timestamp={message.timestamp}
               onCardAction={handleCardAction}
-              onMascotMood={(mood) => setMascotMood(mood as any)}
+              onMascotMood={(mood) => setMascotMood(mood as MoodType)}
+              mentorState={mentorState.state}
             />
           ))}
           
@@ -223,7 +264,11 @@ const StudentMentor: React.FC = () => {
         {/* Quick Action Chips */}
         {quickChips.length > 0 && !isLoading && (
           <div className="px-4 py-2 border-t border-muted">
-            <QuickActionChips chips={quickChips} onChipClick={handleChipClick} />
+            <QuickActionChips 
+              chips={quickChips} 
+              onChipClick={handleChipClick}
+              pendingProposal={mentorState.state.pendingProposal}
+            />
           </div>
         )}
 

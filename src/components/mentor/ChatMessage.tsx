@@ -1,25 +1,35 @@
 import React from 'react';
 import { User, Bot } from 'lucide-react';
 import InteractiveCard from './InteractiveCard';
+import { Card, MentorProposal, MentorState } from '@/types/mentor';
 
 interface ChatMessageProps {
   role: 'user' | 'assistant';
   content: string;
-  cards?: any[];
+  cards?: Card[];
+  proposal?: MentorProposal;
+  mode?: 'dialog' | 'proposal' | 'final';
   timestamp?: Date;
   onCardAction?: (action: string, cardId: string, data?: any) => void;
   onMascotMood?: (mood: string) => void;
+  mentorState?: MentorState;
 }
 
 const ChatMessage: React.FC<ChatMessageProps> = ({
   role,
   content,
   cards = [],
+  proposal,
+  mode,
   timestamp,
   onCardAction,
-  onMascotMood
+  onMascotMood,
+  mentorState
 }) => {
   const isUser = role === 'user';
+
+  // Only show cards if mode is 'final' - implements consent gating
+  const shouldShowCards = mode === 'final' && cards && cards.length > 0;
 
   return (
     <div className={`flex gap-3 mb-4 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
@@ -46,8 +56,19 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
           </div>
         )}
 
-        {/* Interactive cards */}
-        {cards && cards.length > 0 && (
+        {/* Proposal information (if present) */}
+        {proposal && mode === 'proposal' && !isUser && (
+          <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <p className="text-blue-800 text-sm font-medium">{proposal.description}</p>
+            <p className="text-blue-600 text-xs mt-1">
+              {proposal.topic && `Topic: ${proposal.topic}`}
+              {proposal.size && ` • ${proposal.size} questions`}
+            </p>
+          </div>
+        )}
+
+        {/* Interactive cards - only shown when mode is 'final' */}
+        {shouldShowCards && (
           <div className={`mt-3 space-y-3 ${isUser ? 'flex justify-end' : ''}`}>
             <div className={isUser ? 'max-w-sm' : 'max-w-full'}>
               {cards.map((card, index) => (

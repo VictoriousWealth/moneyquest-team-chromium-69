@@ -6,10 +6,21 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+interface MentorProposal {
+  type: 'quiz' | 'plan' | 'recap';
+  topic?: string;
+  size?: number;
+  id: string;
+  confirmChip: string;
+  description: string;
+}
+
 interface MentorResponse {
+  mode: 'dialog' | 'proposal' | 'final';
   mood: 'cheer' | 'thinking' | 'proud' | 'curious' | 'gentle';
-  text?: string;
+  text: string;
   chips: string[];
+  proposal?: MentorProposal;
   cards: Card[];
 }
 
@@ -26,7 +37,7 @@ serve(async (req) => {
   }
 
   try {
-    const { message, conversationHistory = [] } = await req.json();
+    const { message, conversationHistory = [], acceptProposalId = null } = await req.json();
     const apiKey = Deno.env.get('GOOGLE_CLOUD_API_KEY');
 
     if (!apiKey) {
@@ -34,30 +45,55 @@ serve(async (req) => {
     }
 
     console.log('Processing mentor chat message:', message);
+    console.log('Accept proposal ID:', acceptProposalId);
 
-    // System prompt for the financial mentor
+    // Enhanced system prompt for consent-gated interactions
     const systemPrompt = `You are MoneyQuest's AI financial mentor for UK students aged 11-16. You're encouraging, educational, and fun.
+
+CRITICAL INTERACTION RULES:
+1. NEVER return cards[] unless the user explicitly asked for it OR acceptProposalId is provided
+2. Default to text dialogue with supportive, concise explanations
+3. When suggesting activities, use mode:"proposal" with a confirmation chip
+4. Only return mode:"final" with cards[] when acceptProposalId matches your proposal
 
 RESPONSE FORMAT: Always respond with valid JSON matching this structure:
 {
+  "mode": "dialog|proposal|final",
   "mood": "cheer|thinking|proud|curious|gentle",
-  "text": "Your response text (optional if cards provided)",
-  "chips": ["Suggestion 1", "Suggestion 2", "Suggestion 3"],
-  "cards": [card objects if applicable]
+  "text": "Your response text",
+  "chips": ["Suggestion 1", "Suggestion 2"],
+  "proposal": {
+    "type": "quiz|plan|recap",
+    "topic": "specific topic",
+    "size": 3,
+    "id": "unique_id",
+    "confirmChip": "Start Quiz",
+    "description": "Brief description"
+  },
+  "cards": []
 }
 
-CARD TYPES:
-- Quiz card: {"type": "quiz", "id": "unique_id", "title": "Quiz Title", "question": "Question?", "options": [{"id": "a", "text": "Option A"}, {"id": "b", "text": "Option B"}], "correctOptionId": "a", "explanation": "Why A is correct", "optionHints": {"b": "Hint for wrong option"}}
-- Plan card: {"type": "plan", "id": "unique_id", "title": "Plan Title", "steps": ["Step 1", "Step 2"], "summary": "Brief summary", "actions": ["export_pdf"]}
-- Recap card: {"type": "recap", "id": "unique_id", "bullets": ["Point 1", "Point 2"], "suggestedNext": "Try a savings challenge"}
-- Fix card: {"type": "fix", "id": "unique_id", "title": "Common Mistake", "mistake": "What went wrong", "correctRule": "The right way", "oneExample": "Example", "cta": "Try again"}
+INTERACTION FLOW:
+- Default mode: "dialog" with text + max 2-3 chips
+- To suggest activity: mode:"proposal" with proposal object
+- After user accepts: mode:"final" with cards[]
+
+CARD TYPES (only when mode:"final"):
+- Quiz: {"type": "quiz", "id": "unique_id", "title": "Quiz Title", "question": "Question?", "options": [{"id": "a", "text": "Option A"}], "correctOptionId": "a", "explanation": "Why A is correct"}
+- Plan: {"type": "plan", "id": "unique_id", "title": "Plan Title", "steps": ["Step 1", "Step 2"], "summary": "Brief summary", "actions": ["export_pdf"]}
 
 GUIDELINES:
 - Use £ for currency, UK date format (12 Aug)
 - Age-appropriate content, no regulated financial advice
-- Encourage learning through practice
-- Generate interactive content when possible
-- Set mood based on context: "cheer" for encouragement, "thinking" for problem-solving, "proud" for achievements, "curious" for exploration, "gentle" for corrections`;
+- After activities complete, return to dialog mode
+- Maximum 2-3 chips per response
+- Be supportive and encouraging`;
+
+    // Build message context with acceptance signal
+    let contextMessage = message;
+    if (acceptProposalId) {
+      contextMessage = `[USER ACCEPTED PROPOSAL: ${acceptProposalId}] ${message}`;
+    }
 
     const messages = [
       { role: 'system', content: systemPrompt },
@@ -65,7 +101,7 @@ GUIDELINES:
         role: msg.role,
         content: msg.content
       })),
-      { role: 'user', content: message }
+      { role: 'user', content: contextMessage }
     ];
 
     const response = await fetch(
@@ -129,11 +165,14 @@ GUIDELINES:
     }
 
     // Validate response structure
-    if (!mentorResponse.mood) {
-      mentorResponse.mood = 'gentle';
+    if (!mentorResponse.mode) {
+      mentorResponse.mode = 'dialog';
+    }
+    if (!mentorResponse.text) {
+      mentorResponse.text = "I'm here to help you learn about money!";
     }
     if (!mentorResponse.chips) {
-      mentorResponse.chips = ["Give me a quiz", "Make a savings plan", "What did I learn?"];
+      mentorResponse.chips = ["Give me a quiz", "Make a plan", "What did I learn?"];
     }
     if (!mentorResponse.cards) {
       mentorResponse.cards = [];
@@ -150,6 +189,7 @@ GUIDELINES:
     return new Response(
       JSON.stringify({ 
         error: error.message,
+        mode: 'dialog',
         mood: 'gentle',
         text: "I'm having trouble thinking right now. Could you try asking me something else?",
         chips: ["Try again", "Give me a quiz", "Make a plan"],

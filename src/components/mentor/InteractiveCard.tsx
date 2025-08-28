@@ -3,52 +3,14 @@ import Card from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import BadgeComponent from '@/components/ui/Badge';
 import { Check, X, Download, MoreVertical } from 'lucide-react';
-import { generatePDF } from '@/utils/pdfGenerator';
+import { generatePDF } from '@/utils/pdfExport';
+import { Card as CardType, QuizCard, PlanCard, RecapCard, FixCard } from '@/types/mentor';
 
 // Alias to avoid any potential naming conflicts
 const Badge = BadgeComponent;
 
-interface QuizCard {
-  type: 'quiz';
-  id: string;
-  title: string;
-  question: string;
-  options: Array<{ id: string; text: string }>;
-  correctOptionId: string;
-  explanation: string;
-  optionHints?: Record<string, string>;
-}
-
-interface PlanCard {
-  type: 'plan';
-  id: string;
-  title: string;
-  steps: string[];
-  summary?: string;
-  actions: string[];
-}
-
-interface RecapCard {
-  type: 'recap';
-  id: string;
-  bullets: string[];
-  suggestedNext?: string;
-}
-
-interface FixCard {
-  type: 'fix';
-  id: string;
-  title: string;
-  mistake: string;
-  correctRule: string;
-  oneExample: string;
-  cta: string;
-}
-
-type CardData = QuizCard | PlanCard | RecapCard | FixCard;
-
 interface InteractiveCardProps {
-  card: CardData;
+  card: CardType;
   onAction?: (action: string, cardId: string, data?: any) => void;
   onMascotMood?: (mood: string) => void;
 }
@@ -76,9 +38,11 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({
 
   const handleExportPDF = () => {
     try {
-      generatePDF(card);
-      onAction?.('export_pdf', card.id, card);
-      onMascotMood?.('proud');
+      if (card.type === 'plan') {
+        generatePDF(card as PlanCard);
+        onAction?.('export_pdf', card.id, card);
+        onMascotMood?.('proud');
+      }
     } catch (error) {
       console.error('Error generating PDF:', error);
     }
