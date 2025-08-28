@@ -2,7 +2,8 @@ import React, { createContext } from 'react';
 
 const DialogContext = createContext({});
 
-export const Dialog: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+type DialogProps = { children: React.ReactNode; open?: boolean; onOpenChange?: (open: boolean) => void };
+export const Dialog: React.FC<DialogProps> = ({ children }) => (
   <div>{children}</div>
 );
 

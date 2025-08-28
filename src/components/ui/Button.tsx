@@ -21,6 +21,8 @@ export const Button: React.FC<ButtonProps> = ({ variant = 'primary', size = 'def
     muted:   'bg-[var(--muted)] text-[var(--text)] hover:bg-opacity-80',
     outline: 'bg-transparent text-[var(--text)] ring-1 ring-inset ring-[var(--ring)] hover:bg-[var(--muted)]',
     ghost: 'bg-transparent text-text hover:bg-muted/50',
+    default: 'bg-[var(--primary)] text-[var(--primary-ink)] hover:brightness-110 shadow-soft',
+    secondary: 'bg-[var(--secondary)] text-[var(--secondary-ink)] hover:brightness-110 shadow-soft',
   };
 
   const sizeStyles: Record<Size, string> = {
