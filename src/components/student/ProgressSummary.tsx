@@ -10,6 +10,14 @@ import { useDatabaseAchievements } from '../../hooks/useDatabaseAchievements';
 
 // --- HELPER FUNCTIONS & COMPONENTS ---
 
+// Helper to format dates consistently for local comparison
+const toLocalISO = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, '0');
+    return `${year}-${month}-${day}`;
+};
+
 const Tooltip = ({ activity, position }: { activity: DailyActivity; position: { top: number; left: number } }) => {
     if (!activity || activity.attempts === 0) return null;
     const conceptEntries = Object.entries(activity.concepts).filter(([, count]) => count > 0);
@@ -78,25 +86,20 @@ const MonthSummary = ({ activity, currentDate }: { activity: any[]; currentDate:
       .sort((a, b) => new Date(b.earnedAt!).getTime() - new Date(a.earnedAt!).getTime())
       .slice(0, 3);
 
-    // Debug: log activity data
-    console.log('MonthSummary activity for', currentDate.toLocaleDateString(), ':', activity);
-    
     // Compute streaks from the monthly calendar activity - only count days with attempts > 0
     const activeDaysInMonth = activity.filter((d: any) => d.attempts > 0);
-    console.log('Active days in month:', activeDaysInMonth);
     
     // If no active days in this month, streaks should be 0
     let mainStreak;
     if (activeDaysInMonth.length === 0) {
       mainStreak = { current_count: 0, best_count: 0 };
-      console.log('No active days, setting streaks to 0');
     } else {
       // Calculate streaks from consecutive active days
       const dayMs = 24 * 60 * 60 * 1000;
       const normalize = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
       
       const activeDates = activeDaysInMonth
-        .map((d: any) => normalize(new Date(d.date)))
+        .map((d: any) => normalize(new Date(d.date + 'T00:00:00')))
         .sort((a: Date, b: Date) => a.getTime() - b.getTime());
 
       // Remove duplicates
@@ -122,7 +125,6 @@ const MonthSummary = ({ activity, currentDate }: { activity: any[]; currentDate:
       }
       
       mainStreak = { current_count: current, best_count: best };
-      console.log('Calculated streaks:', mainStreak);
     }
 
     return (
@@ -240,13 +242,7 @@ const ProgressSummary = () => {
         details: [] // Could be expanded to show more details
     }));
 
-    console.log('All formattedActivities:', formattedActivities);
-    
-    const activityMap = useMemo(() => {
-        const map = new Map(formattedActivities.map(d => [d.date, d]));
-        console.log('ActivityMap for current month:', currentDate.toLocaleDateString(), Array.from(map.entries()));
-        return map;
-    }, [formattedActivities]);
+    const activityMap = useMemo(() => new Map(formattedActivities.map(d => [d.date, d])), [formattedActivities]);
     const calendarGrid = useMemo(() => generateMonthGrid(currentDate), [currentDate]);
     const monthName = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
 
@@ -254,7 +250,7 @@ const ProgressSummary = () => {
         const month = currentDate.getMonth();
         const year = currentDate.getFullYear();
         return formattedActivities.filter(d => {
-            const dt = new Date(d.date);
+            const dt = new Date(d.date + 'T00:00:00');
             return dt.getMonth() === month && dt.getFullYear() === year;
         });
     }, [currentDate, formattedActivities]);
@@ -273,7 +269,7 @@ const ProgressSummary = () => {
     };
     
     const handleMouseEnter = (day: Date, e: React.MouseEvent<HTMLButtonElement>) => {
-        const activity = activityMap.get(day.toISOString().split('T')[0]);
+        const activity = activityMap.get(toLocalISO(day));
         if (activity) {
             setHoveredDay(activity);
             const rect = e.currentTarget.getBoundingClientRect();
@@ -299,17 +295,17 @@ const ProgressSummary = () => {
             
             <div className="flex flex-col lg:flex-row gap-6 md:gap-8 flex-grow min-h-0">
                 {/* Left Panel: Calendar */}
-                <div className="flex-shrink-0 w-full lg:w-[380px] flex flex-col">
-                    <div className="relative flex-grow flex flex-col" ref={gridRef}>
+                <div className="flex-shrink-0 w-full lg:w-[380px] flex flex-col min-h-0">
+                    <div className="relative flex-grow flex flex-col min-h-0" ref={gridRef}>
                         {hoveredDay && <Tooltip activity={hoveredDay} position={tooltipPos} />}
-                        <div className="grid grid-cols-7 gap-1.5 flex-grow min-h-[280px]" style={{ gridTemplateRows: `auto repeat(${numDateRows}, 1fr)` }}>
+                        <div className="grid grid-cols-7 gap-1.5 flex-grow min-h-0" style={{ gridTemplateRows: `auto repeat(${numDateRows}, minmax(0, 1fr))` }}>
                              {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => 
                                 <div key={day} className="flex items-center justify-center text-center text-xs h-8">{day}</div>
                              )}
                             {calendarGrid.map((day, index) => {
                                 if (!day) return <div key={`empty-${index}`} />;
                                 
-                                const dateStr = day.toISOString().split('T')[0];
+                                const dateStr = toLocalISO(day);
                                 const isFuture = day > TODAY;
 
                                 if (isFuture) {
@@ -324,15 +320,10 @@ const ProgressSummary = () => {
                                     );
                                 }
                                 
-                                const isToday = dateStr === TODAY.toISOString().split('T')[0];
+                                const isToday = dateStr === toLocalISO(TODAY);
                                 const activity = activityMap.get(dateStr);
                                 const isSelected = selectedDay === dateStr;
                                 const attempts = activity?.attempts || 0;
-                                
-                                // Debug log for problematic dates
-                                if (day.getDate() === 30 && currentDate.getMonth() === 5) { // June 30
-                                    console.log(`June 30 debug - dateStr: ${dateStr}, activity:`, activity, 'attempts:', attempts);
-                                }
 
                                 return (
                                     <button
