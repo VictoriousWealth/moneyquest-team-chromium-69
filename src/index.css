@@ -74,3 +74,8 @@ small { font-size: var(--small); }
     transform: translateY(-200px); /* Move through one complete set of 8 items */
   }
 }
+
+.activity-ticker-scroll {
+  animation: activity-ticker 16s linear infinite;
+  will-change: transform;
+}

@@ -117,13 +117,11 @@ const ProfileSection = () => {
                     </div>
                 </div>
 
-                {/* Activity Ticker - Pure CSS infinite animation */}
+                {/* Activity Ticker - Continuous rolling animation */}
                 <div className="flex-grow flex flex-col border-t border-muted pt-2 min-h-0">
                     <h4 className="font-medium text-xs text-subtext mb-1 flex-shrink-0">Class Activity</h4>
                     <div className="relative overflow-hidden h-[25px]" aria-live="off">
-                        <div
-                          className="animate-[activity-ticker_16s_linear_infinite] will-change-transform"
-                        >
+                        <div className="activity-ticker-scroll">
                           {infiniteActivities.map((a, index) => (
                             <div key={`${a.seed}-${index}`} className="flex w-full items-center gap-2 px-1 h-[25px] text-xs">
                               <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${a.seed}`} alt={a.name} className="w-5 h-5 rounded-full flex-shrink-0" />
