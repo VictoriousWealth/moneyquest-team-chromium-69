@@ -182,34 +182,98 @@ const MonthSummary = ({ activity, currentDate }: { activity: any[]; currentDate:
     );
 };
 
-const DayDetail = ({ activity }: { activity: DailyActivity }) => {
+const DayDetail = ({ activity, journalEntries, questResponses }: { 
+    activity: DailyActivity; 
+    journalEntries: any[];
+    questResponses: any[];
+}) => {
     const date = new Date(activity.date + 'T00:00:00');
+    
+    // Get journal entries and quest responses for this specific date
+    const dayJournalEntries = journalEntries.filter(entry => {
+        const entryDate = new Date(entry.created_at).toLocaleDateString('en-CA');
+        return entryDate === activity.date;
+    });
+    
+    const dayQuestResponses = questResponses.filter(response => {
+        const responseDate = new Date(response.created_at).toLocaleDateString('en-CA');
+        return responseDate === activity.date;
+    });
+
+    // Generate mentor tips based on recent concepts and performance
+    const getMentorTip = () => {
+        const concepts = activity.concepts || [];
+        const successRate = activity.attempts > 0 ? (activity.pass / activity.attempts) * 100 : 0;
+        
+        if (concepts.length === 0) {
+            return "Keep exploring! Every day brings new learning opportunities.";
+        }
+        
+        const mainConcept = concepts[0];
+        
+        if (successRate >= 80) {
+            return `Excellent work with ${mainConcept}! You're mastering these concepts.`;
+        } else if (successRate >= 60) {
+            return `Good progress on ${mainConcept}. Keep practicing to strengthen your understanding.`;
+        } else if (successRate >= 40) {
+            return `${mainConcept} can be tricky. Try breaking it down into smaller steps.`;
+        } else {
+            return `Don't worry about ${mainConcept} - every expert was once a beginner. Keep trying!`;
+        }
+    };
+    
     return (
         <div className="flex flex-col h-full">
              <h4 className="font-semibold text-sm text-text mb-3">
                 {date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })} — Activity
             </h4>
             <div className="space-y-3 flex-grow overflow-y-auto pr-2 -mr-2">
-                {activity.details.slice(0, 3).map((attempt, i) => (
+                {/* Show quest responses for this day */}
+                {dayQuestResponses.slice(0, 3).map((response, i) => (
                     <div key={i} className="text-sm">
                         <div className="flex items-center gap-2">
-                            <UIBadge variant={attempt.result === 'Pass' ? 'mint' : attempt.result === 'Fail' ? 'muted' : 'teal'}>{attempt.result}</UIBadge>
-                            <p className="font-medium text-text truncate">{attempt.episode}</p>
-                            {attempt.result === 'In progress' && <Link to="/student/play" className="ml-auto text-xs font-medium text-blue-500 hover:underline">Resume</Link>}
+                            <UIBadge variant={response.is_correct ? 'mint' : 'muted'}>
+                                {response.is_correct ? 'Correct' : 'Incorrect'}
+                            </UIBadge>
+                            <p className="font-medium text-text truncate">{response.quest_id}</p>
                         </div>
                         <div className="flex items-center gap-4 pl-2 mt-1.5 text-xs">
-                            <span><Clock size={12} className="inline mr-1" />{attempt.time}m</span>
+                            <span><Clock size={12} className="inline mr-1" />{Math.round((response.response_time_ms || 0) / 1000 / 60)}m</span>
                              <div className="flex items-center gap-1.5 truncate">
                                 <BookOpen size={12} />
-                                <span className="truncate">{attempt.concepts.join(', ')}</span>
+                                <span className="truncate">{response.question_text || 'Quest activity'}</span>
                             </div>
                         </div>
                     </div>
                 ))}
+                
+                {/* Show journal entries for this day */}
+                {dayJournalEntries.slice(0, 2).map((entry, i) => (
+                    <div key={`journal-${i}`} className="text-sm">
+                        <div className="flex items-center gap-2">
+                            <UIBadge variant="teal">Journal</UIBadge>
+                            <p className="font-medium text-text truncate">{entry.episode_title}</p>
+                        </div>
+                        <div className="flex items-center gap-4 pl-2 mt-1.5 text-xs">
+                            <span><Clock size={12} className="inline mr-1" />{entry.time_spent_minutes || 0}m</span>
+                             <div className="flex items-center gap-1.5 truncate">
+                                <BookOpen size={12} />
+                                <span className="truncate">{(entry.concepts || []).join(', ')}</span>
+                            </div>
+                        </div>
+                    </div>
+                ))}
+                
+                {/* If no activities, show a message */}
+                {dayQuestResponses.length === 0 && dayJournalEntries.length === 0 && (
+                    <div className="text-sm text-subtext text-center py-4">
+                        No detailed activities recorded for this day
+                    </div>
+                )}
             </div>
              <div className="mt-auto border-t border-muted pt-3 space-y-2">
                 <div className="bg-blue-800/10 text-blue-500 p-3 rounded-lg text-xs font-medium text-center">
-                    Mentor Tip: You're doing great on Budgeting!
+                    {getMentorTip()}
                 </div>
                  <Link to="/student/journal" className="inline-flex items-center justify-center w-full gap-1 text-sm font-medium text-blue-500 hover:underline">
                     Open full Journal <ArrowRight size={14} />
@@ -223,7 +287,7 @@ const DayDetail = ({ activity }: { activity: DailyActivity }) => {
 // --- MAIN COMPONENT ---
 
 const ProgressSummary = () => {
-    const { dailyActivities, streaks } = useCompleteStudentData();
+    const { dailyActivities, streaks, journalEntries, questResponses } = useCompleteStudentData();
     const [currentDate, setCurrentDate] = useState(new Date(2025, 7, 1)); // August 2025
     const [selectedDay, setSelectedDay] = useState<string | null>(null);
     const [hoveredDay, setHoveredDay] = useState<DailyActivity | null>(null);
@@ -359,7 +423,11 @@ const ProgressSummary = () => {
                 {/* Right Panel: Summary/Details */}
                 <div className="flex-1 lg:border-l lg:pl-6 xl:pl-8 border-muted lg:border-t-0 border-t pt-6 lg:pt-0">
                     {selectedDayActivity && selectedDayActivity.attempts > 0
-                        ? <DayDetail activity={selectedDayActivity} />
+                        ? <DayDetail 
+                            activity={selectedDayActivity} 
+                            journalEntries={journalEntries} 
+                            questResponses={questResponses}
+                          />
                         : <MonthSummary activity={activityForMonth} currentDate={currentDate} />
                     }
                 </div>
