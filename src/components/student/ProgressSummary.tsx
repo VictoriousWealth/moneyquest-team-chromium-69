@@ -15,7 +15,7 @@ const Tooltip = ({ activity, position }: { activity: DailyActivity; position: { 
     
     return (
         <div 
-            className="absolute z-10 w-64 rounded-md bg-surface p-3 shadow-soft ring-1 ring-blue800/50 text-left pointer-events-none"
+            className="absolute z-10 w-64 rounded-xl bg-surface p-3 shadow-soft ring-1 ring-blue800/50 text-left pointer-events-none"
             style={{ top: position.top, left: position.left, transform: 'translate(-50%, calc(-100% - 8px))' }}
         >
             <p className="font-semibold text-sm text-text">{new Date(activity.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</p>
