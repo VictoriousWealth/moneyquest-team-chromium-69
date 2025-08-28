@@ -13,6 +13,7 @@ import StudentMentor from './app/(student)/mentor/page';
 import TeacherStudents from './app/(teacher)/students/page';
 import TeacherStudentDetail from './app/(teacher)/students/[id]/page';
 import TeacherAssignments from './app/(teacher)/assignments/page';
+import TeacherInsights from './app/(teacher)/insights/page';
 import TeacherSettings from './app/(teacher)/settings/page';
 
 // Helper to get role from a simple cookie-like storage (using localStorage)
@@ -66,7 +67,7 @@ export default function App() {
             <Route path="students" element={<TeacherStudents />} />
             <Route path="students/:id" element={<TeacherStudentDetail />} />
             <Route path="assignments" element={<TeacherAssignments />} />
-            <Route path="settings" element={<TeacherSettings />} />
+            <Route path="insights" element={<TeacherInsights />} />
           </Route>
         </Route>
 
