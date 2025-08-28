@@ -170,6 +170,7 @@ const DayDetail = ({ activity }: { activity: DailyActivity }) => {
 // --- MAIN COMPONENT ---
 
 const ProgressSummary = () => {
+    const { dailyActivities } = useCompleteStudentData();
     const [currentDate, setCurrentDate] = useState(new Date(2025, 7, 1)); // August 2025
     const [selectedDay, setSelectedDay] = useState<string | null>(null);
     const [hoveredDay, setHoveredDay] = useState<DailyActivity | null>(null);
@@ -177,14 +178,25 @@ const ProgressSummary = () => {
     const gridRef = useRef<HTMLDivElement>(null);
     const TODAY = new Date(2025, 7, 29); // Friday, Aug 29, 2025 is "today"
 
-    const activityMap = useMemo(() => new Map(dailyActivity.map(d => [d.date, d])), []);
+    // Convert database daily activities to the format expected by the component
+    const formattedActivities = dailyActivities.map(activity => ({
+        date: activity.activity_date,
+        attempts: activity.attempts,
+        pass: activity.passes,
+        fail: activity.attempts - activity.passes,
+        time: activity.time_spent_minutes,
+        concepts: activity.concepts || [],
+        details: [] // Could be expanded to show more details
+    }));
+
+    const activityMap = useMemo(() => new Map(formattedActivities.map(d => [d.date, d])), [formattedActivities]);
     const calendarGrid = useMemo(() => generateMonthGrid(currentDate), [currentDate]);
     const monthName = currentDate.toLocaleString('default', { month: 'long', year: 'numeric' });
 
     const activityForMonth = useMemo(() => {
         const month = currentDate.getMonth();
-        return dailyActivity.filter(d => new Date(d.date).getMonth() === month);
-    }, [currentDate]);
+        return formattedActivities.filter(d => new Date(d.date).getMonth() === month);
+    }, [currentDate, formattedActivities]);
 
     const selectedDayActivity = selectedDay ? activityMap.get(selectedDay) : null;
     
