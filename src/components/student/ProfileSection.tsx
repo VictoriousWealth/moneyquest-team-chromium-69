@@ -33,12 +33,20 @@ const ProfileSection = () => {
     ];
     const ROW_H = 25; // px, must match each row height
     const [idx, setIdx] = useState(0);
+    
+    // Create duplicated array for seamless looping
+    const duplicatedActivities = [...activities, ...activities];
+    
     useEffect(() => {
         const id = setInterval(() => {
-            setIdx((i) => (i + 1) % activities.length);
+            setIdx((i) => {
+                const next = i + 1;
+                // Reset to 0 when we've shown all original items (seamless transition)
+                return next >= activities.length ? 0 : next;
+            });
         }, 2000);
         return () => clearInterval(id);
-    }, []);
+    }, [activities.length]);
     return (
         <Card className="p-3 h-full flex flex-col relative overflow-hidden rounded-xl">
             <h3 className="text-base font-semibold mb-2">Profile</h3>
@@ -127,10 +135,13 @@ const ProfileSection = () => {
                     <div className="relative overflow-hidden h-[25px]" aria-live="off">
                         <div
                           className="will-change-transform"
-                          style={{ transform: `translateY(-${idx * ROW_H}px)`, transition: 'transform 600ms linear' }}
+                          style={{ 
+                            transform: `translateY(-${idx * ROW_H}px)`,
+                            transition: 'transform 600ms ease-in-out'
+                          }}
                         >
-                          {activities.map((a) => (
-                            <div key={a.seed} className="flex w-full items-center gap-2 px-1 h-[25px] text-xs">
+                          {duplicatedActivities.map((a, index) => (
+                            <div key={`${a.seed}-${index}`} className="flex w-full items-center gap-2 px-1 h-[25px] text-xs">
                               <img src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${a.seed}`} alt={a.name} className="w-5 h-5 rounded-full flex-shrink-0" />
                               <p className="text-subtext text-left truncate">
                                 <span className="font-medium text-text">{a.name}</span> {a.text}
