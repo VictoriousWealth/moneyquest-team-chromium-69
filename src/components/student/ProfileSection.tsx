@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../ui/Card';
 import { demoStudent, demoPrefs, demoClassActivity, dailyActivity } from '../../lib/demoData';
-import { Camera } from 'lucide-react';
+import { Camera, Trophy, Clock, Calendar, PiggyBank, Award } from 'lucide-react';
 
 // Util for GBP currency formatting
 const formatGBP = (amount: number) => {
@@ -49,25 +49,42 @@ const ProfileSection = () => {
             <div className="flex-grow flex flex-col pt-2 mt-2 border-t border-muted min-h-0">
                 {/* Stats */}
                 <div className="space-y-2 mb-2">
-                    <div className="grid grid-cols-5 gap-2 text-center">
+                    <div className="grid grid-cols-3 gap-2 text-center">
                         <div>
-                            <p className="font-semibold text-sm text-text">20</p>
+                            <div className="flex items-center justify-center gap-1 mb-1">
+                                <Trophy size={12} className="text-blue-500" />
+                                <p className="font-semibold text-sm text-text">20</p>
+                            </div>
                             <p className="text-xs text-subtext">Episodes passed</p>
                         </div>
                         <div>
-                            <p className="font-semibold text-sm text-text">8h 33m</p>
+                            <div className="flex items-center justify-center gap-1 mb-1">
+                                <Clock size={12} className="text-blue-500" />
+                                <p className="font-semibold text-sm text-text">8h 33m</p>
+                            </div>
                             <p className="text-xs text-subtext">Time spent</p>
                         </div>
                         <div>
-                            <p className="font-semibold text-sm text-text">29</p>
+                            <div className="flex items-center justify-center gap-1 mb-1">
+                                <Calendar size={12} className="text-blue-500" />
+                                <p className="font-semibold text-sm text-text">29</p>
+                            </div>
                             <p className="text-xs text-subtext">Active days</p>
                         </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-center">
                         <div>
-                            <p className="font-semibold text-sm text-text">£125.50</p>
+                            <div className="flex items-center justify-center gap-1 mb-1">
+                                <PiggyBank size={12} className="text-mint-400" />
+                                <p className="font-semibold text-sm text-text">£125.50</p>
+                            </div>
                             <p className="text-xs text-subtext">Money saved</p>
                         </div>
                         <div>
-                            <p className="font-semibold text-sm text-text">#12</p>
+                            <div className="flex items-center justify-center gap-1 mb-1">
+                                <Award size={12} className="text-blue-500" />
+                                <p className="font-semibold text-sm text-text">#12</p>
+                            </div>
                             <p className="text-xs text-subtext">Class rank</p>
                         </div>
                     </div>
