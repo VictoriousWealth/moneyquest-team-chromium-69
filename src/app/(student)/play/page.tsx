@@ -278,7 +278,7 @@ const StudentPlay: React.FC = () => {
             placeholder="Search quests, concepts, zones, or NPCs..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 rounded-xl bg-background/50 backdrop-blur-sm text-foreground placeholder:text-muted-foreground/70 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary focus:bg-background/80 transition-all shadow-sm border border-border/50"
+            className="w-full pl-10 pr-4 py-3 rounded-xl bg-background text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors border border-border/30"
           />
         </div>
           
