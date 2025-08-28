@@ -71,6 +71,6 @@ small { font-size: var(--small); }
     transform: translateY(0);
   }
   100% {
-    transform: translateY(-200px);
+    transform: translateY(-200px); /* Move through one complete set of 8 items */
   }
 }

@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../ui/Card';
 import { demoStudent, demoPrefs, demoClassActivity, dailyActivity } from '../../lib/demoData';
