@@ -219,7 +219,7 @@ const ProgressSummary = () => {
             
             <div className="flex flex-row gap-6 md:gap-8 flex-grow min-h-0">
                 {/* Left Panel: Calendar */}
-                <div className="flex-1 flex flex-col">
+                <div className="flex-shrink-0 w-full md:w-[380px] flex flex-col">
                     <div className="relative flex-grow flex flex-col" ref={gridRef}>
                         {hoveredDay && <Tooltip activity={hoveredDay} position={tooltipPos} />}
                         <div className="grid grid-cols-7 gap-1.5 flex-grow" style={{ gridTemplateRows: `auto repeat(${numDateRows}, 1fr)` }}>
@@ -281,7 +281,7 @@ const ProgressSummary = () => {
                 </div>
 
                 {/* Right Panel: Summary/Details */}
-                <div className="w-full basis-full md:w-auto md:basis-[320px] flex-shrink-0 md:border-l md:pl-6 lg:pl-8 border-muted">
+                <div className="flex-1 md:border-l md:pl-6 lg:pl-8 border-muted">
                     {selectedDayActivity && selectedDayActivity.attempts > 0
                         ? <DayDetail activity={selectedDayActivity} />
                         : <MonthSummary activity={activityForMonth} />
