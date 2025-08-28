@@ -16,6 +16,7 @@ const StudentMentor: React.FC = () => {
   const [mascotMood, setMascotMood] = useState<MoodType>('idle');
   const [quickChips, setQuickChips] = useState<string[]>([]);
   const mentorState = useMentorState();
+  const [shownCardIds, setShownCardIds] = useState<Set<string>>(new Set());
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
@@ -60,7 +61,7 @@ const StudentMentor: React.FC = () => {
       setMessages([{
         role: 'assistant',
         content: mentorResponse.text || "Hi! I'm your AI financial mentor. I'm here to help you learn about money through fun quizzes, savings plans, and personalized advice!",
-        cards: mentorResponse.mode === 'final' ? mentorResponse.cards || [] : [],
+        cards: [],
         proposal: mentorResponse.proposal,
         mode: mentorResponse.mode,
         timestamp: new Date()
@@ -131,16 +132,28 @@ const StudentMentor: React.FC = () => {
         }
       }
 
+      // Consent-gated + de-duplicated cards
+      const incomingCards = (mentorResponse.mode === 'final' && acceptProposalId)
+        ? (mentorResponse.cards || [])
+        : [];
+      const filteredCards = incomingCards.filter((c: any) => c?.id && !shownCardIds.has(c.id));
+      if (incomingCards.length > 0 && filteredCards.length === 0) {
+        console.log('Suppressing duplicate cards; already shown:', incomingCards.map((c: any) => c.id));
+      }
+
       const assistantMessage: Message = {
         role: 'assistant',
         content: mentorResponse.text || '',
-        cards: mentorResponse.mode === 'final' ? mentorResponse.cards || [] : [],
+        cards: filteredCards,
         proposal: mentorResponse.proposal,
         mode: mentorResponse.mode,
         timestamp: new Date()
       };
 
       setMessages(prev => [...prev, assistantMessage]);
+      if (filteredCards.length > 0) {
+        setShownCardIds(prev => new Set([...prev, ...filteredCards.map((c: any) => c.id)]));
+      }
     } catch (error) {
       console.error('Error sending message:', error);
       toast({
