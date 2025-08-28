@@ -71,35 +71,44 @@ const LoginPage: React.FC = () => {
         try {
           await supabase
             .from('profiles')
-            .upsert({
-              user_id: data.user.id,
-              ...account.profile
-            });
+            .upsert(
+              {
+                user_id: data.user.id,
+                ...account.profile
+              },
+              { onConflict: 'user_id' }
+            );
 
           // For student, also create progress and game state
           if (role === Role.STUDENT) {
             await supabase
               .from('student_progress')
-              .upsert({
-                user_id: data.user.id,
-                episodes_passed: 12,
-                time_spent_minutes: 180,
-                active_days: 15,
-                money_saved: 25.50,
-                class_rank: 3
-              });
+              .upsert(
+                {
+                  user_id: data.user.id,
+                  episodes_passed: 12,
+                  time_spent_minutes: 180,
+                  active_days: 15,
+                  money_saved: 25.50,
+                  class_rank: 3
+                },
+                { onConflict: 'user_id' }
+              );
 
             await supabase
               .from('game_states')
-              .upsert({
-                user_id: data.user.id,
-                day: 15,
-                coins: 150.00,
-                streak_days: 7,
-                coin_multiplier: 1.2,
-                xp_multiplier: 1.1,
-                last_played_date: new Date().toISOString().split('T')[0]
-              });
+              .upsert(
+                {
+                  user_id: data.user.id,
+                  day: 15,
+                  coins: 150.00,
+                  streak_days: 7,
+                  coin_multiplier: 1.2,
+                  xp_multiplier: 1.1,
+                  last_played_date: new Date().toISOString().split('T')[0]
+                },
+                { onConflict: 'user_id' }
+              );
           }
         } catch (profileError) {
           console.log('Profile creation error (might already exist):', profileError);
