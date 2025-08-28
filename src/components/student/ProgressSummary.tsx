@@ -73,7 +73,7 @@ const MonthSummary = ({ activity }: { activity: DailyActivity[] }) => {
 
     return (
         <div className="flex flex-col h-full py-3">
-            <h4 className="font-semibold text-text mb-3">This Month</h4>
+            <h4 className="font-semibold text-sm text-text mb-3">This Month</h4>
             <div className="grid grid-cols-2 gap-3 mb-3">
                 <div className="flex items-center gap-2 p-3 rounded-md bg-muted text-sm">
                     <Flame className="text-orange-500" size={20} />
@@ -92,7 +92,7 @@ const MonthSummary = ({ activity }: { activity: DailyActivity[] }) => {
             </div>
 
             <div className="flex justify-between items-center mb-2">
-                <h4 className="font-semibold text-text">Badges earned</h4>
+                <h4 className="font-semibold text-sm text-text">Badges earned</h4>
                 <Link to="/student/achievements">
                     <Button variant="ghost" size="sm">View all</Button>
                 </Link>
@@ -126,7 +126,7 @@ const DayDetail = ({ activity }: { activity: DailyActivity }) => {
     const date = new Date(activity.date + 'T00:00:00');
     return (
         <div className="flex flex-col h-full">
-             <h4 className="font-semibold text-text mb-3">
+             <h4 className="font-semibold text-sm text-text mb-3">
                 {date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })} — Activity
             </h4>
             <div className="space-y-3 flex-grow overflow-y-auto pr-2 -mr-2">
@@ -210,7 +210,7 @@ const ProgressSummary = () => {
     return (
         <Card className="p-5 h-full flex flex-col">
             <header className="flex justify-between items-center mb-2">
-                <h3 className="text-xl font-semibold">Progress — {monthName}</h3>
+                <h3 className="text-base font-semibold">Progress — {monthName}</h3>
                 <div className="flex items-center gap-2">
                     <button onClick={() => handleMonthChange('prev')} className="p-1 text-subtext hover:text-text disabled:opacity-50" aria-label="Previous month"><ChevronLeft size={20}/></button>
                     <button onClick={() => handleMonthChange('next')} className="p-1 text-subtext hover:text-text disabled:opacity-50" aria-label="Next month"><ChevronRight size={20} /></button>

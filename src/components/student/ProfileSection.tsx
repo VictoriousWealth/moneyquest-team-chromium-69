@@ -23,9 +23,9 @@ const ProfileSection = () => {
 
     return (
         <Card className="p-3 h-full flex flex-col relative overflow-hidden rounded-xl">
-            <h3 className="text-base font-semibold mb-2">Profile</h3>
+            <h3 className="text-sm font-semibold mb-2">Profile</h3>
             <div className="mb-2">
-                <h2 className="text-lg font-semibold text-text">Alex Johnson</h2>
+                <h4 className="text-base font-semibold text-text">Alex Johnson</h4>
                 <p className="text-xs mt-1 text-subtext">
                     Year 9 &bull; Northwood High &bull; STU-001
                 </p>
@@ -51,23 +51,23 @@ const ProfileSection = () => {
                 <div className="space-y-2 mb-2">
                     <div className="grid grid-cols-5 gap-2 text-center">
                         <div>
-                            <p className="font-bold text-sm text-text">20</p>
+                            <p className="font-semibold text-sm text-text">20</p>
                             <p className="text-xs text-subtext">Episodes passed</p>
                         </div>
                         <div>
-                            <p className="font-bold text-sm text-text">8h 33m</p>
+                            <p className="font-semibold text-sm text-text">8h 33m</p>
                             <p className="text-xs text-subtext">Time spent</p>
                         </div>
                         <div>
-                            <p className="font-bold text-sm text-text">29</p>
+                            <p className="font-semibold text-sm text-text">29</p>
                             <p className="text-xs text-subtext">Active days</p>
                         </div>
                         <div>
-                            <p className="font-bold text-sm text-text">£125.50</p>
+                            <p className="font-semibold text-sm text-text">£125.50</p>
                             <p className="text-xs text-subtext">Money saved</p>
                         </div>
                         <div>
-                            <p className="font-bold text-sm text-text">#12</p>
+                            <p className="font-semibold text-sm text-text">#12</p>
                             <p className="text-xs text-subtext">Class rank</p>
                         </div>
                     </div>

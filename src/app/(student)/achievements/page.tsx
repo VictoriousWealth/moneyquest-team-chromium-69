@@ -138,7 +138,7 @@ const StreakCard: React.FC<{ streak: StreakType }> = ({ streak }) => {
             {/* Header */}
             <div className="flex items-start justify-between">
                 <div>
-                    <h4 className="font-semibold text-sm text-text">{streak.name}</h4>
+                    <p className="font-semibold text-sm text-text">{streak.name}</p>
                     <p className="text-xs text-subtext mt-1">{streak.description}</p>
                 </div>
                 {streak.currentTier !== 'none' && (
@@ -253,16 +253,16 @@ const StudentAchievements: React.FC = () => {
   }, [badgeFilter, selectedTags, searchTerm, sortBy]);
   
   return (
-    <div className="space-y-12">
+    <div className="space-y-8">
       <section>
-        <h2 className="h2 mb-4">Active Streaks</h2>
+        <h3 className="text-base font-semibold mb-4">Active Streaks</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
           {allStreaks.map(streak => <StreakCard key={streak.id} streak={streak} />)}
         </div>
       </section>
       
       <section>
-        <h2 className="h2 mb-4">Badge Collection</h2>
+        <h3 className="text-base font-semibold mb-4">Badge Collection</h3>
         
         <Card className="p-4 mb-6">
             <div className="flex flex-col gap-4">
