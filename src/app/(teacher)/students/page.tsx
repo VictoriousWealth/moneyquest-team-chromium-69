@@ -71,7 +71,7 @@ const TeacherStudents: React.FC = () => {
             <select
               value={masteryFilter}
               onChange={(e) => setMasteryFilter(e.target.value)}
-              className="px-3 py-2 border border-[var(--ring)] rounded-lg bg-surface text-text focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="px-3 py-2 border border-[var(--ring)] rounded-full bg-surface text-text focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             >
               {masteryOptions.map(option => (
                 <option key={option.value} value={option.value}>{option.label}</option>
