@@ -19,20 +19,20 @@ const Tooltip = ({ activity, position }: { activity: DailyActivity; position: { 
             style={{ top: position.top, left: position.left, transform: 'translate(-50%, calc(-100% - 8px))' }}
         >
             <p className="font-semibold text-sm text-text">{new Date(activity.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</p>
-            <p className="small mt-1">Attempts: {activity.attempts} (Pass {activity.pass} / Fail {activity.fail})</p>
-            <p className="small">Time: {activity.time}m</p>
+            <p className="text-xs mt-1">Attempts: {activity.attempts} (Pass {activity.pass} / Fail {activity.fail})</p>
+            <p className="text-xs">Time: {activity.time}m</p>
             {conceptEntries.length > 0 && (
                 <div className="mt-2 pt-2 border-t border-muted">
-                    <p className="small font-semibold text-text mb-1">Concepts covered:</p>
+                    <p className="text-xs font-semibold text-text mb-1">Concepts covered:</p>
                     {conceptEntries.map(([concept, count]) => (
-                        <p key={concept} className="small text-subtext">{concept} (x{count})</p>
+                        <p key={concept} className="text-xs text-subtext">{concept} (x{count})</p>
                     ))}
                 </div>
             )}
              {activity.details[0]?.reason && (
                 <div className="mt-2 pt-2 border-t border-muted">
-                    <p className="small font-semibold text-text mb-1">Note:</p>
-                    <p className="small text-subtext">{activity.details[0].reason}</p>
+                    <p className="text-xs font-semibold text-text mb-1">Note:</p>
+                    <p className="text-xs text-subtext">{activity.details[0].reason}</p>
                 </div>
              )}
         </div>
@@ -269,11 +269,11 @@ const ProgressSummary = () => {
                             <span>Activity level (attempts/day)</span>
                             <div className="flex items-center gap-1.5">
                                 <span>Low</span>
-                                <div title="0 attempts" className="w-3.5 h-3.5 rounded-md bg-surface ring-1 ring-inset ring-ring" />
-                                <div title="1 attempt" className="w-3.5 h-3.5 rounded-md bg-[#d6e9fb]" />
-                                <div title="2-3 attempts" className="w-3.5 h-3.5 rounded-md bg-[#a9d2f5]" />
-                                <div title="4-5 attempts" className="w-3.5 h-3.5 rounded-md bg-[#6bb5ea]" />
-                                <div title="6+ attempts" className="w-3.5 h-3.5 rounded-md bg-[#338aca]" />
+                                <div title="0 attempts" className="w-3.5 h-3.5 rounded-lg bg-surface ring-1 ring-inset ring-ring" />
+                                <div title="1 attempt" className="w-3.5 h-3.5 rounded-lg bg-[#d6e9fb]" />
+                                <div title="2-3 attempts" className="w-3.5 h-3.5 rounded-lg bg-[#a9d2f5]" />
+                                <div title="4-5 attempts" className="w-3.5 h-3.5 rounded-lg bg-[#6bb5ea]" />
+                                <div title="6+ attempts" className="w-3.5 h-3.5 rounded-lg bg-[#338aca]" />
                                 <span>High</span>
                             </div>
                         </div>
