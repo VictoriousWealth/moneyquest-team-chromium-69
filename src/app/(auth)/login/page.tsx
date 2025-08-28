@@ -9,10 +9,10 @@ const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Demo credentials - using unique timestamps to avoid conflicts
+  // Demo credentials - fixed accounts to avoid creating duplicates
   const DEMO_ACCOUNTS = {
     [Role.STUDENT]: {
-      email: `student.demo.${Date.now()}@moneyquest.com`,
+      email: 'student.demo@moneyquest.com',
       password: 'moneyquest123',
       profile: {
         username: 'Alex Johnson',
@@ -23,7 +23,7 @@ const LoginPage: React.FC = () => {
       }
     },
     [Role.TEACHER]: {
-      email: `teacher.demo.${Date.now()}@moneyquest.com`, 
+      email: 'teacher.demo@moneyquest.com',
       password: 'moneyquest123',
       profile: {
         username: 'Sarah Chen',
