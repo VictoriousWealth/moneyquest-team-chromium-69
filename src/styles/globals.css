@@ -135,3 +135,14 @@ button:disabled {
 input, textarea {
   font-family: inherit;
 }
+
+/* Activity ticker animation (used in ProfileSection) */
+@keyframes activity-ticker {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-200px); } /* 8 rows x 25px */
+}
+
+.activity-ticker-scroll {
+  animation: activity-ticker 16s linear infinite;
+  will-change: transform;
+}
