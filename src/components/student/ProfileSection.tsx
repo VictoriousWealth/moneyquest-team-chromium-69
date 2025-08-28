@@ -16,7 +16,7 @@ const formatGBP = (amount: number) => {
 };
 
 const ProfileSection = () => {
-    const { progress, gameState, loading } = useCompleteStudentData();
+    const { profile, progress, gameState, loading } = useCompleteStudentData();
     const { badges } = useDatabaseAchievements();
     
     const stats = useMemo(() => {
@@ -73,8 +73,8 @@ const ProfileSection = () => {
             <div className="flex items-center gap-3 mb-2">
                 <div className="relative group cursor-pointer">
                     <img 
-                        src="https://api.dicebear.com/7.x/avataaars/svg?seed=Alex" 
-                        alt="Alex Johnson" 
+                        src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${profile?.username || 'Alex'}`} 
+                        alt={profile?.username || 'Student'} 
                         className="w-16 h-16 rounded-full bg-muted object-cover shadow-sm ring-2 ring-surface transition-opacity group-hover:opacity-75" 
                     />
                     <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -86,16 +86,16 @@ const ProfileSection = () => {
                     </div>
                 </div>
                 <div>
-                    <h4 className="text-base font-semibold text-text">Alex Johnson</h4>
+                    <h4 className="text-base font-semibold text-text">{profile?.username || 'Loading...'}</h4>
                 </div>
             </div>
 
             <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 items-baseline mb-2 text-xs">
                 {[
-                    { label: 'Year group', value: 'Year 9' },
-                    { label: 'School', value: 'Northwood High' },
-                    { label: 'District', value: 'Northwood' },
-                    { label: 'Student ID', value: 'STU-001' },
+                    { label: 'Year group', value: profile?.year || 'Loading...' },
+                    { label: 'School', value: profile?.school || 'Loading...' },
+                    { label: 'District', value: profile?.district || 'Loading...' },
+                    { label: 'Student ID', value: profile?.student_id || 'Loading...' },
                 ].map(({ label, value }) => (
                     <React.Fragment key={label}>
                         <p className="font-medium text-subtext text-xs leading-relaxed">{label}</p>
