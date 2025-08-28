@@ -277,21 +277,21 @@ const StudentPlay: React.FC = () => {
             placeholder="Search quests..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all border-0"
+            className="w-full pl-10 pr-4 py-2.5 rounded-lg bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all border border-primary/20"
           />
         </div>
         
         {/* Status Filter Tabs */}
         <div className="flex flex-wrap items-center gap-3">
-          <div className="flex bg-muted/30 rounded-lg p-1">
+          <div className="flex bg-muted/20 rounded-lg p-1 border border-border/30">
             {['all', 'Not started', 'In progress', 'Completed'].map((status) => (
               <button
                 key={status}
                 onClick={() => setStatusFilter(status)}
-                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all border ${
                   statusFilter === status
-                    ? 'bg-background text-foreground shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'bg-primary text-primary-foreground border-primary/30 shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground border-border/20 hover:bg-muted/30'
                 }`}
               >
                 {status === 'all' ? 'All' : status}
@@ -305,7 +305,7 @@ const StudentPlay: React.FC = () => {
             <select
               value={sectionFilter}
               onChange={(e) => setSectionFilter(e.target.value)}
-              className="px-3 py-2 rounded-lg bg-muted/30 text-foreground text-sm focus:outline-none focus:bg-background focus:ring-2 focus:ring-primary/20 transition-all border-0 cursor-pointer"
+              className="px-3 py-2 rounded-lg bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all border border-border/30 hover:border-border/50 cursor-pointer"
             >
               <option value="all">All Sections</option>
               {groupedQuests.map(group => (
@@ -321,7 +321,7 @@ const StudentPlay: React.FC = () => {
             <Button 
               variant="ghost" 
               onClick={clearFilters}
-              className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground !rounded-lg"
+              className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground border border-border/20 hover:border-border/40 !rounded-lg"
             >
               <X className="w-3 h-3" />
               Clear
