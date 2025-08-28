@@ -75,11 +75,11 @@ const QuestCard: React.FC<{ quest: Quest }> = ({ quest }) => {
                     
                     {/* Rewards */}
                     <div className="flex items-center gap-4 mb-3">
-                        <div className="flex items-center gap-1 text-amber-600">
+                        <div className="flex items-center gap-1 text-primary">
                             <Coins className="w-4 h-4" />
                             <span className="text-sm font-medium">{quest.reward_coins}</span>
                         </div>
-                        <div className="flex items-center gap-1 text-blue-600">
+                        <div className="flex items-center gap-1 text-primary">
                             <Zap className="w-4 h-4" />
                             <span className="text-sm font-medium">{quest.reward_xp} XP</span>
                         </div>
@@ -111,85 +111,73 @@ const StudentPlay: React.FC = () => {
   useEffect(() => {
     const fetchCurriculumData = async () => {
       try {
-        // Fetch curriculum sections and quests with joins
+        // Fetch curriculum sections first
+        const { data: sections, error: sectionsError } = await supabase
+          .from('curriculum_sections')
+          .select('*')
+          .order('curriculum_order', { ascending: true });
+
+        if (sectionsError) {
+          console.error('Error fetching curriculum sections:', sectionsError);
+          return;
+        }
+
+        // Fetch quests without joins
         const { data: questsData, error: questsError } = await supabase
           .from('quests')
-          .select(`
-            *,
-            curriculum_sections!inner (
-              id,
-              title,
-              description,
-              curriculum_order,
-              concepts
-            )
-          `)
-          .order('curriculum_sections.curriculum_order', { ascending: true })
-          .order('order_in_section', { ascending: true });
+          .select('*')
+          .order('order_in_section', { ascending: true })
+          .order('created_at', { ascending: true });
 
         if (questsError) {
-          console.error('Error fetching quests with curriculum:', questsError);
+          console.error('Error fetching quests:', questsError);
           return;
         }
 
         // Fetch user's quest progress
+        const currentUser = (await supabase.auth.getUser()).data.user;
         const { data: progressData, error: progressError } = await supabase
           .from('user_quest_progress')
           .select('quest_id, status, completed_at')
-          .eq('user_id', (await supabase.auth.getUser()).data.user?.id);
+          .eq('user_id', currentUser?.id || '00000000-0000-0000-0000-000000000000');
 
         if (progressError) {
           console.error('Error fetching progress:', progressError);
         }
 
-        // Create a map of quest progress for quick lookup
-        const progressMap = new Map(
-          progressData?.map(p => [p.quest_id, p]) || []
-        );
+        // Map progress by quest_id
+        const progressMap = new Map(progressData?.map(p => [p.quest_id, p]) || []);
 
-        // Process quests with status
-        const questsWithStatus = (questsData || []).map(quest => {
-          const progress = progressMap.get(quest.id);
+        // Attach status from progress to quests
+        const questsWithStatus: Quest[] = (questsData || []).map((q: any) => {
+          const progress = progressMap.get(q.id);
           let status: 'Completed' | 'In progress' | 'Not started' = 'Not started';
-          
           if (progress) {
-            if (progress.status === 'completed') {
-              status = 'Completed';
-            } else if (progress.status === 'started' || progress.status === 'in_progress') {
-              status = 'In progress';
-            }
+            if (progress.status === 'completed') status = 'Completed';
+            else if (progress.status === 'started' || progress.status === 'in_progress') status = 'In progress';
           }
-
-          return {
-            ...quest,
-            status
-          };
+          return { ...q, status } as Quest;
         });
 
         // Group quests by curriculum section
-        const grouped = questsWithStatus.reduce((acc, quest) => {
-          const section = quest.curriculum_sections;
-          const existingGroup = acc.find(g => g.section.id === section.id);
-          
-          if (existingGroup) {
-            existingGroup.quests.push(quest);
-            existingGroup.totalCount++;
-            if (quest.status === 'Completed') {
-              existingGroup.completedCount++;
-            }
-          } else {
-            acc.push({
-              section,
-              quests: [quest],
-              completedCount: quest.status === 'Completed' ? 1 : 0,
-              totalCount: 1
-            });
-          }
-          
-          return acc;
-        }, [] as GroupedQuests[]);
+        const sectionMap = new Map((sections || []).map(s => [s.id, s]));
+        const grouped: GroupedQuests[] = [];
 
-        // Sort by curriculum order
+        for (const quest of questsWithStatus) {
+          const section = sectionMap.get(quest.curriculum_section_id);
+          if (!section) continue; // skip quests not assigned to a section
+
+          let group = grouped.find(g => g.section.id === section.id);
+          if (!group) {
+            group = { section, quests: [], completedCount: 0, totalCount: 0 } as GroupedQuests;
+            grouped.push(group);
+          }
+          group.quests.push(quest);
+          group.totalCount += 1;
+          if (quest.status === 'Completed') group.completedCount += 1;
+        }
+
+        // Ensure groups are ordered by curriculum_order
         grouped.sort((a, b) => a.section.curriculum_order - b.section.curriculum_order);
 
         setGroupedQuests(grouped);
@@ -219,6 +207,17 @@ const StudentPlay: React.FC = () => {
             </Card>
           ))}
         </div>
+      </div>
+    );
+  }
+
+  if (!loading && groupedQuests.length === 0) {
+    return (
+      <div>
+        <h1 className="h1 mb-6">Financial Quest Journey</h1>
+        <Card className="p-6">
+          <p className="text-muted-foreground">No quests found. Add quests in the database or assign them to curriculum sections.</p>
+        </Card>
       </div>
     );
   }
