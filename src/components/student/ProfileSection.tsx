@@ -33,20 +33,17 @@ const ProfileSection = () => {
     ];
     const ROW_H = 25; // px, must match each row height
     const [idx, setIdx] = useState(0);
+    const [instant, setInstant] = useState(false);
     
     // Create duplicated array for seamless looping
     const duplicatedActivities = [...activities, ...activities];
     
     useEffect(() => {
         const id = setInterval(() => {
-            setIdx((i) => {
-                const next = i + 1;
-                // Reset to 0 when we've shown all original items (seamless transition)
-                return next >= activities.length ? 0 : next;
-            });
+            setIdx((i) => i + 1);
         }, 2000);
         return () => clearInterval(id);
-    }, [activities.length]);
+    }, []);
     return (
         <Card className="p-3 h-full flex flex-col relative overflow-hidden rounded-xl">
             <h3 className="text-base font-semibold mb-2">Profile</h3>
@@ -135,9 +132,18 @@ const ProfileSection = () => {
                     <div className="relative overflow-hidden h-[25px]" aria-live="off">
                         <div
                           className="will-change-transform"
+                          onTransitionEnd={() => {
+                            if (idx >= activities.length) {
+                              setInstant(true);
+                              setIdx(0);
+                              requestAnimationFrame(() => {
+                                requestAnimationFrame(() => setInstant(false));
+                              });
+                            }
+                          }}
                           style={{ 
                             transform: `translateY(-${idx * ROW_H}px)`,
-                            transition: 'transform 600ms ease-in-out'
+                            transition: instant ? 'none' : 'transform 600ms ease-in-out'
                           }}
                         >
                           {duplicatedActivities.map((a, index) => (
