@@ -67,7 +67,7 @@ const InsightItem: React.FC<{
   text,
   actionText
 }) => <div className="flex items-center justify-between gap-4 py-3">
-    <p className="body text-subtext leading-relaxed">{text}</p>
+    <p className="text-sm text-subtext leading-relaxed">{text}</p>
     {actionText && <Button variant="outline" size="sm" className="whitespace-nowrap flex-shrink-0">
         {actionText}
       </Button>}
@@ -89,10 +89,10 @@ const InsightCategory: React.FC<{
   items
 }) => <div className="pt-2">
     <div className="flex items-center gap-3">
-      <Icon size={24} className={color} />
+      <Icon size={16} className={color} />
       <div>
-        <h3 className="h3">{title}</h3>
-        {subtitle && <p className="small">{subtitle}</p>}
+        <h3 className="text-base font-semibold text-text">{title}</h3>
+        {subtitle && <p className="text-xs text-subtext">{subtitle}</p>}
       </div>
     </div>
     <div className="pl-10 divide-y divide-muted border-l border-muted ml-3 mt-2">
@@ -107,12 +107,12 @@ const TeacherInsights: React.FC = () => {
 
       <Card className="p-6">
         <div className="flex items-start gap-4 mb-8">
-          <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-800 flex items-center justify-center text-white">
-            <Bot size={24} />
+          <div className="flex-shrink-0 w-10 h-10 rounded-full bg-blue-800 flex items-center justify-center text-white">
+            <Bot size={20} />
           </div>
           <div>
-            <h2 className="h2">AI-Generated Teacher Briefing</h2>
-            <p className="small mt-1">Key patterns and opportunities from the last 7 days.</p>
+            <h2 className="text-lg font-semibold text-text">AI-Generated Teacher Briefing</h2>
+            <p className="text-xs text-subtext mt-1">Key patterns and opportunities from the last 7 days.</p>
           </div>
         </div>
 
