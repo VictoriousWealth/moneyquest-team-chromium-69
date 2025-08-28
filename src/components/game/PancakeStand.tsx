@@ -71,8 +71,12 @@ export const PancakeStand = ({ isActive, onComplete }: PancakeStandProps) => {
       {gamePhase === "intro" && (
         <Card className="p-8 text-center">
           <div className="mb-6">
-            <div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-yellow-400 to-orange-600 rounded-full flex items-center justify-center text-4xl">
-              🥞
+            <div className="w-48 h-32 mx-auto mb-4 rounded-lg overflow-hidden">
+              <img 
+                src="/images/pancake-price-storm-story-image.png" 
+                alt="Pancake Price Storm story illustration" 
+                className="w-full h-full object-cover"
+              />
             </div>
             <h1 className="text-3xl font-bold text-[var(--text)] mb-4">Pancake Price Storm!</h1>
             <div className="text-[var(--text)] text-lg leading-relaxed max-w-2xl mx-auto">
