@@ -44,14 +44,14 @@ const QuestCard: React.FC<{ quest: Quest; onClick?: () => void }> = ({ quest, on
 
     const status = quest.status || 'Not started';
     
-    // Check if this quest should use popup (only for the 3 specific quests)
-    const usePopup = ["The Juice That Shrunk", "Pancake Price Storm", "Momo Summer Job Dilemma"].includes(quest.title);
+    // Check if this quest should use popup (only for the 4 specific quests)
+    const usePopup = ["The Juice That Shrunk", "Pancake Price Storm", "Momo Summer Job Dilemma", "Pippa's Business Challenge"].includes(quest.title);
 
     return (
         <Card className="flex flex-col justify-between rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
             <div>
                 <img 
-                    src={quest.title === "The Juice That Shrunk" ? "/lovable-uploads/3d24a1f5-6261-49c1-8237-6f1c0cff430c.png" : `https://picsum.photos/seed/${quest.id}/500/240`} 
+                    src={`https://picsum.photos/seed/${quest.id}/500/240`} 
                     alt={quest.title} 
                     className="w-full h-40 object-cover" 
                 />
