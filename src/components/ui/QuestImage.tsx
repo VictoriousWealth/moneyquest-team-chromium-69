@@ -14,6 +14,14 @@ export const QuestImage = ({ quest, className = "", alt }: QuestImageProps) => {
   const [imageError, setImageError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Debug logging
+  console.log(`QuestImage for ${quest.title}:`, {
+    questId: quest.id,
+    imageUrl: quest.image_url,
+    imageError,
+    hasImageUrl: !!quest.image_url
+  });
+
   // Generate fallback image URL using Picsum with quest ID as seed
   const getFallbackImageUrl = () => {
     const seed = quest.id.replace(/[^a-zA-Z0-9]/g, '');
@@ -21,6 +29,7 @@ export const QuestImage = ({ quest, className = "", alt }: QuestImageProps) => {
   };
 
   const imageUrl = quest.image_url && !imageError ? quest.image_url : getFallbackImageUrl();
+  console.log(`Final imageUrl for ${quest.title}:`, imageUrl);
   const imageAlt = alt || `${quest.title} quest image`;
 
   return (
