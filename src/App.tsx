@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { HashRouter, Routes, Route, Navigate, Outlet, useLocation } from 'react-router-dom';
 import { Role } from './lib/roles';
+import { supabase } from './integrations/supabase/client';
 import LoginPage from './app/(auth)/login/page';
 import StudentLayout from './app/(student)/layout';
 import TeacherLayout from './app/(teacher)/layout';
@@ -16,25 +17,48 @@ import TeacherAssignments from './app/(teacher)/assignments/page';
 import TeacherInsights from './app/(teacher)/insights/page';
 import TeacherSettings from './app/(teacher)/settings/page';
 
-// Helper to get role from a simple cookie-like storage (using localStorage)
-const getRole = (): Role | null => {
-  const role = localStorage.getItem('userRole');
-  if (role === Role.STUDENT || role === Role.TEACHER) {
-    return role;
-  }
-  return null;
-};
-
 const ProtectedRoute: React.FC<{ allowedRole: Role }> = ({ allowedRole }) => {
-  const currentRole = getRole();
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
 
-  if (!currentRole) {
+  useEffect(() => {
+    // Get initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+        setLoading(false);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (currentRole !== allowedRole) {
-    // Or a dedicated "Access Denied" page
+  // Determine role based on email
+  const isStudent = user.email?.includes('alex.johnson') || user.email?.includes('student');
+  const isTeacher = user.email?.includes('sarah.chen') || user.email?.includes('teacher');
+  
+  const userRole = isStudent ? Role.STUDENT : isTeacher ? Role.TEACHER : null;
+
+  if (!userRole || userRole !== allowedRole) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
@@ -80,12 +104,43 @@ export default function App() {
 }
 
 function RoleBasedRedirect() {
-  const role = getRole();
-  if (role === Role.STUDENT) {
-    return <Navigate to="/student" replace />;
-  } else if (role === Role.TEACHER) {
-    return <Navigate to="/teacher" replace />;
-  } else {
+  const [user, setUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+      setLoading(false);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+        setLoading(false);
+      }
+    );
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
     return <Navigate to="/login" replace />;
+  }
+
+  // Determine role based on email
+  const isStudent = user.email?.includes('alex.johnson') || user.email?.includes('student');
+  
+  if (isStudent) {
+    return <Navigate to="/student" replace />;
+  } else {
+    return <Navigate to="/teacher" replace />;
   }
 }

@@ -3,6 +3,7 @@ import { useNavigate, NavLink } from 'react-router-dom';
 import Button from '../ui/Button';
 import { LogOut, Rocket } from 'lucide-react';
 import { Role } from '../../lib/roles';
+import { supabase } from '../../integrations/supabase/client';
 
 interface HeaderProps {
     role: Role;
@@ -11,10 +12,8 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ role }) => {
     const navigate = useNavigate();
 
-    const handleLogout = () => {
-        localStorage.removeItem('userRole');
-        // This will trigger a re-render in App.tsx and navigate to login
-        window.dispatchEvent(new Event("storage"));
+    const handleLogout = async () => {
+        await supabase.auth.signOut();
         navigate('/login');
     };
 

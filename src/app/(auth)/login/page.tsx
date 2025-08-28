@@ -1,18 +1,113 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Role } from '../../../lib/roles';
 import { Button } from '../../../components/ui/Button';
 import { Rocket, School, User } from 'lucide-react';
+import { supabase } from '../../../integrations/supabase/client';
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleLogin = (role: Role) => {
-    // In a real app, you'd perform authentication here.
-    // For this skeleton, we'll just set the role in localStorage.
-    localStorage.setItem('userRole', role);
-    window.dispatchEvent(new Event("storage")); // Notify App.tsx of role change
-    navigate(role === Role.STUDENT ? '/student/play' : '/teacher/dashboard');
+  // Demo credentials
+  const DEMO_ACCOUNTS = {
+    [Role.STUDENT]: {
+      email: 'alex.johnson@demo.com',
+      password: 'moneyquest123',
+      profile: {
+        username: 'Alex Johnson',
+        student_id: 'STU001',
+        school: 'Greenfield Elementary',
+        year: 'Grade 5',
+        district: 'Central District'
+      }
+    },
+    [Role.TEACHER]: {
+      email: 'sarah.chen@demo.com', 
+      password: 'moneyquest123',
+      profile: {
+        username: 'Sarah Chen',
+        school: 'Greenfield Elementary',
+        district: 'Central District'
+      }
+    }
+  };
+
+  const handleLogin = async (role: Role) => {
+    setIsLoading(true);
+    try {
+      const account = DEMO_ACCOUNTS[role];
+      
+      // Try to sign in first
+      let { data, error } = await supabase.auth.signInWithPassword({
+        email: account.email,
+        password: account.password,
+      });
+
+      // If user doesn't exist, create the account
+      if (error && error.message.includes('Invalid login credentials')) {
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email: account.email,
+          password: account.password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/`,
+            data: account.profile
+          }
+        });
+
+        if (signUpError) {
+          console.error('Sign up error:', signUpError);
+          return;
+        }
+
+        data = signUpData;
+      } else if (error) {
+        console.error('Sign in error:', error);
+        return;
+      }
+
+      if (data.user) {
+        // Create or update profile
+        await supabase
+          .from('profiles')
+          .upsert({
+            user_id: data.user.id,
+            ...account.profile
+          });
+
+        // For student, also create progress and game state
+        if (role === Role.STUDENT) {
+          await supabase
+            .from('student_progress')
+            .upsert({
+              user_id: data.user.id,
+              episodes_passed: 12,
+              time_spent_minutes: 180,
+              active_days: 15,
+              money_saved: 25.50,
+              class_rank: 3
+            });
+
+          await supabase
+            .from('game_states')
+            .upsert({
+              user_id: data.user.id,
+              day: 15,
+              coins: 150.00,
+              streak_days: 7,
+              coin_multiplier: 1.2,
+              xp_multiplier: 1.1,
+              last_played_date: new Date().toISOString().split('T')[0]
+            });
+        }
+
+        navigate(role === Role.STUDENT ? '/student/play' : '/teacher/dashboard');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
