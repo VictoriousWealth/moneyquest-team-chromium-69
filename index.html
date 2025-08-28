@@ -66,6 +66,21 @@
 </head>
 <body>
   <div id="root"></div>
+  <script>
+    // Preview/new-tab bootstrap: set a demo role and route if none is set
+    (function() {
+      try {
+        var role = localStorage.getItem('userRole');
+        var hash = location.hash || '';
+        var onLoginOrRoot = hash === '' || hash === '#/' || hash.indexOf('#/login') === 0;
+        if (!role && onLoginOrRoot) {
+          localStorage.setItem('userRole', 'student');
+          // Route straight to the mentor page for demo convenience
+          location.hash = '#/student/mentor';
+        }
+      } catch (e) { /* noop */ }
+    })();
+  </script>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>
