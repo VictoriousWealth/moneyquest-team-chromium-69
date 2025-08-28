@@ -429,19 +429,19 @@ const StudentPlay: React.FC = () => {
           </DialogClose>
 
           {selectedQuest && (
-            <div className="p-4">
-              <DialogHeader className="mb-4">
+            <div className="p-3">
+              <DialogHeader className="mb-3">
                 <div className="flex items-start gap-3">
                   <div className="flex-shrink-0">
                     <img 
-                      src={`https://picsum.photos/seed/${selectedQuest.id}/60/60`} 
+                      src={`https://picsum.photos/seed/${selectedQuest.id}/50/50`} 
                       alt={selectedQuest.title} 
-                      className="w-15 h-15 rounded-[var(--radius)] object-cover ring-1 ring-[var(--ring)]" 
+                      className="w-12 h-12 rounded-[var(--radius)] object-cover ring-1 ring-[var(--ring)]" 
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <DialogTitle className="h3 text-[var(--text)] mb-1">{selectedQuest.title}</DialogTitle>
-                    <p className="text-[var(--subtext)]" style={{ fontSize: 'var(--small)' }}>Adventure with {selectedQuest.npc}</p>
+                    <DialogTitle className="text-[var(--text)] font-semibold mb-1" style={{ fontSize: 'var(--body)' }}>{selectedQuest.title}</DialogTitle>
+                    <p className="text-[var(--subtext)]" style={{ fontSize: '13px' }}>Adventure with {selectedQuest.npc}</p>
                     <div className="mt-2">
                       <Badge variant={selectedQuest.status === 'Completed' ? 'mint' : selectedQuest.status === 'In progress' ? 'teal' : 'muted'}>
                         {selectedQuest.status}
@@ -451,44 +451,44 @@ const StudentPlay: React.FC = () => {
                 </div>
               </DialogHeader>
 
-              <div className="mb-4">
-                <p className="text-[var(--text)]" style={{ fontSize: 'var(--small)', lineHeight: '1.4' }}>{selectedQuest.description}</p>
+              <div className="mb-3">
+                <p className="text-[var(--text)]" style={{ fontSize: '13px', lineHeight: '1.3' }}>{selectedQuest.description}</p>
                 
                 {/* Concepts */}
-                <div className="flex flex-wrap gap-1.5 mt-3">
-                  {selectedQuest.concepts?.map(concept => (
-                    <Badge key={concept} variant="blue">{concept}</Badge>
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {selectedQuest.concepts?.slice(0, 3).map(concept => (
+                    <Badge key={concept} variant="blue" className="text-xs px-2 py-0.5">{concept}</Badge>
                   ))}
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 mb-4">
-                <div className="flex items-center gap-2 bg-[var(--muted)] rounded-[var(--radius)] p-3">
-                  <MapPin className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />
-                  <div>
-                    <span className="text-[var(--subtext)] block" style={{ fontSize: '11px' }}>Location</span>
-                    <span className="text-[var(--text)] font-medium" style={{ fontSize: 'var(--small)' }}>{selectedQuest.zone}</span>
+              <div className="grid grid-cols-2 gap-2 mb-3">
+                <div className="flex items-center gap-2 bg-[var(--muted)] rounded-[var(--radius)] p-2">
+                  <MapPin className="w-3 h-3 text-[var(--primary)] flex-shrink-0" />
+                  <div className="min-w-0">
+                    <span className="text-[var(--subtext)] block" style={{ fontSize: '10px' }}>Location</span>
+                    <span className="text-[var(--text)] font-medium truncate block" style={{ fontSize: '12px' }}>{selectedQuest.zone}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 bg-[var(--muted)] rounded-[var(--radius)] p-3">
-                  <Users className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />
-                  <div>
-                    <span className="text-[var(--subtext)] block" style={{ fontSize: '11px' }}>Guide</span>
-                    <span className="text-[var(--text)] font-medium" style={{ fontSize: 'var(--small)' }}>{selectedQuest.npc}</span>
+                <div className="flex items-center gap-2 bg-[var(--muted)] rounded-[var(--radius)] p-2">
+                  <Users className="w-3 h-3 text-[var(--primary)] flex-shrink-0" />
+                  <div className="min-w-0">
+                    <span className="text-[var(--subtext)] block" style={{ fontSize: '10px' }}>Guide</span>
+                    <span className="text-[var(--text)] font-medium truncate block" style={{ fontSize: '12px' }}>{selectedQuest.npc}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 bg-[var(--muted)] rounded-[var(--radius)] p-3">
-                  <Coins className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />
-                  <div>
-                    <span className="text-[var(--subtext)] block" style={{ fontSize: '11px' }}>Coins</span>
-                    <span className="text-[var(--text)] font-medium" style={{ fontSize: 'var(--small)' }}>{selectedQuest.reward_coins}</span>
+                <div className="flex items-center gap-2 bg-[var(--muted)] rounded-[var(--radius)] p-2">
+                  <Coins className="w-3 h-3 text-[var(--primary)] flex-shrink-0" />
+                  <div className="min-w-0">
+                    <span className="text-[var(--subtext)] block" style={{ fontSize: '10px' }}>Coins</span>
+                    <span className="text-[var(--text)] font-medium" style={{ fontSize: '12px' }}>{selectedQuest.reward_coins}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 bg-[var(--muted)] rounded-[var(--radius)] p-3">
-                  <Zap className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />
-                  <div>
-                    <span className="text-[var(--subtext)] block" style={{ fontSize: '11px' }}>XP</span>
-                    <span className="text-[var(--text)] font-medium" style={{ fontSize: 'var(--small)' }}>{selectedQuest.reward_xp}</span>
+                <div className="flex items-center gap-2 bg-[var(--muted)] rounded-[var(--radius)] p-2">
+                  <Zap className="w-3 h-3 text-[var(--primary)] flex-shrink-0" />
+                  <div className="min-w-0">
+                    <span className="text-[var(--subtext)] block" style={{ fontSize: '10px' }}>XP</span>
+                    <span className="text-[var(--text)] font-medium" style={{ fontSize: '12px' }}>{selectedQuest.reward_xp}</span>
                   </div>
                 </div>
               </div>
@@ -497,12 +497,12 @@ const StudentPlay: React.FC = () => {
                 {selectedQuest.status === "Not started" && (
                   <Button
                     variant="primary"
-                    size="default"
+                    size="sm"
                     onClick={() => {
                       window.open(`/quest/${selectedQuest.id}`, '_blank');
                       setSelectedQuest(null);
                     }}
-                    className="px-6"
+                    className="px-4 rounded-[var(--radius)]"
                   >
                     🚀 Start Quest
                   </Button>
@@ -510,18 +510,18 @@ const StudentPlay: React.FC = () => {
                 {selectedQuest.status === "In progress" && (
                   <Button
                     variant="accent"
-                    size="default"
+                    size="sm"
                     onClick={() => {
                       window.open(`/quest/${selectedQuest.id}`, '_blank');
                       setSelectedQuest(null);
                     }}
-                    className="px-6 animate-pulse"
+                    className="px-4 animate-pulse rounded-[var(--radius)]"
                   >
                     ⚡ Continue Quest
                   </Button>
                 )}
                 {selectedQuest.status === "Completed" && (
-                  <Button variant="muted" size="default" disabled className="px-6">
+                  <Button variant="muted" size="sm" disabled className="px-4 rounded-[var(--radius)]">
                     ✅ Completed
                   </Button>
                 )}
