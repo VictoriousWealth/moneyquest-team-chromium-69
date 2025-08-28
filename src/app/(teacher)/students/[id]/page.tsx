@@ -27,25 +27,25 @@ const TeacherStudentDetail: React.FC = () => {
       <div className="flex items-center gap-4 mb-6">
         <img src={student.avatarUrl} alt={student.name} className="w-16 h-16 rounded-full ring-2 ring-blue-500" />
         <div>
-            <h1 className="h1">{student.name}</h1>
+            <h1 className="text-lg font-semibold text-text">{student.name}</h1>
             <div className="flex items-center gap-4 mt-1">
-                <span className="small">Streak: <strong>{student.streak} days</strong></span>
-                <span className="small">Badges: <strong>{student.badges.length}</strong></span>
-                <span className="small">Mastery: <strong>{student.masteryProgress}</strong></span>
+                <span className="text-xs text-subtext">Streak: <strong>{student.streak} days</strong></span>
+                <span className="text-xs text-subtext">Badges: <strong>{student.badges.length}</strong></span>
+                <span className="text-xs text-subtext">Mastery: <strong>{student.masteryProgress}</strong></span>
             </div>
         </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <Card className="p-6">
-              <h2 className="h2 mb-4 flex items-center gap-2"><ListChecks size={24}/> Attempt Timeline</h2>
+              <h2 className="text-base font-semibold text-text mb-4 flex items-center gap-2"><ListChecks size={16}/> Attempt Timeline</h2>
               <div className="space-y-4">
                   {studentAttempts.map(attempt => (
                       <div key={attempt.id} className="rounded-md bg-muted p-3">
                         <div className="flex justify-between items-baseline">
-                          <h3 className="font-semibold text-text">{attempt.episodeTitle}</h3>
-                          <span className="small">{attempt.date}</span>
+                          <h3 className="text-sm font-medium text-text">{attempt.episodeTitle}</h3>
+                          <span className="text-xs text-subtext">{attempt.date}</span>
                         </div>
-                        <p className="small mt-1">{attempt.summary}</p>
+                        <p className="text-xs text-subtext mt-1">{attempt.summary}</p>
                         <Badge variant={attempt.score && attempt.score >= 70 ? 'mint' : 'muted'} className="mt-2">
                           Score: {attempt.score}%
                         </Badge>
@@ -54,12 +54,12 @@ const TeacherStudentDetail: React.FC = () => {
               </div>
           </Card>
            <Card className="p-6">
-              <h2 className="h2 mb-4 flex items-center gap-2"><MessageSquare size={24}/> Mentor Q&A Highlights</h2>
+              <h2 className="text-base font-semibold text-text mb-4 flex items-center gap-2"><MessageSquare size={16}/> Mentor Q&A Highlights</h2>
                <div className="space-y-4">
                   {studentMentorInteractions.map(interaction => (
                       <div key={interaction.id} className="text-sm">
-                          <p className="p-2 rounded-md bg-blue-500/10 text-right font-medium">"{interaction.question}"</p>
-                          <p className="mt-2 p-2 rounded-md bg-muted text-subtext">{interaction.answer}</p>
+                          <p className="p-2 rounded-md bg-blue-500/10 text-right text-xs font-medium">"{interaction.question}"</p>
+                          <p className="mt-2 p-2 rounded-md bg-muted text-subtext text-xs">{interaction.answer}</p>
                       </div>
                   ))}
               </div>
