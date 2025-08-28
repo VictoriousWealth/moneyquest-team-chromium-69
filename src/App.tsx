@@ -11,7 +11,6 @@ import StudentAchievements from './app/(student)/achievements/page';
 import StudentPlay from './app/(student)/play/page';
 import StudentJournal from './app/(student)/journal/page';
 import StudentMentor from './app/(student)/mentor/page';
-import QuestPage from './app/(student)/quest/[episodeId]/page';
 import TeacherStudents from './app/(teacher)/students/page';
 import TeacherStudentDetail from './app/(teacher)/students/[id]/page';
 import TeacherAssignments from './app/(teacher)/assignments/page';
@@ -78,7 +77,6 @@ export default function App() {
             <Route index element={<Navigate to="/student/play" replace />} />
             <Route path="dashboard" element={<StudentDashboard />} />
             <Route path="play" element={<StudentPlay />} />
-            <Route path="quest/:episodeId" element={<QuestPage />} />
             <Route path="achievements" element={<StudentAchievements />} />
             <Route path="journal" element={<StudentJournal />} />
             <Route path="mentor" element={<StudentMentor />} />

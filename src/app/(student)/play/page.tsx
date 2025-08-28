@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import { episodes } from '../../../lib/mockData';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
-import EpisodePreviewModal from '../../../components/student/EpisodePreviewModal';
 
-const EpisodeCard: React.FC<{ episode: typeof episodes[0]; onPreview: () => void }> = ({ episode, onPreview }) => {
+const EpisodeCard: React.FC<{ episode: typeof episodes[0] }> = ({ episode }) => {
     const statusColor = {
         'Completed': 'mint',
         'In progress': 'teal',
@@ -31,7 +29,7 @@ const EpisodeCard: React.FC<{ episode: typeof episodes[0]; onPreview: () => void
                 </div>
             </div>
             <div className="p-4 pt-0">
-                <Button variant="primary" className="w-full mt-2" onClick={onPreview}>
+                <Button variant="primary" className="w-full mt-2">
                     {episode.status === 'In progress' ? 'Resume' : 'Start'}
                 </Button>
             </div>
@@ -40,47 +38,14 @@ const EpisodeCard: React.FC<{ episode: typeof episodes[0]; onPreview: () => void
 }
 
 const StudentPlay: React.FC = () => {
-  const [selectedEpisode, setSelectedEpisode] = useState<typeof episodes[0] | null>(null);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
-  const navigate = useNavigate();
-
-  const handlePreview = (episode: typeof episodes[0]) => {
-    setSelectedEpisode(episode);
-    setIsPreviewOpen(true);
-  };
-
-  const handleStartQuest = () => {
-    if (selectedEpisode) {
-      navigate(`/student/quest/${selectedEpisode.id}`);
-    }
-  };
-
-  const handleClosePreview = () => {
-    setIsPreviewOpen(false);
-    setSelectedEpisode(null);
-  };
-
   return (
     <div>
       <h1 className="h1 mb-6">Play Episodes</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {episodes.map(episode => (
-          <EpisodeCard 
-            key={episode.id} 
-            episode={episode} 
-            onPreview={() => handlePreview(episode)}
-          />
+          <EpisodeCard key={episode.id} episode={episode} />
         ))}
       </div>
-      
-      {selectedEpisode && (
-        <EpisodePreviewModal
-          episode={selectedEpisode}
-          isOpen={isPreviewOpen}
-          onClose={handleClosePreview}
-          onStartQuest={handleStartQuest}
-        />
-      )}
     </div>
   );
 };
