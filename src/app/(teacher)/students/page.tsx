@@ -1,15 +1,83 @@
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import { students } from '../../../lib/mockData';
+import { supabase } from '../../../integrations/supabase/client';
 import type { Student } from '../../../types';
 import { Search, Award, Calendar, ChevronRight, ChevronDown, AlertTriangle, Target, Activity } from 'lucide-react';
 
 const TeacherStudents: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [masteryFilter, setMasteryFilter] = useState('all');
+  const [allStudents, setAllStudents] = useState<Student[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchAlexJohnson = async () => {
+      try {
+        // Fetch Alex Johnson's real data from database
+        const { data: alexProfile } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('username', 'Alex Johnson')
+          .maybeSingle();
+
+        let alexJohnsonData = null;
+        
+        if (alexProfile) {
+          const { data: alexProgress } = await supabase
+            .from('student_progress')
+            .select('*')
+            .eq('user_id', alexProfile.user_id)
+            .maybeSingle();
+
+          const { data: alexStreaks } = await supabase
+            .from('streaks')
+            .select('*')
+            .eq('user_id', alexProfile.user_id)
+            .maybeSingle();
+
+          const { data: alexAchievements } = await supabase
+            .from('achievements')
+            .select('*')
+            .eq('user_id', alexProfile.user_id);
+
+          alexJohnsonData = {
+            id: alexProfile.user_id,
+            name: alexProfile.username,
+            avatarUrl: `https://api.dicebear.com/7.x/avataaars/svg?seed=${alexProfile.username}`,
+            streak: alexStreaks?.current_count || 0,
+            lastActivity: new Date().toISOString().split('T')[0],
+            school: alexProfile.school || "Unknown School",
+            badges: (alexAchievements || []).map(achievement => ({
+              id: achievement.id,
+              name: achievement.title || "Achievement",
+              icon: "🏆",
+              type: "achievement" as const
+            })),
+            masteryProgress: `${Math.floor((alexProgress?.episodes_passed || 0) * 10)}%`,
+          };
+        }
+
+        // Combine real Alex Johnson data with mock data for others
+        const otherMockStudents = students.filter(student => student.name !== "Alex Johnson");
+        const combinedStudents = alexJohnsonData 
+          ? [alexJohnsonData, ...otherMockStudents]
+          : students;
+
+        setAllStudents(combinedStudents);
+      } catch (error) {
+        console.error('Error fetching Alex Johnson data:', error);
+        setAllStudents(students);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchAlexJohnson();
+  }, []);
 
   const masteryOptions = [
     { value: 'all', label: 'All Levels' },
@@ -19,7 +87,7 @@ const TeacherStudents: React.FC = () => {
   ];
 
   const filteredStudents = useMemo(() => {
-    return students.filter(student => {
+    return allStudents.filter(student => {
       const nameMatch = student.name.toLowerCase().includes(searchTerm.toLowerCase());
       
       let masteryMatch = true;
@@ -36,7 +104,7 @@ const TeacherStudents: React.FC = () => {
 
       return nameMatch && masteryMatch;
     });
-  }, [searchTerm, masteryFilter]);
+  }, [searchTerm, masteryFilter, allStudents]);
 
   const getMasteryColor = (progress: string) => {
     const num = parseInt(progress, 10);
@@ -51,6 +119,14 @@ const TeacherStudents: React.FC = () => {
     if (num >= 40) return Activity;
     return AlertTriangle;
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-text">Loading students...</div>
+      </div>
+    );
+  }
 
   return (
     <div>
