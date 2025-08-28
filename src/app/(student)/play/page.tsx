@@ -53,9 +53,9 @@ const QuestCard: React.FC<{ quest: Quest }> = ({ quest }) => {
                 />
                 <div className="p-4">
                     {/* Header with title and status */}
-                    <div className="flex justify-between items-start mb-2">
-                        <h3 className="h3 mb-2 text-foreground">{quest.title}</h3>
-                        <Badge variant={statusColor[status]}>{status}</Badge>
+                    <div className="flex justify-between items-start gap-3 mb-2">
+                      <h3 className="h3 text-foreground flex-1 min-w-0">{quest.title}</h3>
+                      <Badge variant={statusColor[status]} className="flex-shrink-0">{status}</Badge>
                     </div>
                     
                     {/* Description */}
