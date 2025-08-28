@@ -233,7 +233,7 @@ const StudentPlay: React.FC = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-xl font-semibold text-foreground mb-1">
-                    📚 {group.section.title}
+                    {group.section.curriculum_order}. {group.section.title}
                   </h2>
                   <p className="text-muted-foreground text-sm mb-2">
                     {group.section.description}
