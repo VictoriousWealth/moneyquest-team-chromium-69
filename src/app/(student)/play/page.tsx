@@ -13,7 +13,7 @@ const EpisodeCard: React.FC<{ episode: typeof episodes[0] }> = ({ episode }) => 
     } as const;
 
     return (
-        <Card className="flex flex-col justify-between">
+        <Card className="flex flex-col justify-between rounded-lg overflow-hidden">
             <div>
                 <img src={`https://picsum.photos/seed/${episode.id}/400/200`} alt={episode.title} className="w-full h-32 object-cover" />
                 <div className="p-4">
