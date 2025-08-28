@@ -65,7 +65,7 @@ const ProfileSection = () => {
                 </div>
             </div>
 
-            <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-0.5 items-baseline mb-2 text-xs">
+            <div className="grid grid-cols-[auto_1fr] gap-x-3 gap-y-1.5 items-baseline mb-2 text-xs">
                 {[
                     { label: 'Year group', value: 'Year 9' },
                     { label: 'School', value: 'Northwood High' },
@@ -73,8 +73,8 @@ const ProfileSection = () => {
                     { label: 'Student ID', value: 'STU-001' },
                 ].map(({ label, value }) => (
                     <React.Fragment key={label}>
-                        <p className="font-medium text-subtext text-xs">{label}</p>
-                        <p className="text-xs font-medium text-text">{value}</p>
+                        <p className="font-medium text-subtext text-xs leading-relaxed">{label}</p>
+                        <p className="text-xs font-medium text-text leading-relaxed">{value}</p>
                     </React.Fragment>
                 ))}
             </div>
