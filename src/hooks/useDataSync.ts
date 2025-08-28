@@ -8,9 +8,12 @@ export const useDataSync = () => {
     try {
       // Get current user
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        console.error('No user found for sync');
+        return;
+      }
 
-      console.log('Starting data sync for user:', user.id);
+      console.log('Starting data sync for user:', user.id, user.email);
 
       // 1. Sync daily activities from demoData
       for (const activity of dailyActivity) {
@@ -106,8 +109,10 @@ export const useDataSync = () => {
       ];
 
       // Insert achievements for this user
+      console.log('Syncing achievements for user:', user.id);
       for (const achievement of alexAchievements) {
-        await supabase
+        console.log('Inserting achievement:', achievement.achievement_definition_id);
+        const { data, error } = await supabase
           .from('achievements')
           .upsert({
             user_id: user.id,
@@ -119,6 +124,12 @@ export const useDataSync = () => {
             earned_at: achievement.earned_at,
             achievement_data: achievement.achievement_data
           });
+        
+        if (error) {
+          console.error('Error inserting achievement:', achievement.achievement_definition_id, error);
+        } else {
+          console.log('Successfully inserted achievement:', achievement.achievement_definition_id, data);
+        }
       }
 
       // 4. Sync journal entries from recent activity details
