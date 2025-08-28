@@ -87,7 +87,7 @@ const MonthSummary = ({ activity, currentDate, streaks }: { activity: any[]; cur
       .slice(0, 3);
 
     // Use actual streak data from Supabase database instead of calculating locally
-    const dailyStreak = streaks.find(s => s.streak_type === 'daily_activity');
+    const dailyStreak = streaks.find(s => s.streak_type === 'daily_play');
     const mainStreak = {
       current_count: dailyStreak?.current_count || 0,
       best_count: dailyStreak?.best_count || 0
