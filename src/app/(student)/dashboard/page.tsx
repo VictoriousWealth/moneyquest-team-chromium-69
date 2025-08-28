@@ -7,7 +7,7 @@ const StudentDashboard: React.FC = () => {
   return (
     // This grid establishes the main two-column layout and its height.
     // Uses h-full minus 40px to prevent phantom scrolling.
-    <div className="grid grid-cols-1 lg:grid-cols-[minmax(300px,_30%)_1fr] lg:gap-6 h-[calc(100%-40px)]">
+    <div className="grid grid-cols-1 lg:grid-cols-[minmax(300px,_30%)_1fr] lg:gap-6 h-[calc(100%-250px)]">
       
       {/* Left Column: Profile. Will stretch to fill its grid area height. */}
       <div>
