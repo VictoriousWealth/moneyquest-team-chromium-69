@@ -120,7 +120,7 @@ const ProfileSection = () => {
                 {/* Activity Ticker - Continuous rolling animation */}
                 <div className="flex-grow flex flex-col border-t border-muted pt-2 min-h-0">
                     <h4 className="font-medium text-xs text-subtext mb-1 flex-shrink-0">Class Activity</h4>
-                    <div className="relative overflow-hidden h-[25px]" aria-live="off">
+                    <div className="relative overflow-hidden h-[50px]" aria-live="off">
                         <div className="activity-ticker-scroll">
                           {infiniteActivities.map((a, index) => (
                             <div key={`${a.seed}-${index}`} className="flex w-full items-center gap-2 px-1 h-[25px] text-xs">
