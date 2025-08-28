@@ -277,7 +277,7 @@ const StudentPlay: React.FC = () => {
             placeholder="Search quests..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 rounded-xl bg-muted/30 text-foreground placeholder:text-muted-foreground focus:outline-none focus:bg-background/80 focus:ring-2 focus:ring-primary/20 transition-all"
+            className="w-full pl-10 pr-4 py-3 rounded-xl bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all border border-gray-200 focus:border-blue-400"
           />
         </div>
         
@@ -290,7 +290,7 @@ const StudentPlay: React.FC = () => {
                 onClick={() => setStatusFilter(status)}
                 className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
                   statusFilter === status
-                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    ? 'bg-blue-500 text-white shadow-sm'
                     : 'text-muted-foreground hover:text-foreground hover:bg-muted/40 bg-muted/20'
                 }`}
               >
