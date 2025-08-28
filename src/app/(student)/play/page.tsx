@@ -422,87 +422,111 @@ const StudentPlay: React.FC = () => {
       
       {/* Quest Details Popup */}
       <Dialog open={!!selectedQuest} onOpenChange={() => setSelectedQuest(null)}>
-        <DialogContent className="max-w-lg bg-gradient-to-br from-blue-50 to-blue-100 border-4 border-blue-600">
+        <DialogContent className="max-w-lg bg-[var(--surface)] border-0 shadow-[var(--shadow-soft)] ring-1 ring-[var(--ring)] rounded-[var(--radius-outer)] overflow-hidden">
           <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
           </DialogClose>
 
           {selectedQuest && (
-            <>
-              <DialogHeader>
-                <div className="flex items-center gap-4 mb-4">
-                  <div className="text-4xl">
+            <div className="p-6">
+              <DialogHeader className="mb-6">
+                <div className="flex items-start gap-4">
+                  <div className="flex-shrink-0">
                     <img 
-                      src={`https://picsum.photos/seed/${selectedQuest.id}/100/100`} 
+                      src={`https://picsum.photos/seed/${selectedQuest.id}/80/80`} 
                       alt={selectedQuest.title} 
-                      className="w-16 h-16 rounded-lg object-cover" 
+                      className="w-20 h-20 rounded-[var(--radius-inner)] object-cover ring-1 ring-[var(--ring)]" 
                     />
                   </div>
-                  <div>
-                    <DialogTitle className="text-2xl font-bold text-blue-900">{selectedQuest.title}</DialogTitle>
-                    <p className="text-blue-700 font-medium">with {selectedQuest.npc}</p>
+                  <div className="flex-1 min-w-0">
+                    <DialogTitle className="text-xl font-semibold text-[var(--text)] mb-1">{selectedQuest.title}</DialogTitle>
+                    <p className="text-[var(--subtext)] text-sm font-medium mb-3">Adventure with {selectedQuest.npc}</p>
+                    <Badge variant={selectedQuest.status === 'Completed' ? 'mint' : selectedQuest.status === 'In progress' ? 'teal' : 'muted'}>
+                      {selectedQuest.status}
+                    </Badge>
                   </div>
                 </div>
               </DialogHeader>
 
-              <p className="text-blue-800 mb-4 leading-relaxed">{selectedQuest.description}</p>
+              <div className="mb-6">
+                <p className="text-[var(--text)] leading-relaxed mb-4">{selectedQuest.description}</p>
+                
+                {/* Concepts */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {selectedQuest.concepts?.map(concept => (
+                    <Badge key={concept} variant="blue" className="text-xs">{concept}</Badge>
+                  ))}
+                </div>
+              </div>
 
               <div className="grid grid-cols-1 gap-3 mb-6">
-                <div className="flex items-center gap-2 bg-blue-200 rounded-lg p-3">
-                  <MapPin className="w-5 h-5 text-blue-700" />
-                  <span className="text-sm font-medium text-blue-800">{selectedQuest.zone}</span>
-                </div>
-                <div className="flex items-center gap-2 bg-blue-200 rounded-lg p-3">
-                  <Users className="w-5 h-5 text-blue-700" />
-                  <span className="text-sm font-medium text-blue-800">{selectedQuest.npc}</span>
-                </div>
-                <div className="flex items-center gap-2 bg-blue-200 rounded-lg p-3">
-                  <div className="flex items-center gap-2">
-                    <Coins className="w-5 h-5 text-blue-700" />
-                    <span className="text-sm font-medium text-blue-800">{selectedQuest.reward_coins} coins</span>
+                <div className="flex items-center gap-3 bg-[var(--muted)] rounded-[var(--radius)] p-4">
+                  <MapPin className="w-5 h-5 text-[var(--primary)] flex-shrink-0" />
+                  <div>
+                    <span className="text-xs text-[var(--subtext)] block">Location</span>
+                    <span className="text-sm font-medium text-[var(--text)]">{selectedQuest.zone}</span>
                   </div>
-                  <div className="flex items-center gap-2 ml-4">
-                    <Zap className="w-5 h-5 text-blue-700" />
-                    <span className="text-sm font-medium text-blue-800">{selectedQuest.reward_xp} XP</span>
+                </div>
+                <div className="flex items-center gap-3 bg-[var(--muted)] rounded-[var(--radius)] p-4">
+                  <Users className="w-5 h-5 text-[var(--primary)] flex-shrink-0" />
+                  <div>
+                    <span className="text-xs text-[var(--subtext)] block">Guide</span>
+                    <span className="text-sm font-medium text-[var(--text)]">{selectedQuest.npc}</span>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="flex items-center gap-3 bg-[var(--muted)] rounded-[var(--radius)] p-4">
+                    <Coins className="w-5 h-5 text-[var(--primary)] flex-shrink-0" />
+                    <div>
+                      <span className="text-xs text-[var(--subtext)] block">Coins</span>
+                      <span className="text-sm font-medium text-[var(--text)]">{selectedQuest.reward_coins}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 bg-[var(--muted)] rounded-[var(--radius)] p-4">
+                    <Zap className="w-5 h-5 text-[var(--primary)] flex-shrink-0" />
+                    <div>
+                      <span className="text-xs text-[var(--subtext)] block">Experience</span>
+                      <span className="text-sm font-medium text-[var(--text)]">{selectedQuest.reward_xp} XP</span>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="flex justify-center space-y-2 flex-col">
+              <div className="flex justify-center">
                 {selectedQuest.status === "Not started" && (
                   <Button
+                    variant="primary"
                     size="lg"
                     onClick={() => {
-                      // Handle quest start - open in new tab
                       window.open(`/quest/${selectedQuest.id}`, '_blank');
                       setSelectedQuest(null);
                     }}
-                    className="bg-green-600 hover:bg-green-700 text-white font-bold px-8 py-3 rounded-xl shadow-lg"
+                    className="px-8 animate-scale-in"
                   >
                     🚀 Start Quest
                   </Button>
                 )}
                 {selectedQuest.status === "In progress" && (
                   <Button
+                    variant="accent"
                     size="lg"
                     onClick={() => {
-                      // Handle quest continue - open in new tab
                       window.open(`/quest/${selectedQuest.id}`, '_blank');
                       setSelectedQuest(null);
                     }}
-                    className="bg-orange-600 hover:bg-orange-700 text-white font-bold px-8 py-3 rounded-xl shadow-lg animate-pulse"
+                    className="px-8 animate-pulse"
                   >
                     ⚡ Continue Quest
                   </Button>
                 )}
                 {selectedQuest.status === "Completed" && (
-                  <Button size="lg" disabled className="bg-gray-400 text-gray-600 font-bold px-8 py-3 rounded-xl">
+                  <Button variant="muted" size="lg" disabled className="px-8">
                     ✅ Completed
                   </Button>
                 )}
               </div>
-            </>
+            </div>
           )}
         </DialogContent>
       </Dialog>
