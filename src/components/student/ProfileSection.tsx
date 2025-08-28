@@ -59,9 +59,6 @@ const ProfileSection = () => {
                 </div>
                 <div>
                     <h4 className="text-base font-semibold text-text">Alex Johnson</h4>
-                    <p className="text-xs mt-1 text-subtext">
-                        Year 9 &bull; Northwood High &bull; STU-001
-                    </p>
                 </div>
             </div>
 
