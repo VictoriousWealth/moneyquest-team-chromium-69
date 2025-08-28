@@ -15,8 +15,8 @@ const QuickActionChips: React.FC<QuickActionChipsProps> = ({
   className = ''
 }) => {
   const defaultChips = [
-    "Give me a 3-question quiz",
-    "Set a 1-week savings plan", 
+    "Give me a small quiz about saving",
+    "Create a savings plan for me", 
     "What did I learn this week?"
   ];
 
