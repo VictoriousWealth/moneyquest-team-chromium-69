@@ -89,15 +89,15 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({
   if (card.type === 'quiz') {
     return (
       <Card className="bg-white border-l-4 border-l-blue-500 shadow-sm">
-        <div className="p-4 pb-3 border-b border-gray-100">
-          <h3 className="text-lg font-semibold text-gray-800">
+        <div className="p-3 pb-2 border-b border-gray-100">
+          <h3 className="text-sm font-semibold text-gray-800">
             {card.title}
           </h3>
         </div>
-        <div className="p-4 space-y-4">
-          <p className="text-gray-700 font-medium">{card.question}</p>
+        <div className="p-3 space-y-3">
+          <p className="text-sm text-gray-700 font-medium">{card.question}</p>
           
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {card.options.map((option) => {
               const isSelected = selectedOption === option.id;
               const isCorrect = card.correctOptionId === option.id;
@@ -109,7 +109,7 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({
                   onClick={() => handleQuizAnswer(option.id)}
                   disabled={showResult}
                   className={`
-                    w-full p-3 text-left rounded-lg border-2 transition-all
+                    w-full p-2.5 text-left rounded-lg border-2 transition-all text-sm
                     ${!showResult ? 'hover:border-blue-300 hover:bg-blue-50' : ''}
                     ${isSelected && !showResult ? 'border-blue-500 bg-blue-50' : ''}
                     ${showResult && isCorrect ? 'border-green-500 bg-green-50' : ''}
@@ -121,7 +121,7 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({
                   tabIndex={0}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-800">{option.text}</span>
+                    <span className="text-gray-800 text-sm">{option.text}</span>
                     {showResult && (
                       <div className="flex items-center gap-2">
                         {isCorrect && <Check className="text-green-600" size={20} />}
@@ -131,7 +131,7 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({
                   </div>
                   
                   {showResult && isWrong && card.optionHints?.[option.id] && (
-                    <p className="mt-2 text-sm text-red-700">
+                    <p className="mt-1.5 text-xs text-red-700">
                       {card.optionHints[option.id]}
                     </p>
                   )}
@@ -141,9 +141,9 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({
           </div>
           
           {showResult && (
-            <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-              <p className="text-blue-800 font-medium">Explanation:</p>
-              <p className="text-blue-700 mt-1">{card.explanation}</p>
+            <div className="mt-3 p-2.5 bg-blue-50 rounded-lg">
+              <p className="text-blue-800 font-medium text-xs">Explanation:</p>
+              <p className="text-blue-700 mt-1 text-sm">{card.explanation}</p>
             </div>
           )}
         </div>
@@ -154,9 +154,9 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({
   if (card.type === 'plan') {
     return (
       <Card className="bg-white border-l-4 border-l-green-500 shadow-sm">
-        <div className="p-4 pb-3 border-b border-gray-100">
+        <div className="p-3 pb-2 border-b border-gray-100">
           <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-800">
+            <h3 className="text-sm font-semibold text-gray-800">
               {card.title}
             </h3>
             <Button variant="ghost" size="sm">
@@ -164,20 +164,20 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({
             </Button>
           </div>
         </div>
-        <div className="p-4 space-y-4">
-          <div className="space-y-2">
+        <div className="p-3 space-y-3">
+          <div className="space-y-1.5">
             {card.steps.map((step, index) => (
-              <div key={index} className="flex items-start gap-3">
-                <div className="flex-shrink-0 w-6 h-6 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-sm font-medium">
+              <div key={index} className="flex items-start gap-2.5">
+                <div className="flex-shrink-0 w-5 h-5 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xs font-medium">
                   {index + 1}
                 </div>
-                <p className="text-gray-700">{step}</p>
+                <p className="text-gray-700 text-sm">{step}</p>
               </div>
             ))}
           </div>
           
           {card.summary && (
-            <div className="p-3 bg-green-50 rounded-lg">
+            <div className="p-2.5 bg-green-50 rounded-lg">
               <p className="text-green-800 text-sm">{card.summary}</p>
             </div>
           )}
