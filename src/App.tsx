@@ -53,8 +53,8 @@ const ProtectedRoute: React.FC<{ allowedRole: Role }> = ({ allowedRole }) => {
   }
 
   // Determine role based on email
-  const isStudent = user.email?.includes('alex.johnson') || user.email?.includes('student');
-  const isTeacher = user.email?.includes('sarah.chen') || user.email?.includes('teacher');
+  const isStudent = user.email?.includes('student.demo') || user.email?.includes('alex.johnson');
+  const isTeacher = user.email?.includes('teacher.demo') || user.email?.includes('sarah.chen');
   
   const userRole = isStudent ? Role.STUDENT : isTeacher ? Role.TEACHER : null;
 
@@ -136,7 +136,7 @@ function RoleBasedRedirect() {
   }
 
   // Determine role based on email
-  const isStudent = user.email?.includes('alex.johnson') || user.email?.includes('student');
+  const isStudent = user.email?.includes('student.demo') || user.email?.includes('alex.johnson');
   
   if (isStudent) {
     return <Navigate to="/student" replace />;
