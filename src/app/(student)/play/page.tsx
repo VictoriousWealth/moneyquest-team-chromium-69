@@ -106,6 +106,7 @@ const StudentPlay: React.FC = () => {
   console.log('StudentPlay component loaded - using curriculum structure');
   const [groupedQuests, setGroupedQuests] = useState<GroupedQuests[]>([]);
   const [loading, setLoading] = useState(true);
+  const quests = React.useMemo(() => groupedQuests.flatMap(g => g.quests), [groupedQuests]);
 
   useEffect(() => {
     const fetchCurriculumData = async () => {
