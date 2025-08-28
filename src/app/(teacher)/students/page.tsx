@@ -5,7 +5,7 @@ import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import { students } from '../../../lib/mockData';
 import type { Student } from '../../../types';
-import { Search, Award, Calendar, ChevronRight, AlertTriangle, Target, Activity } from 'lucide-react';
+import { Search, Award, Calendar, ChevronRight, ChevronDown, AlertTriangle, Target, Activity } from 'lucide-react';
 
 const TeacherStudents: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -67,16 +67,17 @@ const TeacherStudents: React.FC = () => {
               className="w-full pl-10 pr-4 py-2 border border-[var(--ring)] rounded-full bg-surface text-text placeholder:text-subtext focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
-          <div className="flex gap-3">
+          <div className="relative">
             <select
               value={masteryFilter}
               onChange={(e) => setMasteryFilter(e.target.value)}
-              className="px-3 pr-8 py-2 border border-[var(--ring)] rounded-full bg-surface text-text focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="appearance-none px-3 pr-10 py-2 border border-[var(--ring)] rounded-full bg-surface text-text focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             >
               {masteryOptions.map(option => (
                 <option key={option.value} value={option.value}>{option.label}</option>
               ))}
             </select>
+            <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-subtext" />
           </div>
         </div>
       </Card>
