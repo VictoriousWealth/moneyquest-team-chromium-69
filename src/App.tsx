@@ -83,11 +83,11 @@ export default function App() {
             <Route path="achievements" element={<StudentAchievements />} />
             <Route path="journal" element={<StudentJournal />} />
             <Route path="mentor" element={<StudentMentor />} />
+            {/* Quest Routes */}
+            <Route path="quest/juice-shrinkflation" element={<JuiceQuestPage />} />
+            <Route path="quest/pancake-price-storm" element={<PancakeQuestPage />} />
+            <Route path="quest/momo-summer-job-dilemma" element={<MomoQuestPage />} />
           </Route>
-          {/* Quest Routes */}
-          <Route path="quest/juice-shrinkflation" element={<JuiceQuestPage />} />
-          <Route path="quest/pancake-price-storm" element={<PancakeQuestPage />} />
-          <Route path="quest/momo-summer-job-dilemma" element={<MomoQuestPage />} />
         </Route>
 
         {/* Teacher Routes */}

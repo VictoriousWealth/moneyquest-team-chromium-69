@@ -499,15 +499,17 @@ const StudentPlay: React.FC = () => {
                     variant="primary"
                     size="default"
                     onClick={() => {
-                      // Map quest titles to URLs
-                      const questUrlMap: Record<string, string> = {
-                        "The Juice That Shrunk": "/quest/juice-shrinkflation",
-                        "Pancake Price Storm": "/quest/pancake-price-storm", 
-                        "Momo Summer Job Dilemma": "/quest/momo-summer-job-dilemma"
-                      };
-                      const questUrl = questUrlMap[selectedQuest.title] || `/quest/${selectedQuest.id}`;
-                      window.open(questUrl, '_blank');
-                      setSelectedQuest(null);
+                       // Map quest titles to URLs for same-tab navigation
+                       const questUrlMap: Record<string, string> = {
+                         "The Juice That Shrunk": "#/student/quest/juice-shrinkflation",
+                         "Pancake Price Storm": "#/student/quest/pancake-price-storm", 
+                         "Momo Summer Job Dilemma": "#/student/quest/momo-summer-job-dilemma"
+                       };
+                       const questUrl = questUrlMap[selectedQuest.title];
+                       if (questUrl) {
+                         window.location.href = questUrl;
+                       }
+                       setSelectedQuest(null);
                     }}
                     className="px-6 py-3 rounded-xl"
                   >
@@ -519,15 +521,17 @@ const StudentPlay: React.FC = () => {
                     variant="accent"
                     size="default"
                     onClick={() => {
-                      // Map quest titles to URLs
-                      const questUrlMap: Record<string, string> = {
-                        "The Juice That Shrunk": "/quest/juice-shrinkflation",
-                        "Pancake Price Storm": "/quest/pancake-price-storm", 
-                        "Momo Summer Job Dilemma": "/quest/momo-summer-job-dilemma"
-                      };
-                      const questUrl = questUrlMap[selectedQuest.title] || `/quest/${selectedQuest.id}`;
-                      window.open(questUrl, '_blank');
-                      setSelectedQuest(null);
+                       // Map quest titles to URLs for same-tab navigation
+                       const questUrlMap: Record<string, string> = {
+                         "The Juice That Shrunk": "#/student/quest/juice-shrinkflation",
+                         "Pancake Price Storm": "#/student/quest/pancake-price-storm", 
+                         "Momo Summer Job Dilemma": "#/student/quest/momo-summer-job-dilemma"
+                       };
+                       const questUrl = questUrlMap[selectedQuest.title];
+                       if (questUrl) {
+                         window.location.href = questUrl;
+                       }
+                       setSelectedQuest(null);
                     }}
                     className="px-6 py-3 animate-pulse rounded-xl"
                   >
