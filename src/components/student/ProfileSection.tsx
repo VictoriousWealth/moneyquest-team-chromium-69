@@ -75,7 +75,7 @@ const ProfileSection = () => {
             {/* Consolidated Stats & Activity Block */}
             <div className="flex-grow flex flex-col pt-2 mt-2 border-t border-muted min-h-0">
                 {/* Stats */}
-                <div className="space-y-4 mb-2">
+                <div className="space-y-4">
                     <div className="grid grid-cols-3 gap-2 text-center">
                         <div>
                             <div className="flex items-center justify-center gap-1 mb-1">
