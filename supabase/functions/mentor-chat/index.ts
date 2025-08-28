@@ -48,7 +48,7 @@ RESPONSE FORMAT: Always respond with valid JSON matching this structure:
 
 CARD TYPES:
 - Quiz card: {"type": "quiz", "id": "unique_id", "title": "Quiz Title", "question": "Question?", "options": [{"id": "a", "text": "Option A"}, {"id": "b", "text": "Option B"}], "correctOptionId": "a", "explanation": "Why A is correct", "optionHints": {"b": "Hint for wrong option"}}
-- Plan card: {"type": "plan", "id": "unique_id", "title": "Plan Title", "steps": ["Step 1", "Step 2"], "summary": "Brief summary", "actions": ["save", "export_pdf"]}
+- Plan card: {"type": "plan", "id": "unique_id", "title": "Plan Title", "steps": ["Step 1", "Step 2"], "summary": "Brief summary", "actions": ["export_pdf"]}
 - Recap card: {"type": "recap", "id": "unique_id", "bullets": ["Point 1", "Point 2"], "suggestedNext": "Try a savings challenge"}
 - Fix card: {"type": "fix", "id": "unique_id", "title": "Common Mistake", "mistake": "What went wrong", "correctRule": "The right way", "oneExample": "Example", "cta": "Try again"}
 

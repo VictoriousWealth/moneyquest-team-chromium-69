@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Card from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import BadgeComponent from '@/components/ui/Badge';
-import { Check, X, Download, Save, MoreVertical } from 'lucide-react';
+import { Check, X, Download, MoreVertical } from 'lucide-react';
 import { generatePDF } from '@/utils/pdfGenerator';
 
 // Alias to avoid any potential naming conflicts
@@ -72,11 +72,6 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({
       onMascotMood?.(isCorrect ? 'cheer' : 'gentle');
       onAction?.('quiz_answer', card.id, { optionId, isCorrect });
     }
-  };
-
-  const handleSave = () => {
-    onAction?.('save', card.id, card);
-    onMascotMood?.('proud');
   };
 
   const handleExportPDF = () => {
@@ -186,12 +181,6 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({
           )}
           
           <div className="flex gap-1.5 pt-1">
-            {card.actions.includes('save') && (
-              <Button onClick={handleSave} size="sm" variant="outline" className="h-6 text-xs px-2">
-                <Save size={12} className="mr-1" />
-                Save
-              </Button>
-            )}
             {card.actions.includes('export_pdf') && (
               <Button onClick={handleExportPDF} size="sm" variant="outline" className="h-6 text-xs px-2">
                 <Download size={12} className="mr-1" />

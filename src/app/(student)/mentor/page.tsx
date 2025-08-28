@@ -153,13 +153,6 @@ const StudentMentor: React.FC = () => {
     console.log('Card action:', action, cardId, data);
     
     switch (action) {
-      case 'save':
-        localStorage.setItem(`mentor_card_${cardId}`, JSON.stringify(data));
-        toast({
-          title: "Saved!",
-          description: "Your plan has been saved successfully.",
-        });
-        break;
       case 'export_pdf':
         toast({
           title: "Downloaded!",
