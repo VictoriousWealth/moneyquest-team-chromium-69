@@ -6,7 +6,7 @@ import Badge from '../../../components/ui/Badge';
 import { students } from '../../../lib/mockData';
 import { supabase } from '../../../integrations/supabase/client';
 import type { Student } from '../../../types';
-import { Search, Award, Calendar, ChevronRight, ChevronDown, AlertTriangle, Target, Activity, Info, CheckCircle, Circle } from 'lucide-react';
+import { Search, Award, Calendar, ChevronRight, ChevronDown, AlertTriangle, Target, Activity } from 'lucide-react';
 
 const TeacherStudents: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -14,8 +14,6 @@ const TeacherStudents: React.FC = () => {
   const [allStudents, setAllStudents] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [allQuests, setAllQuests] = useState<any[]>([]);
-  const [showQuestDrawer, setShowQuestDrawer] = useState(false);
-  const [selectedStudentQuests, setSelectedStudentQuests] = useState<any>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -145,20 +143,6 @@ const TeacherStudents: React.FC = () => {
     return AlertTriangle;
   };
 
-  const openQuestDrawer = (student: any) => {
-    const completedQuestIds = student.questProgress?.map((qp: any) => qp.quest_id) || [];
-    const questsWithStatus = allQuests.map(quest => ({
-      ...quest,
-      completed: completedQuestIds.includes(quest.id)
-    }));
-    
-    setSelectedStudentQuests({
-      student,
-      quests: questsWithStatus
-    });
-    setShowQuestDrawer(true);
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -251,19 +235,13 @@ const TeacherStudents: React.FC = () => {
                               style={{ width: `${progress}%` }}
                             />
                           </div>
+                          <div className="text-xs text-subtext mt-1">
+                            {(student as any).completedQuests || 0} of {(student as any).totalQuests || allQuests.length} quests
+                          </div>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <Badge variant={getMasteryColor(student.masteryProgress)} icon={<MasteryIcon size={12} />}>
-                            {student.masteryProgress}
-                          </Badge>
-                          <button
-                            onClick={() => openQuestDrawer(student)}
-                            className="p-1 hover:bg-muted rounded"
-                            title={`${(student as any).completedQuests || 0} of ${(student as any).totalQuests || allQuests.length} quests completed`}
-                          >
-                            <Info size={12} className="text-subtext" />
-                          </button>
-                        </div>
+                        <Badge variant={getMasteryColor(student.masteryProgress)} icon={<MasteryIcon size={12} />}>
+                          {student.masteryProgress}
+                        </Badge>
                       </div>
                     </td>
                     <td className="p-4">
@@ -301,45 +279,6 @@ const TeacherStudents: React.FC = () => {
           </div>
         )}
       </Card>
-
-      {/* Quest Details Drawer */}
-      {showQuestDrawer && selectedStudentQuests && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex justify-end" onClick={() => setShowQuestDrawer(false)}>
-          <div className="bg-surface w-96 h-full overflow-y-auto p-6" onClick={e => e.stopPropagation()}>
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-base font-semibold text-text">
-                {selectedStudentQuests.student.name} - Quest Progress
-              </h3>
-              <button onClick={() => setShowQuestDrawer(false)} className="text-subtext hover:text-text">
-                ×
-              </button>
-            </div>
-            <div className="mb-4 p-3 bg-muted rounded-lg">
-              <div className="text-sm text-text">
-                Completed: {selectedStudentQuests.quests.filter((q: any) => q.completed).length} of {selectedStudentQuests.quests.length} quests
-              </div>
-              <div className="text-xs text-subtext mt-1">
-                {selectedStudentQuests.student.masteryProgress} mastery
-              </div>
-            </div>
-            <div className="space-y-2">
-              {selectedStudentQuests.quests.map((quest: any) => (
-                <div key={quest.id} className="flex items-center gap-3 p-2 rounded border border-ring">
-                  {quest.completed ? (
-                    <CheckCircle size={16} className="text-mint-400 flex-shrink-0" />
-                  ) : (
-                    <Circle size={16} className="text-subtext flex-shrink-0" />
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <div className="text-xs font-medium text-text truncate">{quest.title}</div>
-                    <div className="text-xs text-subtext">{quest.zone}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
