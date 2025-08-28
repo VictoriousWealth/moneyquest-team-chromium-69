@@ -47,9 +47,9 @@ const QuestCard: React.FC<{ quest: Quest }> = ({ quest }) => {
         <Card className="flex flex-col justify-between rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
             <div>
                 <img 
-                    src={`https://picsum.photos/seed/${quest.id}/400/200`} 
+                    src={`https://picsum.photos/seed/${quest.id}/500/240`} 
                     alt={quest.title} 
-                    className="w-full h-32 object-cover" 
+                    className="w-full h-40 object-cover" 
                 />
                 <div className="p-4">
                     {/* Header with title and status */}
@@ -394,7 +394,7 @@ const StudentPlay: React.FC = () => {
               </div>
               
               {/* Quest Cards */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ml-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 ml-4">
                 {group.quests.map(quest => (
                   <QuestCard key={quest.id} quest={quest} />
                 ))}
