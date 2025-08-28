@@ -202,40 +202,34 @@ const StudentAchievements: React.FC = () => {
   // Merge frontend badges with backend achievements
   const mergedBadges = useMemo(() => {
     const frontendBadges = [...allBadges];
+    const backendAchievementIds = backendAchievements.map(ba => ba.id);
     
-    // Add backend achievements that don't exist in frontend
-    backendAchievements.forEach(backendAch => {
-      const existsInFrontend = frontendBadges.some(fb => fb.id === backendAch.id);
-      if (!existsInFrontend) {
-        // Convert backend achievement to frontend badge format
-        const categoryMap: { [key: string]: BadgeCategory } = {
-          'milestone': 'Milestone',
-          'skill': 'Skill', 
-          'habit': 'Habit',
-          'fun': 'Fun',
-          'quest': 'Quest'
-        };
-        
-        frontendBadges.push({
-          id: backendAch.id,
-          name: backendAch.title,
-          category: categoryMap[backendAch.achievement_type] || 'Skill',
-          state: backendAch.state,
-          earnedAt: backendAch.earned_at || undefined,
-          unlockHint: backendAch.description,
-          artKey: backendAch.achievement_type
-        });
-      } else {
-        // Update frontend badge with backend status
-        const frontendBadge = frontendBadges.find(fb => fb.id === backendAch.id);
-        if (frontendBadge && backendAch.state === 'earned') {
-          frontendBadge.state = 'earned';
-          frontendBadge.earnedAt = backendAch.earned_at;
-        }
-      }
+    // Remove frontend badges that exist in backend (to avoid duplicates)
+    const filteredFrontendBadges = frontendBadges.filter(fb => !backendAchievementIds.includes(fb.id));
+    
+    // Convert backend achievements to frontend badge format
+    const backendBadgesConverted = backendAchievements.map(backendAch => {
+      const categoryMap: { [key: string]: BadgeCategory } = {
+        'milestone': 'Milestone',
+        'skill': 'Skill', 
+        'habit': 'Habit',
+        'fun': 'Fun',
+        'quest': 'Quest'
+      };
+      
+      return {
+        id: backendAch.id,
+        name: backendAch.title,
+        category: categoryMap[backendAch.achievement_type] || 'Skill',
+        state: backendAch.state,
+        earnedAt: backendAch.earned_at || undefined,
+        unlockHint: backendAch.description,
+        artKey: backendAch.achievement_type
+      };
     });
     
-    return frontendBadges;
+    // Combine filtered frontend badges with backend badges
+    return [...filteredFrontendBadges, ...backendBadgesConverted];
   }, [backendAchievements]);
 
   const handleTagToggle = (tag: BadgeCategory) => {
