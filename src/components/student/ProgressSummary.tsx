@@ -270,10 +270,10 @@ const ProgressSummary = () => {
                             <div className="flex items-center gap-1.5">
                                 <span>Low</span>
                                 <div title="0 attempts" className="w-3.5 h-3.5 rounded-full bg-surface ring-1 ring-inset ring-ring" />
-                                <div title="1 attempt" className="w-3.5 h-3.5 rounded-full bg-[#d6e9fb]" />
-                                <div title="2-3 attempts" className="w-3.5 h-3.5 rounded-full bg-[#a9d2f5]" />
-                                <div title="4-5 attempts" className="w-3.5 h-3.5 rounded-full bg-[#6bb5ea]" />
-                                <div title="6+ attempts" className="w-3.5 h-3.5 rounded-full bg-[#338aca]" />
+                                <div title="1 attempt" className="w-3.5 h-3.5 rounded-full bg-[#d6e9fb] ring-1 ring-inset ring-ring" />
+                                <div title="2-3 attempts" className="w-3.5 h-3.5 rounded-full bg-[#a9d2f5] ring-1 ring-inset ring-ring" />
+                                <div title="4-5 attempts" className="w-3.5 h-3.5 rounded-full bg-[#6bb5ea] ring-1 ring-inset ring-ring" />
+                                <div title="6+ attempts" className="w-3.5 h-3.5 rounded-full bg-[#338aca] ring-1 ring-inset ring-ring" />
                                 <span>High</span>
                             </div>
                         </div>
