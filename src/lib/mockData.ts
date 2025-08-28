@@ -141,6 +141,19 @@ export const students = [
     masteryProgress: "42%",
   },
   {
+    id: "9",
+    name: "Alex Johnson",
+    avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=AlexJohnson",
+    streak: 7,
+    lastActivity: "2024-01-22",
+    school: "Riverside Academy",
+    badges: [
+      { id: "12", name: "Quiz Pro", icon: "🧠", type: "concept" as const },
+      { id: "13", name: "Week Warrior", icon: "🔥", type: "streak" as const },
+    ],
+    masteryProgress: "79%",
+  },
+  {
     id: "7",
     name: "Luna Martinez",
     avatarUrl: "https://api.dicebear.com/7.x/avataaars/svg?seed=Luna",
