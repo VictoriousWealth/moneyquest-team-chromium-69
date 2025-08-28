@@ -422,73 +422,73 @@ const StudentPlay: React.FC = () => {
       
       {/* Quest Details Popup */}
       <Dialog open={!!selectedQuest} onOpenChange={() => setSelectedQuest(null)}>
-        <DialogContent className="max-w-lg bg-[var(--surface)] border-0 shadow-[var(--shadow-soft)] ring-1 ring-[var(--ring)] rounded-[var(--radius-outer)] overflow-hidden">
+        <DialogContent className="max-w-md bg-[var(--surface)] border-0 shadow-[var(--shadow-soft)] ring-1 ring-[var(--ring)] rounded-[var(--radius-outer)] overflow-hidden">
           <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
           </DialogClose>
 
           {selectedQuest && (
-            <div className="p-6">
-              <DialogHeader className="mb-6">
-                <div className="flex items-start gap-4">
+            <div className="p-4">
+              <DialogHeader className="mb-4">
+                <div className="flex items-start gap-3">
                   <div className="flex-shrink-0">
                     <img 
-                      src={`https://picsum.photos/seed/${selectedQuest.id}/80/80`} 
+                      src={`https://picsum.photos/seed/${selectedQuest.id}/60/60`} 
                       alt={selectedQuest.title} 
-                      className="w-20 h-20 rounded-[var(--radius-inner)] object-cover ring-1 ring-[var(--ring)]" 
+                      className="w-15 h-15 rounded-[var(--radius)] object-cover ring-1 ring-[var(--ring)]" 
                     />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <DialogTitle className="text-xl font-semibold text-[var(--text)] mb-1">{selectedQuest.title}</DialogTitle>
-                    <p className="text-[var(--subtext)] text-sm font-medium mb-3">Adventure with {selectedQuest.npc}</p>
-                    <Badge variant={selectedQuest.status === 'Completed' ? 'mint' : selectedQuest.status === 'In progress' ? 'teal' : 'muted'}>
-                      {selectedQuest.status}
-                    </Badge>
+                    <DialogTitle className="h3 text-[var(--text)] mb-1">{selectedQuest.title}</DialogTitle>
+                    <p className="text-[var(--subtext)]" style={{ fontSize: 'var(--small)' }}>Adventure with {selectedQuest.npc}</p>
+                    <div className="mt-2">
+                      <Badge variant={selectedQuest.status === 'Completed' ? 'mint' : selectedQuest.status === 'In progress' ? 'teal' : 'muted'}>
+                        {selectedQuest.status}
+                      </Badge>
+                    </div>
                   </div>
                 </div>
               </DialogHeader>
 
-              <div className="mb-6">
-                <p className="text-[var(--text)] leading-relaxed mb-4">{selectedQuest.description}</p>
+              <div className="mb-4">
+                <p className="text-[var(--text)]" style={{ fontSize: 'var(--small)', lineHeight: '1.4' }}>{selectedQuest.description}</p>
                 
                 {/* Concepts */}
-                <div className="flex flex-wrap gap-2 mb-4">
+                <div className="flex flex-wrap gap-1.5 mt-3">
                   {selectedQuest.concepts?.map(concept => (
-                    <Badge key={concept} variant="blue" className="text-xs">{concept}</Badge>
+                    <Badge key={concept} variant="blue">{concept}</Badge>
                   ))}
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 gap-3 mb-6">
-                <div className="flex items-center gap-3 bg-[var(--muted)] rounded-[var(--radius)] p-4">
-                  <MapPin className="w-5 h-5 text-[var(--primary)] flex-shrink-0" />
+              <div className="grid grid-cols-2 gap-2 mb-4">
+                <div className="flex items-center gap-2 bg-[var(--muted)] rounded-[var(--radius)] p-3">
+                  <MapPin className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />
                   <div>
-                    <span className="text-xs text-[var(--subtext)] block">Location</span>
-                    <span className="text-sm font-medium text-[var(--text)]">{selectedQuest.zone}</span>
+                    <span className="text-[var(--subtext)] block" style={{ fontSize: '11px' }}>Location</span>
+                    <span className="text-[var(--text)] font-medium" style={{ fontSize: 'var(--small)' }}>{selectedQuest.zone}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 bg-[var(--muted)] rounded-[var(--radius)] p-4">
-                  <Users className="w-5 h-5 text-[var(--primary)] flex-shrink-0" />
+                <div className="flex items-center gap-2 bg-[var(--muted)] rounded-[var(--radius)] p-3">
+                  <Users className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />
                   <div>
-                    <span className="text-xs text-[var(--subtext)] block">Guide</span>
-                    <span className="text-sm font-medium text-[var(--text)]">{selectedQuest.npc}</span>
+                    <span className="text-[var(--subtext)] block" style={{ fontSize: '11px' }}>Guide</span>
+                    <span className="text-[var(--text)] font-medium" style={{ fontSize: 'var(--small)' }}>{selectedQuest.npc}</span>
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="flex items-center gap-3 bg-[var(--muted)] rounded-[var(--radius)] p-4">
-                    <Coins className="w-5 h-5 text-[var(--primary)] flex-shrink-0" />
-                    <div>
-                      <span className="text-xs text-[var(--subtext)] block">Coins</span>
-                      <span className="text-sm font-medium text-[var(--text)]">{selectedQuest.reward_coins}</span>
-                    </div>
+                <div className="flex items-center gap-2 bg-[var(--muted)] rounded-[var(--radius)] p-3">
+                  <Coins className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />
+                  <div>
+                    <span className="text-[var(--subtext)] block" style={{ fontSize: '11px' }}>Coins</span>
+                    <span className="text-[var(--text)] font-medium" style={{ fontSize: 'var(--small)' }}>{selectedQuest.reward_coins}</span>
                   </div>
-                  <div className="flex items-center gap-3 bg-[var(--muted)] rounded-[var(--radius)] p-4">
-                    <Zap className="w-5 h-5 text-[var(--primary)] flex-shrink-0" />
-                    <div>
-                      <span className="text-xs text-[var(--subtext)] block">Experience</span>
-                      <span className="text-sm font-medium text-[var(--text)]">{selectedQuest.reward_xp} XP</span>
-                    </div>
+                </div>
+                <div className="flex items-center gap-2 bg-[var(--muted)] rounded-[var(--radius)] p-3">
+                  <Zap className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />
+                  <div>
+                    <span className="text-[var(--subtext)] block" style={{ fontSize: '11px' }}>XP</span>
+                    <span className="text-[var(--text)] font-medium" style={{ fontSize: 'var(--small)' }}>{selectedQuest.reward_xp}</span>
                   </div>
                 </div>
               </div>
@@ -497,12 +497,12 @@ const StudentPlay: React.FC = () => {
                 {selectedQuest.status === "Not started" && (
                   <Button
                     variant="primary"
-                    size="lg"
+                    size="default"
                     onClick={() => {
                       window.open(`/quest/${selectedQuest.id}`, '_blank');
                       setSelectedQuest(null);
                     }}
-                    className="px-8 animate-scale-in"
+                    className="px-6"
                   >
                     🚀 Start Quest
                   </Button>
@@ -510,18 +510,18 @@ const StudentPlay: React.FC = () => {
                 {selectedQuest.status === "In progress" && (
                   <Button
                     variant="accent"
-                    size="lg"
+                    size="default"
                     onClick={() => {
                       window.open(`/quest/${selectedQuest.id}`, '_blank');
                       setSelectedQuest(null);
                     }}
-                    className="px-8 animate-pulse"
+                    className="px-6 animate-pulse"
                   >
                     ⚡ Continue Quest
                   </Button>
                 )}
                 {selectedQuest.status === "Completed" && (
-                  <Button variant="muted" size="lg" disabled className="px-8">
+                  <Button variant="muted" size="default" disabled className="px-6">
                     ✅ Completed
                   </Button>
                 )}
