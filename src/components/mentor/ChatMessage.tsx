@@ -46,20 +46,20 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
         {/* Text bubble */}
         {content && (
           <div className={`
-            inline-block p-3 rounded-2xl max-w-full
+            inline-block p-2.5 rounded-2xl max-w-full
             ${isUser 
               ? 'bg-blue-500 text-white rounded-br-md' 
               : 'bg-gray-100 text-gray-800 rounded-bl-md'
             }
           `}>
-            <p className="text-sm whitespace-pre-wrap">{content}</p>
+            <p className="text-xs whitespace-pre-wrap">{content}</p>
           </div>
         )}
 
         {/* Proposal information (if present) */}
         {proposal && mode === 'proposal' && !isUser && (
-          <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-200">
-            <p className="text-blue-800 text-sm font-medium">{proposal.description}</p>
+          <div className="mt-2 p-2.5 bg-blue-50 rounded-lg border border-blue-200">
+            <p className="text-blue-800 text-xs font-medium">{proposal.description}</p>
             <p className="text-blue-600 text-xs mt-1">
               {proposal.topic && `Topic: ${proposal.topic}`}
               {proposal.size && ` • ${proposal.size} questions`}
