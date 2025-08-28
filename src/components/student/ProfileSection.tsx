@@ -118,7 +118,7 @@ const ProfileSection = () => {
                 </div>
 
                 {/* Activity Ticker - Continuous rolling animation */}
-                <div className="flex-grow flex flex-col border-t border-muted pt-2 min-h-0">
+                <div className="flex-grow flex flex-col border-t border-muted pt-4 min-h-0">
                     <h4 className="font-medium text-xs text-subtext mb-1 flex-shrink-0">Class Activity</h4>
                     <div className="relative overflow-hidden h-[50px]" aria-live="off">
                         <div className="activity-ticker-scroll">
