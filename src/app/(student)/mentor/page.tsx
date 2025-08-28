@@ -132,8 +132,9 @@ const StudentMentor: React.FC = () => {
         }
       }
 
-      // Consent-gated + de-duplicated cards
-      const incomingCards = (mentorResponse.mode === 'final' && acceptProposalId)
+      // Consent-gated + de-duplicated cards - also show cards if quiz is requested directly
+      const incomingCards = (mentorResponse.mode === 'final' && acceptProposalId) || 
+                           (mentorResponse.cards && mentorResponse.cards.length > 0 && mentorResponse.mode === 'dialog')
         ? (mentorResponse.cards || [])
         : [];
       const filteredCards = incomingCards.filter((c: any) => c?.id && !shownCardIds.has(c.id));
