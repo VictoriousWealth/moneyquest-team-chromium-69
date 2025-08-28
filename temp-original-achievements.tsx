@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo, useEffect } from 'react';
 import { allBadges, allStreaks } from '../../../lib/demoData';
 import type { Badge as BadgeType, Streak as StreakType, BadgeCategory, Tier } from '../../../types';
@@ -13,7 +14,7 @@ function usePersistentState<T>(key: string, defaultValue: T): [T, React.Dispatch
         const storedValue = localStorage.getItem(key);
         return storedValue ? JSON.parse(storedValue) : defaultValue;
       } catch (error) {
-        console.warn(`Error reading localStorage key "${key}":`, error);
+        console.warn(`Error reading localStorage key “${key}”:`, error);
         return defaultValue;
       }
     });
@@ -22,7 +23,7 @@ function usePersistentState<T>(key: string, defaultValue: T): [T, React.Dispatch
       try {
         localStorage.setItem(key, JSON.stringify(state));
       } catch (error) {
-        console.warn(`Error setting localStorage key "${key}":`, error);
+        console.warn(`Error setting localStorage key “${key}”:`, error);
       }
     }, [key, state]);
   
@@ -38,7 +39,7 @@ const formatShortDate = (isoString: string) => {
 
 const badgeFunCopy: Record<string, { title: string; description: string }> = {
     first_pound: { title: "Ka-ching!", description: "You passed your first episode and banked your first £." },
-    level_up: { title: "Level-Up Learner", description: "10 passes! You're levelling up faster than interest compounds." },
+    level_up: { title: "Level-Up Learner", description: "10 passes! You’re levelling up faster than interest compounds." },
     marathon: { title: "Marathon Learner", description: "Keep going! Pass 25 episodes." },
     value_detective: { title: "Value Detective", description: "You sniffed out the best unit price. Grocery stores fear you now." },
     paycheck_pro: { title: "Paycheck Pro", description: "Decode a full payslip (gross, net, NI, tax code)." },

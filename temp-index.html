@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MoneyQuest</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: ['class'],
+      content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
+      theme: {
+        extend: {
+          colors: {
+            bg: 'var(--bg)',
+            surface: 'var(--surface)',
+            muted: 'var(--muted)',
+            text: 'var(--text)',
+            subtext: 'var(--subtext)',
+            blue900: 'var(--blue-900)',
+            blue800: 'var(--blue-800)',
+            blue500: 'var(--blue-500)',
+            teal400: 'var(--teal-400)',
+            mint400: 'var(--mint-400)',
+            accent: 'var(--accent)',
+          },
+          borderRadius: {
+            lg: 'var(--radius-outer)',
+            md: 'var(--radius-inner)',
+            sm: 'calc(var(--radius-inner) - 4px)',
+            full: 'var(--radius-pill)',
+          },
+          boxShadow: { soft: 'var(--shadow-soft)' },
+          fontSize: {
+            h1: 'var(--h1)', h2: 'var(--h2)', h3: 'var(--h3)',
+            body: 'var(--body)', small: 'var(--small)'
+          },
+          spacing: {
+            1: 'var(--space-1)', 2: 'var(--space-2)', 3: 'var(--space-3)',
+            4: 'var(--space-4)', 6: 'var(--space-6)', 8: 'var(--space-8)',
+            10: 'var(--space-10)', 12: 'var(--space-12)'
+          },
+          fontFamily: {
+            sans: ['Inter', 'ui-sans-serif', 'system-ui']
+          }
+        },
+      },
+      plugins: [],
+    };
+  </script>
+<script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.1.1/",
+    "react": "https://aistudiocdn.com/react@^19.1.1",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.541.0",
+    "react-router-dom": "https://aistudiocdn.com/react-router-dom@^7.8.2",
+    "recharts": "https://aistudiocdn.com/recharts@^3.1.2",
+    "d3-scale": "https://aistudiocdn.com/d3-scale@^4.0.2"
+  }
+}
+</script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
