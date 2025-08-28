@@ -19,7 +19,25 @@ export const useDailyActivities = () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
-          setError('No authenticated user');
+          // Demo fallback: generate last 30 days of synthetic activity
+          const demo: DailyActivity[] = Array.from({ length: 30 }).map((_, i) => {
+            const d = new Date();
+            d.setDate(d.getDate() - i);
+            const attempts = Math.floor(Math.random() * 6); // 0-5
+            const passes = Math.max(0, Math.min(attempts, Math.floor(Math.random() * (attempts + 1))));
+            const time = attempts === 0 ? 0 : Math.floor(Math.random() * 46) + 15; // 15-60
+            const conceptsPool = ['Budgeting', 'Saving', 'Investment', 'Risk', 'Taxes'];
+            const concepts = conceptsPool.sort(() => 0.5 - Math.random()).slice(0, Math.floor(Math.random() * 3));
+            return {
+              activity_date: d.toISOString().split('T')[0],
+              attempts,
+              passes,
+              time_spent_minutes: time,
+              concepts,
+            };
+          }).reverse();
+
+          setActivities(demo);
           return;
         }
 

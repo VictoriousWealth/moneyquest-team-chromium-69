@@ -18,7 +18,11 @@ export const useStreaks = () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
-          setError('No authenticated user');
+          // Demo fallback
+          setStreaks([
+            { streak_type: 'daily_play', current_count: 7, best_count: 15 },
+            { streak_type: 'learning_streak', current_count: 12, best_count: 18 },
+          ]);
           return;
         }
 
