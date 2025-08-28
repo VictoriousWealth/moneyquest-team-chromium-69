@@ -58,7 +58,7 @@ export const QuestBoard = ({ quests, onQuestStart, onQuestContinue }: QuestBoard
                 </div>
                 <div className="flex flex-col items-end gap-2">
                   <Badge 
-                    variant="outline" 
+                    variant="blue" 
                     className={`${getDifficultyColor(quest.difficulty)} text-white border-transparent`}
                   >
                     {quest.difficulty}

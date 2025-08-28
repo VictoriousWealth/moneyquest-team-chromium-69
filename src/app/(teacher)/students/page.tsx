@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Header from '../../components/shared/Header';
-import NavTabs from '../../components/shared/NavTabs';
-import { Role } from '../../lib/roles';
+import Header from '@/components/shared/Header';
+import NavTabs from '@/components/shared/NavTabs';
+import { Role } from '@/lib/roles';
 import { LayoutGrid, Users, ClipboardList, Bot } from 'lucide-react';
 
 const teacherNavItems = [

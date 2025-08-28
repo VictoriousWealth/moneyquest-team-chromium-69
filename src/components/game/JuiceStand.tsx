@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
+import Card from "@/components/ui/Card";
+import Button from "@/components/ui/Button";
+import Badge from "@/components/ui/Badge";
 import { Progress } from "@/components/ui/progress";
 import { Zap, Star, AlertTriangle, Volume2, VolumeX } from "lucide-react";
 import { toast } from "sonner";
@@ -315,7 +315,7 @@ export const JuiceStand = ({ isActive, onComplete, onUseScanner }: JuiceStandPro
                   onClick={startCrafting}
                   type="button"
                   size="lg"
-                  variant="default"
+                  variant="primary"
                   className="shadow-game hover:shadow-game-hover animate-float inline-flex items-center gap-2"
                 >
                   <span>Okay, let's do this!</span>
@@ -373,13 +373,13 @@ export const JuiceStand = ({ isActive, onComplete, onUseScanner }: JuiceStandPro
                 <p className="text-muted-foreground mb-2">Which option gives you the best value for money?</p>
                 <div className="flex justify-center items-center gap-4 mb-4">
                   <Badge 
-                    variant="outline" 
+                    variant="blue" 
                     className="px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-primary/10 cursor-pointer animate-pulse border-primary/30"
                   >
                     🎯 Round {currentRound + 1} of {comparisons.length}
                   </Badge>
                   <Badge 
-                    variant="outline" 
+                    variant="teal" 
                     className="px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-secondary/10 cursor-pointer animate-bounce border-secondary/30"
                   >
                     ⭐ Score: {totalScore}
@@ -403,7 +403,7 @@ export const JuiceStand = ({ isActive, onComplete, onUseScanner }: JuiceStandPro
                       <h4 className="font-semibold text-foreground">{juice.name}</h4>
                       
                       {juice.isNewSize && (
-                        <Badge variant="secondary" className="animate-pulse">
+                        <Badge variant="muted" className="animate-pulse">
                           <AlertTriangle className="w-3 h-3 mr-1" />
                           New Size!
                         </Badge>
@@ -427,7 +427,7 @@ export const JuiceStand = ({ isActive, onComplete, onUseScanner }: JuiceStandPro
                       </div>
                       
                       <Button 
-                        variant={selectedJuice === juice.id ? "default" : "outline"}
+                        variant={selectedJuice === juice.id ? "primary" : "outline"}
                         className="w-full shadow-game hover:shadow-game-hover"
                         disabled={!!selectedJuice}
                       >

@@ -110,7 +110,6 @@ const JuiceQuestPage = () => {
             isActive={true}
             onComplete={handleQuestComplete}
             onUseScanner={() => setScannerOpen(true)}
-            scannedItem={scannedItem}
           />
         </div>
       </div>

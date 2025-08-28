@@ -21,6 +21,11 @@ export interface Episode {
   title: string;
   concepts: string[];
   status: 'Not started' | 'In progress' | 'Completed' | 'Failed';
+  assigned?: boolean;
+  classStatus?: 'Completed' | 'In Progress' | 'Not Started';
+  dueDate?: string;
+  xpReward?: number;
+  estimatedTime?: string;
 }
 
 export interface Attempt {
