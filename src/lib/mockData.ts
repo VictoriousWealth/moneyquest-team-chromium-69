@@ -71,6 +71,8 @@ export const students = [
     name: "Emily Chen",
     avatarUrl: "/api/placeholder/64/64",
     streak: 5,
+    lastActivity: "2024-01-20",
+    school: "Greenfield Elementary",
     badges: [
       { id: "1", name: "Budget Master", icon: "💰", type: "concept" as const },
       { id: "2", name: "Week Warrior", icon: "🔥", type: "streak" as const },
@@ -82,10 +84,37 @@ export const students = [
     name: "Marcus Johnson",
     avatarUrl: "/api/placeholder/64/64",
     streak: 12,
+    lastActivity: "2024-01-21",
+    school: "Greenfield Elementary",
     badges: [
       { id: "3", name: "Saving Star", icon: "⭐", type: "concept" as const },
     ],
     masteryProgress: "92%",
+  },
+  {
+    id: "3", 
+    name: "Sarah Kim",
+    avatarUrl: "/api/placeholder/64/64",
+    streak: 3,
+    lastActivity: "2024-01-19",
+    school: "Oak Valley Middle School",
+    badges: [
+      { id: "4", name: "First Steps", icon: "🎯", type: "concept" as const },
+    ],
+    masteryProgress: "67%",
+  },
+  {
+    id: "4", 
+    name: "Alex Rodriguez",
+    avatarUrl: "/api/placeholder/64/64",
+    streak: 8,
+    lastActivity: "2024-01-20",
+    school: "Central High School",
+    badges: [
+      { id: "5", name: "Streak Master", icon: "🔥", type: "streak" as const },
+      { id: "6", name: "Credit Champion", icon: "💳", type: "concept" as const },
+    ],
+    masteryProgress: "78%",
   },
 ];
 

@@ -6,6 +6,8 @@ export interface Student {
   streak: number;
   lastActivity: string;
   badges: BadgeSummary[];
+  school?: string;
+  masteryProgress?: string;
 }
 
 // Summary for overview cards
@@ -33,6 +35,7 @@ export interface Attempt {
   episodeTitle: string;
   date: string;
   summary: string;
+  score?: number;
 }
 
 
