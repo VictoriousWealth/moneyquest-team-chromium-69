@@ -293,7 +293,8 @@ const StudentPlay: React.FC = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 rounded-lg bg-card text-foreground text-sm shadow-sm border border-transparent focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+            className="px-4 py-2 bg-card text-foreground text-sm shadow-sm border border-transparent focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors appearance-none cursor-pointer"
+            style={{ borderRadius: '0.75rem' }}
           >
             <option value="all">All Status</option>
             <option value="Not started">Not Started</option>
@@ -305,7 +306,8 @@ const StudentPlay: React.FC = () => {
           <select
             value={sectionFilter}
             onChange={(e) => setSectionFilter(e.target.value)}
-            className="px-4 py-2 rounded-lg bg-card text-foreground text-sm shadow-sm border border-transparent focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+            className="px-4 py-2 bg-card text-foreground text-sm shadow-sm border border-transparent focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors appearance-none cursor-pointer"
+            style={{ borderRadius: '0.75rem' }}
           >
             <option value="all">All Sections</option>
             {groupedQuests.map(group => (
@@ -320,7 +322,7 @@ const StudentPlay: React.FC = () => {
             <Button 
               variant="muted" 
               onClick={clearFilters}
-              className="flex items-center gap-2 text-sm rounded-lg shadow-sm"
+              className="flex items-center gap-2 text-sm shadow-sm !rounded-xl"
             >
               <X className="w-3 h-3" />
               Clear Filters
