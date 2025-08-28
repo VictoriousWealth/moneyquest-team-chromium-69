@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ProfileSection from '../../../components/student/ProfileSection';
 import ProgressSummary from '../../../components/student/ProgressSummary';
 import JournalPreview from '../../../components/student/JournalPreview';
 import DataSyncButton from '../../../components/admin/DataSyncButton';
+import { useDataSync } from '../../../hooks/useDataSync';
 
 const StudentDashboard: React.FC = () => {
+  const { syncAllData } = useDataSync();
+  useEffect(() => { syncAllData(); }, []);
   return (
     <div className="space-y-4">
       {/* Data Sync Button - for development */}
