@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Card from '@/components/ui/Card';
-import { Button } from '@/components/ui/Button';
+import Button from '@/components/ui/Button';
 import BadgeComponent from '@/components/ui/Badge';
 import { Check, X, Download, MoreVertical } from 'lucide-react';
 import { generatePDF } from '@/utils/pdfExport';

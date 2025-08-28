@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Role } from '../../../lib/roles';
-import { Button } from '../../../components/ui/Button';
+import Button from '../../../components/ui/Button';
 import { Rocket, School, User } from 'lucide-react';
 import { supabase } from '../../../integrations/supabase/client';
 
