@@ -149,30 +149,6 @@ const ProfileSection = () => {
                      </div>
                  </div>
 
-                 {/* Achievements Earned This Month */}
-                 {thisMonthAchievements.length > 0 && (
-                     <div className="mt-4 pt-4 border-t border-muted flex-shrink-0">
-                         <div className="flex items-center justify-between mb-3">
-                             <h4 className="font-medium text-xs text-subtext">Earned in August</h4>
-                             <Link to="/student/achievements" className="text-xs text-blue-500 hover:underline">
-                                 View all
-                             </Link>
-                         </div>
-                         <div className="space-y-2">
-                             {thisMonthAchievements.map((achievement) => (
-                                 <div key={achievement.id} className="flex items-center gap-2">
-                                     <Trophy size={12} className="text-mint-400 flex-shrink-0" />
-                                     <div className="flex-1 min-w-0">
-                                         <p className="text-xs font-medium text-text truncate">{achievement.title}</p>
-                                         <p className="text-xs text-subtext">
-                                             {new Date(achievement.earnedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
-                                         </p>
-                                     </div>
-                                 </div>
-                             ))}
-                         </div>
-                     </div>
-                 )}
 
                 {/* Activity Ticker - Continuous rolling animation */}
                 <div className="mt-3 flex-grow flex flex-col border-t border-muted pt-4 min-h-0">
