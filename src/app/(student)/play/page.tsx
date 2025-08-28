@@ -1,28 +1,77 @@
-import React from 'react';
-import { episodes } from '../../../lib/mockData';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../../../integrations/supabase/client';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
+import { Coins, Zap, MapPin, Users } from 'lucide-react';
 
-const EpisodeCard: React.FC<{ episode: typeof episodes[0] }> = ({ episode }) => {
+interface Quest {
+    id: string;
+    title: string;
+    description: string;
+    zone: string;
+    npc: string;
+    reward_coins: number;
+    reward_xp: number;
+    concepts: string[];
+    status?: 'Completed' | 'In progress' | 'Not started';
+}
+
+const QuestCard: React.FC<{ quest: Quest }> = ({ quest }) => {
     const statusColor = {
         'Completed': 'mint',
         'In progress': 'teal',
         'Not started': 'muted',
-        'Failed': 'blue', // using blue for failed to not be too negative
     } as const;
 
+    // For now, default to 'Not started' - will be linked to backend later
+    const status = quest.status || 'Not started';
+
     return (
-        <Card className="flex flex-col justify-between rounded-lg overflow-hidden">
+        <Card className="flex flex-col justify-between rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
             <div>
-                <img src={`https://picsum.photos/seed/${episode.id}/400/200`} alt={episode.title} className="w-full h-32 object-cover" />
+                <img 
+                    src={`https://picsum.photos/seed/${quest.id}/400/200`} 
+                    alt={quest.title} 
+                    className="w-full h-32 object-cover" 
+                />
                 <div className="p-4">
+                    {/* Header with title and status */}
                     <div className="flex justify-between items-start mb-2">
-                        <h3 className="h3 mb-2">{episode.title}</h3>
-                        <Badge variant={statusColor[episode.status]}>{episode.status}</Badge>
+                        <h3 className="h3 mb-2 text-foreground">{quest.title}</h3>
+                        <Badge variant={statusColor[status]}>{status}</Badge>
                     </div>
+                    
+                    {/* Description */}
+                    <p className="text-muted-foreground text-sm mb-3">{quest.description}</p>
+                    
+                    {/* Zone and NPC info */}
+                    <div className="flex items-center gap-4 mb-3 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                            <MapPin className="w-4 h-4" />
+                            <span>{quest.zone}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                            <Users className="w-4 h-4" />
+                            <span>{quest.npc}</span>
+                        </div>
+                    </div>
+                    
+                    {/* Rewards */}
+                    <div className="flex items-center gap-4 mb-3">
+                        <div className="flex items-center gap-1 text-amber-600">
+                            <Coins className="w-4 h-4" />
+                            <span className="text-sm font-medium">{quest.reward_coins}</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-blue-600">
+                            <Zap className="w-4 h-4" />
+                            <span className="text-sm font-medium">{quest.reward_xp} XP</span>
+                        </div>
+                    </div>
+                    
+                    {/* Concepts */}
                     <div className="flex flex-wrap gap-2 mb-4">
-                        {episode.concepts.map(concept => (
+                        {quest.concepts?.map(concept => (
                             <Badge key={concept} variant="blue">{concept}</Badge>
                         ))}
                     </div>
@@ -30,7 +79,7 @@ const EpisodeCard: React.FC<{ episode: typeof episodes[0] }> = ({ episode }) => 
             </div>
             <div className="p-4 pt-0">
                 <Button variant="primary" className="w-full mt-2">
-                    {episode.status === 'In progress' ? 'Resume' : 'Start'}
+                    {status === 'In progress' ? 'Resume' : 'Start'}
                 </Button>
             </div>
         </Card>
@@ -38,12 +87,59 @@ const EpisodeCard: React.FC<{ episode: typeof episodes[0] }> = ({ episode }) => 
 }
 
 const StudentPlay: React.FC = () => {
+  const [quests, setQuests] = useState<Quest[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchQuests = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('quests')
+          .select('*')
+          .order('created_at', { ascending: true });
+
+        if (error) {
+          console.error('Error fetching quests:', error);
+          return;
+        }
+
+        setQuests(data || []);
+      } catch (error) {
+        console.error('Error fetching quests:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchQuests();
+  }, []);
+
+  if (loading) {
+    return (
+      <div>
+        <h1 className="h1 mb-6">Play Episodes</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4, 5, 6].map(i => (
+            <Card key={i} className="animate-pulse">
+              <div className="h-32 bg-muted"></div>
+              <div className="p-4 space-y-3">
+                <div className="h-4 bg-muted rounded w-3/4"></div>
+                <div className="h-3 bg-muted rounded w-1/2"></div>
+                <div className="h-10 bg-muted rounded"></div>
+              </div>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <h1 className="h1 mb-6">Play Episodes</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {episodes.map(episode => (
-          <EpisodeCard key={episode.id} episode={episode} />
+        {quests.map(quest => (
+          <QuestCard key={quest.id} quest={quest} />
         ))}
       </div>
     </div>

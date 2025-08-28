@@ -282,6 +282,7 @@ export type Database = {
       }
       quests: {
         Row: {
+          concepts: string[] | null
           created_at: string
           description: string
           id: string
@@ -292,6 +293,7 @@ export type Database = {
           zone: string
         }
         Insert: {
+          concepts?: string[] | null
           created_at?: string
           description: string
           id?: string
@@ -302,6 +304,7 @@ export type Database = {
           zone: string
         }
         Update: {
+          concepts?: string[] | null
           created_at?: string
           description?: string
           id?: string
