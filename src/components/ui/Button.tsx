@@ -2,7 +2,7 @@ import React from 'react';
 
 // @notes: Extended to support lg size used across the app
 
-type Variant = 'primary' | 'accent' | 'muted' | 'outline' | 'ghost';
+type Variant = 'primary' | 'accent' | 'muted' | 'outline' | 'ghost' | 'default' | 'secondary';
 // Extend size to include 'lg'
 type Size = 'default' | 'sm' | 'lg';
 

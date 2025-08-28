@@ -7,7 +7,7 @@ import { useGameState } from "@/hooks/useGameState";
 import { useAchievements } from "@/hooks/useAchievements";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { ArrowLeft } from "lucide-react";
 
 interface ScannedItem {

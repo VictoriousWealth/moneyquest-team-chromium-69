@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 import { CheckCircle, Circle, Lock, MapPin, X, Brain } from "lucide-react";
-import { SpeechBubble } from "./SpeechBubble";
-import { AIReviewDialog } from "./AIReviewDialog";
+import SpeechBubble from "./SpeechBubble";
+import AIReviewDialog from "./AIReviewDialog";
 
 interface Quest {
   id: string;

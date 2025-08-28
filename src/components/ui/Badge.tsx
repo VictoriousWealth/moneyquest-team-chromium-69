@@ -26,3 +26,4 @@ const Badge: React.FC<BadgeProps> = ({ children, variant = 'muted', className = 
 };
 
 export default Badge;
+export { Badge };
