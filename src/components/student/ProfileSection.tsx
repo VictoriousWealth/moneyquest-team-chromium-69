@@ -110,8 +110,8 @@ const ProfileSection = () => {
                 <div className="flex-grow flex flex-col border-t border-muted pt-2 min-h-0">
                     <h4 className="font-medium text-xs text-subtext mb-1 flex-shrink-0">Class Activity</h4>
                     <div className="relative flex-1 overflow-hidden h-6" aria-live="off">
-                        <div className="absolute inset-0 animate-[continuous-scroll_15s_linear_infinite] group-hover:[animation-play-state:paused]">
-                            {/* First set of activities */}
+                        <div className="absolute inset-0 animate-[continuous-scroll_20s_linear_infinite]">
+                            {/* Complete list of activities that will scroll continuously */}
                             <div className="space-y-1">
                                 <div className="flex w-full items-center gap-2 px-1 h-[24px] text-xs">
                                     <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Maria" alt="Maria" className="w-5 h-5 rounded-full flex-shrink-0" />
@@ -141,6 +141,24 @@ const ProfileSection = () => {
                                     <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Emma" alt="Emma" className="w-5 h-5 rounded-full flex-shrink-0" />
                                     <p className="text-subtext text-left truncate">
                                         <span className="font-medium text-text">Emma</span> reached level 5 in Savings
+                                    </p>
+                                </div>
+                                <div className="flex w-full items-center gap-2 px-1 h-[24px] text-xs">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Oliver" alt="Oliver" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <p className="text-subtext text-left truncate">
+                                        <span className="font-medium text-text">Oliver</span> unlocked "Crypto Explorer"
+                                    </p>
+                                </div>
+                                <div className="flex w-full items-center gap-2 px-1 h-[24px] text-xs">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Lily" alt="Lily" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <p className="text-subtext text-left truncate">
+                                        <span className="font-medium text-text">Lily</span> mastered "Tax Basics"
+                                    </p>
+                                </div>
+                                <div className="flex w-full items-center gap-2 px-1 h-[24px] text-xs">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Noah" alt="Noah" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <p className="text-subtext text-left truncate">
+                                        <span className="font-medium text-text">Noah</span> started "Real Estate Basics"
                                     </p>
                                 </div>
                             </div>
