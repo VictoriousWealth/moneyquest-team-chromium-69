@@ -48,10 +48,7 @@ const QuestCard: React.FC<{ quest: Quest; onClick?: () => void }> = ({ quest, on
     const usePopup = ["The Juice That Shrunk", "Pancake Price Storm", "Momo Summer Job Dilemma"].includes(quest.title);
 
     return (
-        <Card 
-            className={`flex flex-col justify-between rounded-lg overflow-hidden hover:shadow-lg transition-shadow ${usePopup ? 'cursor-pointer' : ''}`} 
-            onClick={usePopup ? onClick : undefined}
-        >
+        <Card className="flex flex-col justify-between rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
             <div>
                 <img 
                     src={`https://picsum.photos/seed/${quest.id}/500/240`} 
@@ -100,13 +97,15 @@ const QuestCard: React.FC<{ quest: Quest; onClick?: () => void }> = ({ quest, on
                     </div>
                 </div>
             </div>
-            {!usePopup && (
-                <div className="p-4 pt-0">
-                    <Button variant="primary" className="w-full mt-2">
-                        {status === 'In progress' ? 'Resume' : 'Start'}
-                    </Button>
-                </div>
-            )}
+            <div className="p-4 pt-0">
+                <Button 
+                    variant="primary" 
+                    className="w-full mt-2"
+                    onClick={usePopup ? onClick : undefined}
+                >
+                    {status === 'In progress' ? 'Resume' : 'Start'}
+                </Button>
+            </div>
         </Card>
     );
 }
