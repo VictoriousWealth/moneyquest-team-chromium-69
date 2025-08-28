@@ -199,8 +199,11 @@ const TeacherStudents: React.FC = () => {
               {filteredStudents.map((student, index) => {
                 const progress = parseInt(student.masteryProgress, 10);
                 const totalQuests = allQuests.length || 37;
-                // Calculate completed quests based on the same progress percentage used for the bar
-                const completedQuests = Math.round((progress / 100) * totalQuests);
+                // Calculate completed quests based on the same data source
+                const completedQuests = (student as any).completedQuests !== undefined
+                  ? (student as any).completedQuests
+                  : Math.round((progress / 100) * totalQuests);
+                const derivedProgress = Math.round((completedQuests / totalQuests) * 100);
                 
                 return (
                   <tr 
@@ -229,13 +232,13 @@ const TeacherStudents: React.FC = () => {
                       <div className="flex items-center gap-3">
                         <div className="flex-1">
                           <div className="w-20 bg-muted rounded-full h-2">
-                            <div 
-                              className={`h-2 rounded-full transition-all ${
-                                progress >= 80 ? 'bg-mint-400' : 
-                                progress >= 40 ? 'bg-teal-400' : 'bg-subtext'
-                              }`}
-                              style={{ width: `${progress}%` }}
-                            />
+                          <div 
+                            className={`h-2 rounded-full transition-all ${
+                              derivedProgress >= 80 ? 'bg-mint-400' : 
+                              derivedProgress >= 40 ? 'bg-teal-400' : 'bg-subtext'
+                            }`}
+                            style={{ width: `${derivedProgress}%` }}
+                          />
                           </div>
                           <div className="text-xs text-subtext mt-1">
                             {completedQuests} of {totalQuests} quests
