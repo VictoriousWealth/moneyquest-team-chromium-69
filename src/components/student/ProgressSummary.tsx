@@ -148,7 +148,7 @@ const DayDetail = ({ activity }: { activity: DailyActivity }) => {
                 ))}
             </div>
              <div className="mt-auto border-t border-muted pt-3 space-y-2">
-                <div className="bg-blue-800/20 text-blue-500 p-2 rounded-md text-xs font-medium text-center">
+                <div className="bg-blue-800/10 text-blue-500 p-3 rounded-lg text-xs font-medium text-center">
                     Mentor Tip: You're doing great on Budgeting!
                 </div>
                  <Link to="/student/journal" className="inline-flex items-center justify-center w-full gap-1 text-sm font-medium text-blue-500 hover:underline">
