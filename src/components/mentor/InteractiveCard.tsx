@@ -1,8 +1,14 @@
 import React, { useState } from 'react';
 import Card from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import Badge from '@/components/ui/Badge';
+import BadgeComponent from '@/components/ui/Badge';
 import { Check, X, Download, Save, MoreVertical } from 'lucide-react';
+
+// Alias to avoid any potential naming conflicts
+const Badge = BadgeComponent;
+
+// Debug log to ensure proper import
+console.log('Badge component imported:', Badge);
 
 interface QuizCard {
   type: 'quiz';
