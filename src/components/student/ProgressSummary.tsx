@@ -78,29 +78,35 @@ const MonthSummary = ({ activity, currentDate }: { activity: any[]; currentDate:
       .sort((a, b) => new Date(b.earnedAt!).getTime() - new Date(a.earnedAt!).getTime())
       .slice(0, 3);
 
-    // Compute streaks from the same monthly calendar activity
-    const dayMs = 24 * 60 * 60 * 1000;
-    const normalize = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    // Debug: log activity data
+    console.log('MonthSummary activity for', currentDate.toLocaleDateString(), ':', activity);
     
-    const activeDates = activity
-      .filter((d: any) => d.attempts > 0)
-      .map((d: any) => normalize(new Date(d.date)))
-      .sort((a: Date, b: Date) => a.getTime() - b.getTime());
-
-    // Remove duplicates
-    const uniqueDates: Date[] = [];
-    for (const d of activeDates) {
-      if (!uniqueDates.length || uniqueDates[uniqueDates.length - 1].getTime() !== d.getTime()) {
-        uniqueDates.push(d);
-      }
-    }
-
-    // Calculate streaks - if no active dates in this month, streaks should be 0
+    // Compute streaks from the monthly calendar activity - only count days with attempts > 0
+    const activeDaysInMonth = activity.filter((d: any) => d.attempts > 0);
+    console.log('Active days in month:', activeDaysInMonth);
+    
+    // If no active days in this month, streaks should be 0
     let mainStreak;
-    if (uniqueDates.length === 0) {
+    if (activeDaysInMonth.length === 0) {
       mainStreak = { current_count: 0, best_count: 0 };
+      console.log('No active days, setting streaks to 0');
     } else {
-      // Calculate streaks only from active dates in this month
+      // Calculate streaks from consecutive active days
+      const dayMs = 24 * 60 * 60 * 1000;
+      const normalize = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+      
+      const activeDates = activeDaysInMonth
+        .map((d: any) => normalize(new Date(d.date)))
+        .sort((a: Date, b: Date) => a.getTime() - b.getTime());
+
+      // Remove duplicates
+      const uniqueDates: Date[] = [];
+      for (const d of activeDates) {
+        if (!uniqueDates.length || uniqueDates[uniqueDates.length - 1].getTime() !== d.getTime()) {
+          uniqueDates.push(d);
+        }
+      }
+
       let best = 0;
       let current = 0;
       let prev: Date | null = null;
@@ -116,6 +122,7 @@ const MonthSummary = ({ activity, currentDate }: { activity: any[]; currentDate:
       }
       
       mainStreak = { current_count: current, best_count: best };
+      console.log('Calculated streaks:', mainStreak);
     }
 
     return (
