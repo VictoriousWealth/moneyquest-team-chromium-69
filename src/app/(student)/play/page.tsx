@@ -3,6 +3,7 @@ import { supabase } from '../../../integrations/supabase/client';
 import Card from '../../../components/ui/Card';
 import Badge from '../../../components/ui/Badge';
 import Button from '../../../components/ui/Button';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from '../../../components/ui/dialog';
 import { Coins, Zap, MapPin, Users, Search, Filter, X } from 'lucide-react';
 
 interface CurriculumSection {
@@ -34,7 +35,7 @@ interface GroupedQuests {
     totalCount: number;
 }
 
-const QuestCard: React.FC<{ quest: Quest }> = ({ quest }) => {
+const QuestCard: React.FC<{ quest: Quest; onClick: () => void }> = ({ quest, onClick }) => {
     const statusColor = {
         'Completed': 'mint',
         'In progress': 'teal',
@@ -44,7 +45,7 @@ const QuestCard: React.FC<{ quest: Quest }> = ({ quest }) => {
     const status = quest.status || 'Not started';
 
     return (
-        <Card className="flex flex-col justify-between rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
+        <Card className="flex flex-col justify-between rounded-lg overflow-hidden hover:shadow-lg transition-shadow cursor-pointer" onClick={onClick}>
             <div>
                 <img 
                     src={`https://picsum.photos/seed/${quest.id}/500/240`} 
@@ -93,11 +94,6 @@ const QuestCard: React.FC<{ quest: Quest }> = ({ quest }) => {
                     </div>
                 </div>
             </div>
-            <div className="p-4 pt-0">
-                <Button variant="primary" className="w-full mt-2">
-                    {status === 'In progress' ? 'Resume' : 'Start'}
-                </Button>
-            </div>
         </Card>
     );
 }
@@ -109,6 +105,7 @@ const StudentPlay: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [sectionFilter, setSectionFilter] = useState<string>('all');
+  const [selectedQuest, setSelectedQuest] = useState<Quest | null>(null);
   
   const quests = React.useMemo(() => groupedQuests.flatMap(g => g.quests), [groupedQuests]);
 
@@ -396,13 +393,100 @@ const StudentPlay: React.FC = () => {
               {/* Quest Cards */}
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 ml-4">
                 {group.quests.map(quest => (
-                  <QuestCard key={quest.id} quest={quest} />
+                  <QuestCard key={quest.id} quest={quest} onClick={() => setSelectedQuest(quest)} />
                 ))}
               </div>
             </div>
           ))
         )}
       </div>
+      
+      {/* Quest Details Popup */}
+      <Dialog open={!!selectedQuest} onOpenChange={() => setSelectedQuest(null)}>
+        <DialogContent className="max-w-lg bg-gradient-to-br from-blue-50 to-blue-100 border-4 border-blue-600">
+          <DialogClose className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none">
+            <X className="h-4 w-4" />
+            <span className="sr-only">Close</span>
+          </DialogClose>
+
+          {selectedQuest && (
+            <>
+              <DialogHeader>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="text-4xl">
+                    <img 
+                      src={`https://picsum.photos/seed/${selectedQuest.id}/100/100`} 
+                      alt={selectedQuest.title} 
+                      className="w-16 h-16 rounded-lg object-cover" 
+                    />
+                  </div>
+                  <div>
+                    <DialogTitle className="text-2xl font-bold text-blue-900">{selectedQuest.title}</DialogTitle>
+                    <p className="text-blue-700 font-medium">with {selectedQuest.npc}</p>
+                  </div>
+                </div>
+              </DialogHeader>
+
+              <p className="text-blue-800 mb-4 leading-relaxed">{selectedQuest.description}</p>
+
+              <div className="grid grid-cols-1 gap-3 mb-6">
+                <div className="flex items-center gap-2 bg-blue-200 rounded-lg p-3">
+                  <MapPin className="w-5 h-5 text-blue-700" />
+                  <span className="text-sm font-medium text-blue-800">{selectedQuest.zone}</span>
+                </div>
+                <div className="flex items-center gap-2 bg-blue-200 rounded-lg p-3">
+                  <Users className="w-5 h-5 text-blue-700" />
+                  <span className="text-sm font-medium text-blue-800">{selectedQuest.npc}</span>
+                </div>
+                <div className="flex items-center gap-2 bg-blue-200 rounded-lg p-3">
+                  <div className="flex items-center gap-2">
+                    <Coins className="w-5 h-5 text-blue-700" />
+                    <span className="text-sm font-medium text-blue-800">{selectedQuest.reward_coins} coins</span>
+                  </div>
+                  <div className="flex items-center gap-2 ml-4">
+                    <Zap className="w-5 h-5 text-blue-700" />
+                    <span className="text-sm font-medium text-blue-800">{selectedQuest.reward_xp} XP</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-center space-y-2 flex-col">
+                {selectedQuest.status === "Not started" && (
+                  <Button
+                    size="lg"
+                    onClick={() => {
+                      // Handle quest start - open in new tab
+                      window.open(`/quest/${selectedQuest.id}`, '_blank');
+                      setSelectedQuest(null);
+                    }}
+                    className="bg-green-600 hover:bg-green-700 text-white font-bold px-8 py-3 rounded-xl shadow-lg"
+                  >
+                    🚀 Start Quest
+                  </Button>
+                )}
+                {selectedQuest.status === "In progress" && (
+                  <Button
+                    size="lg"
+                    onClick={() => {
+                      // Handle quest continue - open in new tab
+                      window.open(`/quest/${selectedQuest.id}`, '_blank');
+                      setSelectedQuest(null);
+                    }}
+                    className="bg-orange-600 hover:bg-orange-700 text-white font-bold px-8 py-3 rounded-xl shadow-lg animate-pulse"
+                  >
+                    ⚡ Continue Quest
+                  </Button>
+                )}
+                {selectedQuest.status === "Completed" && (
+                  <Button size="lg" disabled className="bg-gray-400 text-gray-600 font-bold px-8 py-3 rounded-xl">
+                    ✅ Completed
+                  </Button>
+                )}
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
