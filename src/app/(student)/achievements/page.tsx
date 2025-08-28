@@ -1,8 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { allBadges, allStreaks } from '../../../lib/demoData';
-import { useAchievements } from '../../../hooks/useAchievements';
-import { useCompleteStudentData } from '../../../hooks/useCompleteStudentData';
-import type { Badge as BadgeType, Streak as StreakType, BadgeCategory, Tier } from '../../../types';
+import { allStreaks } from '../../../lib/demoData';
+import { useDatabaseAchievements, type DatabaseBadge } from '../../../hooks/useDatabaseAchievements';
+import type { Streak as StreakType, BadgeCategory, Tier } from '../../../types';
 import Card from '../../../components/ui/Card';
 import Button from '../../../components/ui/Button';
 import { Search, Lock, Award, Flame, Star, Zap, Gem, Shield, ChevronDown, Trophy } from 'lucide-react';
@@ -31,39 +30,35 @@ function usePersistentState<T>(key: string, defaultValue: T): [T, React.Dispatch
     return [state, setState];
 }
 
-
 // --- HELPER FUNCTIONS & COMPONENTS ---
 
 const formatShortDate = (isoString: string) => {
   return new Date(isoString).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 };
 
-const badgeFunCopy: Record<string, { title: string; description: string }> = {
-    first_pound: { title: "Ka-ching!", description: "You passed your first episode and banked your first £." },
-    level_up: { title: "Level-Up Learner", description: "10 passes! You're levelling up faster than interest compounds." },
-    marathon: { title: "Marathon Learner", description: "Keep going! Pass 25 episodes." },
-    value_detective: { title: "Value Detective", description: "You sniffed out the best unit price. Grocery stores fear you now." },
-    paycheck_pro: { title: "Paycheck Pro", description: "Decode a full payslip (gross, net, NI, tax code)." },
-    apr_unmasker: { title: "APR Unmasker", description: "Pick the cheaper plan when APR/fees are hiding (3×)." },
-    risk_ranger: { title: "Risk Ranger", description: "Diversified like a pro in Stock Market Maze. Yee-haw!" },
-    goal_setter: { title: "Goal Setter", description: "Set a weekly goal and actually hit it. Consistency FTW." },
-    comeback_kid: { title: "Comeback Kid", description: "Pass an episode you previously failed. Bounce back!" },
-    latte_factor: { title: "Latte Factor", description: "Oops—little treats add up. You spotted the drip-drip spend." },
-    lemonade_tycoon: { title: "Lemonade Tycoon", description: "Citrus CEO! You squeezed ≥£X profit from Lemonade Stand." },
-    bogof_boss: { title: "BOGOF Boss", description: "Win big using multi-buy/unit-price logic." },
+// Map achievement types to badge categories
+const typeToCategory: Record<string, BadgeCategory> = {
+  milestone: 'Milestone',
+  skill: 'Skill',
+  habit: 'Habit',
+  fun: 'Fun',
+  quest: 'Quest'
 };
 
-const BadgePopover: React.FC<{ badge: BadgeType }> = ({ badge }) => {
-    const copy = badgeFunCopy[badge.id] || { title: badge.name, description: badge.unlockHint };
-
+const BadgePopover: React.FC<{ badge: DatabaseBadge }> = ({ badge }) => {
     return (
         <div className="absolute bottom-full mb-2 w-60 rounded-lg bg-surface p-3 shadow-lg ring-1 ring-ring text-left opacity-0 transition-opacity duration-200 group-hover:opacity-100 group-focus-within:opacity-100 pointer-events-none z-10">
-            <h4 className="font-bold text-sm text-text">{copy.title}</h4>
-            <p className="text-xs text-subtext mt-1">{badge.state === 'earned' ? copy.description : `How to unlock: ${badge.unlockHint}`}</p>
-            {badge.state === 'earned' && badge.contextStat && (
+            <h4 className="font-bold text-sm text-text">{badge.title}</h4>
+            <p className="text-xs text-subtext mt-1">
+              {badge.isEarned ? 
+                (badge.performanceSummary || badge.description) : 
+                `How to unlock: ${badge.description}`
+              }
+            </p>
+            {badge.isEarned && badge.contextStat && (
                  <p className="text-xs font-semibold text-blue-500 mt-2">{badge.contextStat}</p>
             )}
-             {badge.state === 'earned' && badge.earnedAt && (
+             {badge.isEarned && badge.earnedAt && (
                  <p className="text-xs text-subtext mt-2">Earned: {formatShortDate(badge.earnedAt)}</p>
             )}
             <div className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 bg-surface rotate-45" />
@@ -71,23 +66,16 @@ const BadgePopover: React.FC<{ badge: BadgeType }> = ({ badge }) => {
     );
 };
 
-const BadgeTile: React.FC<{ badge: BadgeType }> = ({ badge }) => {
-  const isLocked = badge.state === 'locked';
-
-  const tierRingColorMap: Record<Tier, string> = {
-    none: 'ring-transparent',
-    bronze: 'ring-[#CD7F32]',
-    silver: 'ring-[#C0C0C0]',
-    gold: 'ring-[#FFD700]',
-  };
-  const tierRingClass = badge.tier && badge.tier !== 'none' ? `ring-2 ${tierRingColorMap[badge.tier]}` : '';
+const BadgeTile: React.FC<{ badge: DatabaseBadge }> = ({ badge }) => {
+  const isLocked = !badge.isEarned;
+  const category = typeToCategory[badge.achievement_type] || 'Skill';
 
   return (
     <div tabIndex={0} className="relative group flex flex-col items-center justify-start text-center p-4 rounded-lg transition-all duration-150 ease-out bg-muted hover:shadow-lg hover:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
       <BadgePopover badge={badge} />
       
       {/* Square Image Slot */}
-      <div className={`relative w-[72px] h-[72px] sm:w-[96px] sm:h-[96px] lg:w-[120px] lg:h-[120px] flex-shrink-0 transition-all rounded-lg ${tierRingClass} ring-offset-2 ring-offset-muted ${isLocked ? 'grayscale' : ''}`}>
+      <div className={`relative w-[72px] h-[72px] sm:w-[96px] sm:h-[96px] lg:w-[120px] lg:h-[120px] flex-shrink-0 transition-all rounded-lg ring-offset-2 ring-offset-muted ${isLocked ? 'grayscale' : ''}`}>
         <div className={`w-full h-full rounded-lg bg-surface flex items-center justify-center p-1 shadow-inner`}>
            {/* Placeholder */}
            <div className="w-full h-full rounded-md border border-dashed border-slate-300 flex items-center justify-center">
@@ -105,20 +93,21 @@ const BadgeTile: React.FC<{ badge: BadgeType }> = ({ badge }) => {
       {/* Title & Subline */}
       <div className="flex-grow flex flex-col justify-center mt-3">
           <div className="flex items-center justify-center gap-2 mb-1">
-            <p className={`font-semibold text-sm ${isLocked ? 'text-subtext' : 'text-text'}`}>{badge.name}</p>
+            <p className={`font-semibold text-sm ${isLocked ? 'text-subtext' : 'text-text'}`}>{badge.title}</p>
             <UIBadge variant="muted" className="text-[10px] px-1 py-0">
-              {badge.category}
+              {category}
             </UIBadge>
           </div>
           <p className="text-xs text-subtext mt-1 leading-tight">
-            {isLocked ? `How to unlock: ${badge.unlockHint}` : `Earned: ${formatShortDate(badge.earnedAt!)}`}
+            {isLocked ? 
+              `How to unlock: ${badge.description}` : 
+              `Earned: ${formatShortDate(badge.earnedAt!)}`
+            }
           </p>
       </div>
-
     </div>
   );
 };
-
 
 const StreakCard: React.FC<{ streak: StreakType }> = ({ streak }) => {
     const tierConfig = {
@@ -187,12 +176,10 @@ const StreakCard: React.FC<{ streak: StreakType }> = ({ streak }) => {
     );
 };
 
-
 // --- MAIN PAGE COMPONENT ---
 
 const StudentAchievements: React.FC = () => {
-  const { achievements: backendAchievements } = useAchievements();
-  const { achievements: completeAchievements } = useCompleteStudentData();
+  const { badges, loading, error } = useDatabaseAchievements();
   const [badgeFilter, setBadgeFilter] = usePersistentState<'all' | 'earned' | 'locked'>('mq-achievements-filter', 'all');
   
   const badgeCategories: BadgeCategory[] = ['Milestone', 'Skill', 'Habit', 'Fun', 'Quest'];
@@ -200,38 +187,6 @@ const StudentAchievements: React.FC = () => {
   
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = usePersistentState('mq-achievements-sort', 'newest');
-
-  // Create a map of earned achievements from complete data
-  const earnedAchievementsMap = useMemo(() => {
-    const map = new Map();
-    completeAchievements.forEach(achievement => {
-      map.set(achievement.achievement_definition_id || achievement.id, {
-        earned_at: achievement.earned_at,
-        achievement_data: achievement.achievement_data
-      });
-    });
-    return map;
-  }, [completeAchievements]);
-
-  // Merge frontend badges with database state
-  const mergedBadges = useMemo(() => {
-    return allBadges.map(badge => {
-      const earnedData = earnedAchievementsMap.get(badge.id);
-      if (earnedData) {
-        return {
-          ...badge,
-          state: 'earned' as const,
-          earnedAt: earnedData.earned_at,
-          contextStat: earnedData.achievement_data?.contextStat || badge.contextStat
-        };
-      }
-      return {
-        ...badge,
-        state: 'locked' as const,
-        earnedAt: undefined
-      };
-    });
-  }, [earnedAchievementsMap]);
 
   const handleTagToggle = (tag: BadgeCategory) => {
     setSelectedTags(prev => 
@@ -242,56 +197,72 @@ const StudentAchievements: React.FC = () => {
   };
 
   const processedBadges = useMemo(() => {
-    let badges = [...mergedBadges];
+    let filteredBadges = [...badges];
     
     // 1. Filter by earned state
-    if (badgeFilter !== 'all') {
-      badges = badges.filter(b => b.state === badgeFilter);
+    if (badgeFilter === 'earned') {
+      filteredBadges = filteredBadges.filter(b => b.isEarned);
+    } else if (badgeFilter === 'locked') {
+      filteredBadges = filteredBadges.filter(b => !b.isEarned);
     }
     
-    // 2. Filter by selected tags (only if not all are selected)
+    // 2. Filter by selected tags
     if (selectedTags.length > 0 && selectedTags.length < badgeCategories.length) {
-      badges = badges.filter(b => selectedTags.includes(b.category));
+      filteredBadges = filteredBadges.filter(b => {
+        const category = typeToCategory[b.achievement_type] || 'Skill';
+        return selectedTags.includes(category);
+      });
     } else if (selectedTags.length === 0) {
-      badges = [];
+      filteredBadges = [];
     }
     
     // 3. Filter by search term
     if (searchTerm) {
-      badges = badges.filter(b => 
-        b.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-        b.unlockHint.toLowerCase().includes(searchTerm.toLowerCase())
+      filteredBadges = filteredBadges.filter(b => 
+        b.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+        b.description.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // 4. Sort
     switch (sortBy) {
         case 'newest':
-            badges.sort((a, b) => {
-                if (a.state === 'locked' && b.state === 'earned') return 1;
-                if (b.state === 'locked' && a.state === 'earned') return -1;
-                if (a.state === 'locked' && b.state === 'locked') return a.name.localeCompare(b.name);
+            filteredBadges.sort((a, b) => {
+                if (!a.isEarned && b.isEarned) return 1;
+                if (!b.isEarned && a.isEarned) return -1;
+                if (!a.isEarned && !b.isEarned) return a.title.localeCompare(b.title);
                 return new Date(b.earnedAt!).getTime() - new Date(a.earnedAt!).getTime();
             });
             break;
-        case 'rarest':
-            const categoryOrder: Record<BadgeCategory, number> = { 'Milestone': 1, 'Skill': 2, 'Habit': 3, 'Fun': 4, 'Quest': 5 };
-            badges.sort((a, b) => categoryOrder[a.category] - categoryOrder[b.category] || a.name.localeCompare(b.name));
-            break;
         case 'category':
-            badges.sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
+            filteredBadges.sort((a, b) => a.achievement_type.localeCompare(b.achievement_type) || a.title.localeCompare(b.title));
             break;
         case 'az':
-            badges.sort((a, b) => a.name.localeCompare(b.name));
+            filteredBadges.sort((a, b) => a.title.localeCompare(b.title));
             break;
-        case 'progress':
-            // TODO: Implement sorting by progress when data is available
-            badges.sort((a, b) => a.name.localeCompare(b.name));
+        default:
+            filteredBadges.sort((a, b) => a.title.localeCompare(b.title));
             break;
     }
 
-    return badges;
-  }, [mergedBadges, badgeFilter, selectedTags, searchTerm, sortBy]);
+    return filteredBadges;
+  }, [badges, badgeFilter, selectedTags, searchTerm, sortBy]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center">Loading achievements...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="text-center text-red-500">Error loading achievements: {error}</div>
+      </div>
+    );
+  }
   
   return (
     <div className="space-y-8">
@@ -321,10 +292,8 @@ const StudentAchievements: React.FC = () => {
                         <div className="relative">
                             <select value={sortBy} onChange={e => setSortBy(e.target.value)} className="w-48 appearance-none rounded-md bg-muted py-2 pl-3 pr-8 text-sm font-medium text-subtext focus:outline-none focus:ring-2 focus:ring-blue-500">
                                 <option value="newest">Sort: Newest earned</option>
-                                <option value="rarest">Sort: Rarest first</option>
                                 <option value="category">Sort: Category</option>
                                 <option value="az">Sort: A → Z</option>
-                                <option value="progress">Sort: Progress to next</option>
                             </select>
                             <ChevronDown className="absolute right-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-subtext pointer-events-none" />
                         </div>

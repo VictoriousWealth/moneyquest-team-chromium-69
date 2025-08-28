@@ -4,6 +4,7 @@ import Card from '../ui/Card';
 import { demoStudent, demoPrefs, demoClassActivity, dailyActivity } from '../../lib/demoData';
 import { Camera, Trophy, Clock, Calendar, PiggyBank, Award } from 'lucide-react';
 import { useCompleteStudentData } from '../../hooks/useCompleteStudentData';
+import { useDatabaseAchievements } from '../../hooks/useDatabaseAchievements';
 import Badge from '../ui/Badge';
 
 // Util for GBP currency formatting
@@ -15,7 +16,8 @@ const formatGBP = (amount: number) => {
 };
 
 const ProfileSection = () => {
-    const { achievements, progress, gameState, loading } = useCompleteStudentData();
+    const { progress, gameState, loading } = useCompleteStudentData();
+    const { badges } = useDatabaseAchievements();
     
     const stats = useMemo(() => {
         if (loading || !progress) {
@@ -32,18 +34,18 @@ const ProfileSection = () => {
         };
     }, [progress, loading]);
 
-    // Get achievements earned this month
+    // Get achievements earned this month from database
     const thisMonthAchievements = useMemo(() => {
         const currentDate = new Date();
         const currentMonth = currentDate.getMonth();
         const currentYear = currentDate.getFullYear();
         
-        return achievements.filter(achievement => {
-            if (!achievement.earned_at) return false;
-            const earnedDate = new Date(achievement.earned_at);
+        return badges.filter(badge => {
+            if (!badge.isEarned || !badge.earnedAt) return false;
+            const earnedDate = new Date(badge.earnedAt);
             return earnedDate.getMonth() === currentMonth && earnedDate.getFullYear() === currentYear;
         }).slice(0, 3); // Show up to 3 recent badges
-    }, [achievements]);
+    }, [badges]);
 
     const formatTimeSpent = (minutes: number) => {
         const hours = Math.floor(minutes / 60);
@@ -163,7 +165,7 @@ const ProfileSection = () => {
                                      <div className="flex-1 min-w-0">
                                          <p className="text-xs font-medium text-text truncate">{achievement.title}</p>
                                          <p className="text-xs text-subtext">
-                                             {new Date(achievement.earned_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                             {new Date(achievement.earnedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                                          </p>
                                      </div>
                                  </div>
