@@ -3,12 +3,10 @@ import Card from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import BadgeComponent from '@/components/ui/Badge';
 import { Check, X, Download, Save, MoreVertical } from 'lucide-react';
+import { generatePDF } from '@/utils/pdfGenerator';
 
 // Alias to avoid any potential naming conflicts
 const Badge = BadgeComponent;
-
-// Debug log to ensure proper import
-console.log('Badge component imported:', Badge);
 
 interface QuizCard {
   type: 'quiz';
@@ -82,22 +80,27 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({
   };
 
   const handleExportPDF = () => {
-    onAction?.('export_pdf', card.id, card);
-    onMascotMood?.('proud');
+    try {
+      generatePDF(card);
+      onAction?.('export_pdf', card.id, card);
+      onMascotMood?.('proud');
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+    }
   };
 
   if (card.type === 'quiz') {
     return (
-      <Card className="bg-white border-l-4 border-l-blue-500 shadow-sm">
-        <div className="p-3 pb-2 border-b border-gray-100">
-          <h3 className="text-sm font-semibold text-gray-800">
+      <Card className="bg-white border-l-2 border-l-blue-500 shadow-sm">
+        <div className="p-2 pb-1.5 border-b border-gray-100">
+          <h3 className="text-xs font-semibold text-gray-800">
             {card.title}
           </h3>
         </div>
-        <div className="p-3 space-y-3">
-          <p className="text-sm text-gray-700 font-medium">{card.question}</p>
+        <div className="p-2 space-y-2">
+          <p className="text-xs text-gray-700 font-medium">{card.question}</p>
           
-          <div className="space-y-1.5">
+          <div className="space-y-1">
             {card.options.map((option) => {
               const isSelected = selectedOption === option.id;
               const isCorrect = card.correctOptionId === option.id;
@@ -109,7 +112,7 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({
                   onClick={() => handleQuizAnswer(option.id)}
                   disabled={showResult}
                   className={`
-                    w-full p-2.5 text-left rounded-lg border-2 transition-all text-sm
+                    w-full p-2 text-left rounded-md border transition-all text-xs
                     ${!showResult ? 'hover:border-blue-300 hover:bg-blue-50' : ''}
                     ${isSelected && !showResult ? 'border-blue-500 bg-blue-50' : ''}
                     ${showResult && isCorrect ? 'border-green-500 bg-green-50' : ''}
@@ -121,17 +124,17 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({
                   tabIndex={0}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-800 text-sm">{option.text}</span>
+                    <span className="text-gray-800 text-xs">{option.text}</span>
                     {showResult && (
-                      <div className="flex items-center gap-2">
-                        {isCorrect && <Check className="text-green-600" size={20} />}
-                        {isWrong && <X className="text-red-600" size={20} />}
+                      <div className="flex items-center gap-1">
+                        {isCorrect && <Check className="text-green-600" size={14} />}
+                        {isWrong && <X className="text-red-600" size={14} />}
                       </div>
                     )}
                   </div>
                   
                   {showResult && isWrong && card.optionHints?.[option.id] && (
-                    <p className="mt-1.5 text-xs text-red-700">
+                    <p className="mt-1 text-xs text-red-700">
                       {card.optionHints[option.id]}
                     </p>
                   )}
@@ -141,9 +144,9 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({
           </div>
           
           {showResult && (
-            <div className="mt-3 p-2.5 bg-blue-50 rounded-lg">
+            <div className="mt-2 p-2 bg-blue-50 rounded-md">
               <p className="text-blue-800 font-medium text-xs">Explanation:</p>
-              <p className="text-blue-700 mt-1 text-sm">{card.explanation}</p>
+              <p className="text-blue-700 mt-0.5 text-xs">{card.explanation}</p>
             </div>
           )}
         </div>
@@ -153,46 +156,46 @@ const InteractiveCard: React.FC<InteractiveCardProps> = ({
 
   if (card.type === 'plan') {
     return (
-      <Card className="bg-white border-l-4 border-l-green-500 shadow-sm">
-        <div className="p-3 pb-2 border-b border-gray-100">
+      <Card className="bg-white border-l-2 border-l-green-500 shadow-sm">
+        <div className="p-2 pb-1.5 border-b border-gray-100">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-semibold text-gray-800">
+            <h3 className="text-xs font-semibold text-gray-800">
               {card.title}
             </h3>
-            <Button variant="ghost" size="sm">
-              <MoreVertical size={16} />
+            <Button variant="ghost" size="sm" className="h-4 w-4 p-0">
+              <MoreVertical size={12} />
             </Button>
           </div>
         </div>
-        <div className="p-3 space-y-3">
-          <div className="space-y-1.5">
+        <div className="p-2 space-y-2">
+          <div className="space-y-1">
             {card.steps.map((step, index) => (
-              <div key={index} className="flex items-start gap-2.5">
-                <div className="flex-shrink-0 w-5 h-5 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xs font-medium">
+              <div key={index} className="flex items-start gap-2">
+                <div className="flex-shrink-0 w-4 h-4 bg-green-100 text-green-700 rounded-full flex items-center justify-center text-xs font-medium">
                   {index + 1}
                 </div>
-                <p className="text-gray-700 text-sm">{step}</p>
+                <p className="text-gray-700 text-xs">{step}</p>
               </div>
             ))}
           </div>
           
           {card.summary && (
-            <div className="p-2.5 bg-green-50 rounded-lg">
-              <p className="text-green-800 text-sm">{card.summary}</p>
+            <div className="p-2 bg-green-50 rounded-md">
+              <p className="text-green-800 text-xs">{card.summary}</p>
             </div>
           )}
           
-          <div className="flex gap-2 pt-2">
+          <div className="flex gap-1.5 pt-1">
             {card.actions.includes('save') && (
-              <Button onClick={handleSave} size="sm" variant="outline">
-                <Save size={16} className="mr-2" />
-                Save Plan
+              <Button onClick={handleSave} size="sm" variant="outline" className="h-6 text-xs px-2">
+                <Save size={12} className="mr-1" />
+                Save
               </Button>
             )}
             {card.actions.includes('export_pdf') && (
-              <Button onClick={handleExportPDF} size="sm" variant="outline">
-                <Download size={16} className="mr-2" />
-                Export PDF
+              <Button onClick={handleExportPDF} size="sm" variant="outline" className="h-6 text-xs px-2">
+                <Download size={12} className="mr-1" />
+                PDF
               </Button>
             )}
           </div>

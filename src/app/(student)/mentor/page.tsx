@@ -161,10 +161,9 @@ const StudentMentor: React.FC = () => {
         });
         break;
       case 'export_pdf':
-        // TODO: Implement PDF export
         toast({
-          title: "Export Coming Soon",
-          description: "PDF export will be available soon!",
+          title: "Downloaded!",
+          description: "Your plan has been saved as a text file.",
         });
         break;
       case 'quiz_answer':
