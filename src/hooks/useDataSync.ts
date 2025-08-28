@@ -15,20 +15,13 @@ export const useDataSync = () => {
 
       console.log('Starting data sync for user:', user.id, user.email);
 
-      // 1. Sync daily activities from demoData
-      for (const activity of dailyActivity) {
-        if (activity.attempts > 0) { // Only sync days with actual activity
-          await supabase
-            .from('daily_activities')
-            .upsert({
-              user_id: user.id,
-              activity_date: activity.date,
-              attempts: activity.attempts,
-              passes: activity.pass,
-              time_spent_minutes: activity.time,
-              concepts: Object.keys(activity.concepts).filter(key => activity.concepts[key] > 0)
-            });
-        }
+      // 1. Ensure consistent demo activities are in place (replaces random demo data)
+      console.log('Setting up consistent demo activities...');
+      const { error: demoError } = await supabase.rpc('ensure_demo_activities_for_user');
+      if (demoError) {
+        console.error('Error setting up demo activities:', demoError);
+      } else {
+        console.log('Demo activities set up successfully');
       }
 
       // 2. Sync streaks data
