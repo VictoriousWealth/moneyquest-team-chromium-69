@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
-import Card from "@/components/ui/Card";
-import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
+import { Card } from "@/components/ui/Card";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
 import { Progress } from "@/components/ui/progress";
+import { Zap, Star, AlertTriangle, Volume2, VolumeX } from "lucide-react";
 import { toast } from "sonner";
+import { useTextToSpeech } from "@/hooks/useTextToSpeech";
+import { Typewriter } from "@/components/ui/typewriter";
+import { supabase } from "@/integrations/supabase/client";
 
 interface JuiceOption {
   id: string;
@@ -34,246 +38,425 @@ interface JuiceStandProps {
   isActive: boolean;
   onComplete: (score: number, choice: string, wasCorrect: boolean) => void;
   onUseScanner: () => void;
-  scannedItem?: ScannedItem;
 }
 
-export const JuiceStand = ({ isActive, onComplete, onUseScanner, scannedItem }: JuiceStandProps) => {
+export const JuiceStand = ({ isActive, onComplete, onUseScanner }: JuiceStandProps) => {
   const [gamePhase, setGamePhase] = useState<"intro" | "crafting" | "decision">("intro");
   const [totalScore, setTotalScore] = useState(0);
   const [currentRound, setCurrentRound] = useState(0);
   const [craftingProgress, setCraftingProgress] = useState(0);
   const [selectedJuice, setSelectedJuice] = useState<string>("");
+  const [hasSpoken, setHasSpoken] = useState(false);
   const [showTypewriter, setShowTypewriter] = useState(false);
+  
+  const { speak, stop, isPlaying, isLoading } = useTextToSpeech();
+  
+  const momoText = "Hey there! I'm Momo, I work part-time here at the juice stand in Food Row while studying. My manager asked me to help choose the best value juices for our smoothies, but I've noticed something strange - some bottles seem smaller than they used to be, but prices haven't changed. Can you help me figure out which bottles give the best value for the shop?";
 
-  const juiceComparisons: Comparison[] = [
+  const comparisons: Comparison[] = [
     {
       id: 1,
-      optionA: { id: "a1", name: "Orange Juice", price: 3.50, volume: 500 },
-      optionB: { id: "b1", name: "Orange Juice", price: 3.50, volume: 450, isNewSize: true },
-      correctChoice: "a1"
+      optionA: { id: "option-a", name: "Orange Burst", price: 1.00, volume: 250 },
+      optionB: { id: "option-b", name: "Orange Burst", price: 1.00, volume: 200, isNewSize: true },
+      correctChoice: "option-a"
     },
     {
       id: 2,
-      optionA: { id: "a2", name: "Apple Juice", price: 4.00, volume: 600 },
-      optionB: { id: "b2", name: "Apple Juice", price: 3.80, volume: 500 },
-      correctChoice: "a2"
+      optionA: { id: "option-a", name: "Citrus Mix", price: 1.50, volume: 350 },
+      optionB: { id: "option-b", name: "Citrus Mix", price: 1.20, volume: 270, isNewSize: true },
+      correctChoice: "option-a"
     },
     {
       id: 3,
-      optionA: { id: "a3", name: "Grape Juice", price: 5.00, volume: 750 },
-      optionB: { id: "b3", name: "Grape Juice", price: 4.50, volume: 600 },
-      correctChoice: "a3"
+      optionA: { id: "option-a", name: "Tropical Blend", price: 2.20, volume: 500 },
+      optionB: { id: "option-b", name: "Tropical Blend", price: 2.00, volume: 450, isNewSize: true },
+      correctChoice: "option-a"
+    },
+    {
+      id: 4,
+      optionA: { id: "option-a", name: "Berry Fusion", price: 3.60, volume: 800 },
+      optionB: { id: "option-b", name: "Berry Fusion", price: 3.50, volume: 770, isNewSize: true },
+      correctChoice: "option-a"
+    },
+    {
+      id: 5,
+      optionA: { id: "option-a", name: "Ultimate Mix", price: 4.95, volume: 1100 },
+      optionB: { id: "option-b", name: "Ultimate Mix", price: 4.92, volume: 1090, isNewSize: true },
+      correctChoice: "option-a"
     }
   ];
 
-  const currentComparison = juiceComparisons[currentRound];
+  const currentComparison = comparisons[currentRound];
+  const juiceOptions = currentComparison ? [currentComparison.optionA, currentComparison.optionB] : [];
 
-  useEffect(() => {
-    if (gamePhase === "intro") {
-      setTimeout(() => setShowTypewriter(true), 500);
-    }
-  }, [gamePhase]);
-
-  useEffect(() => {
-    if (gamePhase === "crafting") {
+  const startCrafting = async () => {
+    // First, speak the confirmation text
+    const confirmationText = "Great! Let me prepare the juices for you. I'll get everything ready so you can help me choose the best value!";
+    
+    try {
+      await speak(confirmationText);
+      
+      // Wait for speech to finish by polling isPlaying state
+      const waitForSpeechEnd = () => {
+        return new Promise<void>((resolve) => {
+          const checkSpeech = () => {
+            if (!isPlaying && !isLoading) {
+              resolve();
+            } else {
+              setTimeout(checkSpeech, 100);
+            }
+          };
+          // Start checking after a brief delay to ensure speech has started
+          setTimeout(checkSpeech, 500);
+        });
+      };
+      
+      await waitForSpeechEnd();
+      
+      // Now proceed with the original crafting logic
+      setGamePhase("crafting");
+      setTotalScore(0);
+      setCurrentRound(0);
+      setCraftingProgress(0);
+      
+      // Simulate smoothie crafting progress
       const interval = setInterval(() => {
         setCraftingProgress(prev => {
           if (prev >= 100) {
             clearInterval(interval);
             setGamePhase("decision");
+            toast.success("🥤 Smoothie crafted! Now compare your options.");
             return 100;
           }
           return prev + 2;
         });
-      }, 50);
-      return () => clearInterval(interval);
+      }, 100);
+    } catch (error) {
+      console.error('Speech failed:', error);
+      // If speech fails, still proceed with the game
+      setGamePhase("crafting");
+      setTotalScore(0);
+      setCurrentRound(0);
+      setCraftingProgress(0);
+      
+      const interval = setInterval(() => {
+        setCraftingProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(interval);
+            setGamePhase("decision");
+            toast.success("🥤 Smoothie crafted! Now compare your options.");
+            return 100;
+          }
+          return prev + 2;
+        });
+      }, 100);
     }
-  }, [gamePhase]);
-
-  const handleStartGame = () => {
-    setGamePhase("crafting");
-    toast.success("Let's start crafting some juice! 🍊");
   };
 
-  const handleJuiceChoice = (choice: string) => {
-    const isCorrect = choice === currentComparison.correctChoice;
-    const roundScore = isCorrect ? 100 : 0;
+  const makeChoice = async (optionId: string) => {
+    setSelectedJuice(optionId);
+    const chosen = juiceOptions.find(j => j.id === optionId);
+    if (!chosen || !currentComparison) return;
+
+    const isCorrect = optionId === currentComparison.correctChoice;
+    const roundScore = isCorrect ? 10 : 5;
     const newTotalScore = totalScore + roundScore;
     
-    setTotalScore(newTotalScore);
-    setSelectedJuice(choice);
-
-    if (isCorrect) {
-      toast.success("Great choice! You picked the better value! 🎉");
-    } else {
-      toast.error("Not quite right. Think about price per ml! 🤔");
+    // Save response to database
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase.from('quest_responses').insert({
+          user_id: user.id,
+          quest_id: 'juice-shrinkflation',
+          round_number: currentRound + 1,
+          question_text: `Which juice offers better value between ${currentComparison.optionA.name} (${currentComparison.optionA.price} for ${currentComparison.optionA.volume}ml) and ${currentComparison.optionB.name} (${currentComparison.optionB.price} for ${currentComparison.optionB.volume}ml)?`,
+          selected_option: chosen.name,
+          correct_answer: currentComparison.correctChoice === currentComparison.optionA.id ? currentComparison.optionA.name : currentComparison.optionB.name,
+          is_correct: isCorrect,
+          score_earned: roundScore
+        });
+      }
+    } catch (error) {
+      console.error('Error saving quest response:', error);
     }
-
-    // Complete quest after showing result
+    
     setTimeout(() => {
-      onComplete(newTotalScore, choice, isCorrect);
-    }, 2000);
+      if (currentRound < comparisons.length - 1) {
+        // Move to next round
+        setCurrentRound(prev => prev + 1);
+        setSelectedJuice("");
+        setGamePhase("crafting");
+        setCraftingProgress(0);
+        setTotalScore(newTotalScore);
+        
+        // Quick crafting for subsequent rounds
+        const interval = setInterval(() => {
+          setCraftingProgress(prev => {
+            if (prev >= 100) {
+              clearInterval(interval);
+              setGamePhase("decision");
+              return 100;
+            }
+            return prev + 10;
+          });
+        }, 50);
+      } else {
+        // Game complete
+        onComplete(newTotalScore, optionId, isCorrect);
+      }
+    }, 1000);
   };
 
-  const calculateValuePerMl = (option: JuiceOption) => {
-    return (option.price / option.volume).toFixed(3);
+  const calculateUnitPrice = (price: number, volume: number) => {
+    return ((price / volume) * 100).toFixed(2);
   };
 
-  if (!isActive) {
-    return (
-      <div className="text-center p-8">
-        <h2 className="text-2xl font-bold text-[var(--text)] mb-4">Juice Stand Quest</h2>
-        <p className="text-[var(--subtext)]">Quest not active</p>
-      </div>
-    );
-  }
+  const getJuiceImage = (juiceName: string) => {
+    switch (juiceName.toLowerCase()) {
+      case 'orange burst':
+        return "/lovable-uploads/7f571ee2-895c-40b2-9cd8-9481cd3dbb9f.png";
+      case 'citrus mix':
+        return "/lovable-uploads/a1bfc63a-8bff-46eb-a224-3d075ebdbaac.png";
+      case 'tropical blend':
+        return "/lovable-uploads/d8e8b90b-ee13-4504-9d86-8504b19db622.png";
+      case 'berry fusion':
+        return "/lovable-uploads/82870c1a-e2cb-4753-aa4d-851ee9411598.png";
+      case 'ultimate mix':
+        return "/lovable-uploads/65753fed-f484-42f8-a710-aae0e9776064.png";
+      default:
+        return "/lovable-uploads/7f571ee2-895c-40b2-9cd8-9481cd3dbb9f.png";
+    }
+  };
+
+  // Auto-play Momo's speech and show typewriter when intro loads
+  useEffect(() => {
+    if (gamePhase === "intro" && !hasSpoken && isActive) {
+      // Start typewriter effect immediately
+      setShowTypewriter(true);
+      // Start speech after a short delay to sync with typewriter
+      setTimeout(() => {
+        speak(momoText);
+      }, 500);
+      setHasSpoken(true);
+    }
+  }, [gamePhase, hasSpoken, isActive, speak, momoText]);
+
+  const handleSpeakToggle = () => {
+    if (isPlaying) {
+      stop();
+    } else if (gamePhase === "intro") {
+      speak(momoText);
+    }
+  };
+
+  const handleTypewriterComplete = () => {
+    // Typewriter animation completed
+    console.log("Typewriter animation completed");
+  };
+
+  if (!isActive) return null;
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      {gamePhase === "intro" && (
-        <Card className="p-8 text-center">
-          <div className="mb-6">
-            <div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-4xl">
-              🍊
-            </div>
-            <h1 className="text-3xl font-bold text-[var(--text)] mb-4">Welcome to Momo's Juice Stand!</h1>
-            {showTypewriter && (
-              <div className="text-[var(--text)] text-lg leading-relaxed max-w-2xl mx-auto">
-                <p className="mb-4">
-                  Hi there! I'm Momo, and I run this juice stand. I've been noticing something strange lately - 
-                  my juice bottles look the same but something feels different...
-                </p>
-                <p className="mb-6">
-                  Can you help me figure out which juice bottles give the best value for money? 
-                  You'll need to compare different options and pick the one that gives you more juice for your buck!
-                </p>
-              </div>
-            )}
-          </div>
-          <Button 
-            onClick={handleStartGame}
-            size="lg"
-            variant="primary"
-            className="px-8"
-          >
-            Help Momo! 🚀
-          </Button>
-        </Card>
-      )}
-
-      {gamePhase === "crafting" && (
-        <Card className="p-8 text-center">
-          <div className="mb-6">
-            <div className="w-24 h-24 mx-auto mb-4 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-4xl animate-bounce">
-              🧪
-            </div>
-            <h2 className="text-2xl font-bold text-[var(--text)] mb-4">Preparing the Juice Comparison...</h2>
-            <p className="text-[var(--subtext)] mb-6">Momo is setting up the juice bottles for you to analyze!</p>
-          </div>
-          <div className="max-w-md mx-auto">
-            <Progress value={craftingProgress} className="mb-4" />
-            <p className="text-sm text-[var(--subtext)]">{craftingProgress}% Complete</p>
-          </div>
-        </Card>
-      )}
-
-      {gamePhase === "decision" && currentComparison && (
-        <Card className="p-8">
+    <div className="fixed inset-0 bg-gradient-sky overflow-y-auto z-50 p-4">
+      <div className="min-h-full flex items-center justify-center py-8">
+        <Card className="w-full max-w-2xl bg-card shadow-game border-2 border-secondary">
+        <div className="p-6">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-[var(--text)] mb-2">Choose the Better Value!</h2>
-            <p className="text-[var(--subtext)]">Which juice gives you more for your money?</p>
-            <div className="mt-4">
-              <Badge variant="blue">Round {currentRound + 1} of {juiceComparisons.length}</Badge>
+            <div className="flex items-center justify-center gap-2 mb-2">
+              <h2 className="text-2xl font-bold text-foreground">Momo's Juice Stand</h2>
             </div>
+            <p className="text-muted-foreground mb-3">Help craft the perfect smoothie and spot the best value!</p>
+            <img src="/lovable-uploads/3b64b2f0-5c29-48c1-b570-dbbebf4d417d.png" alt="Momo the Juice Maker" className="mx-auto mb-4 rounded-lg max-w-32" />
           </div>
 
-          {scannedItem && (
-            <div className="mb-6 p-4 bg-[var(--muted)] rounded-lg">
-              <h3 className="font-semibold text-[var(--text)] mb-2">🔍 Scanner Results:</h3>
-              <p className="text-sm text-[var(--subtext)]">
-                {scannedItem.name}: ${scannedItem.price} for {scannedItem.size}{scannedItem.unit}
-              </p>
+          {gamePhase === "intro" && (
+            <div className="text-center space-y-6">
+              <div className="bg-card/50 border border-primary/20 rounded-lg p-4 relative">
+                <div className="absolute -top-2 -left-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                  <span className="text-white text-xs font-bold">M</span>
+                </div>
+                <div className="absolute -top-2 -right-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={handleSpeakToggle}
+                    disabled={isLoading}
+                    className="w-8 h-8 p-0 rounded-full bg-background hover:bg-accent"
+                  >
+                    {isLoading ? (
+                      <div className="w-3 h-3 border border-primary border-t-transparent rounded-full animate-spin" />
+                    ) : isPlaying ? (
+                      <VolumeX className="w-3 h-3" />
+                    ) : (
+                      <Volume2 className="w-3 h-3" />
+                    )}
+                  </Button>
+                </div>
+                <div className="text-lg text-foreground">
+                  <p className="mb-2 font-medium">
+                    "
+                    {showTypewriter ? (
+                      <Typewriter 
+                        text={momoText} 
+                        speed={30}
+                        onComplete={handleTypewriterComplete}
+                      />
+                    ) : (
+                      momoText
+                    )}
+                    "
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button
+                  onClick={startCrafting}
+                  type="button"
+                  size="lg"
+                  variant="default"
+                  className="shadow-game hover:shadow-game-hover animate-float inline-flex items-center gap-2"
+                >
+                  <span>Okay, let's do this!</span>
+                  <img
+                    src="/lovable-uploads/7f571ee2-895c-40b2-9cd8-9481cd3dbb9f.png"
+                    alt="orange burst juice"
+                    aria-hidden="true"
+                    className="h-5 w-5 object-contain"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </Button>
+                
+                <Button
+                  onClick={startCrafting}
+                  type="button"
+                  size="lg"
+                  variant="outline"
+                  className="shadow-game hover:shadow-game-hover animate-bounce inline-flex items-center gap-2"
+                >
+                  <span>I can't wait to help!</span>
+                  <span className="text-lg">🥤</span>
+                </Button>
+              </div>
             </div>
           )}
 
-          <div className="grid md:grid-cols-2 gap-6 mb-6">
-            {/* Option A */}
-            <Card className={`p-6 cursor-pointer transition-all ${
-              selectedJuice === currentComparison.optionA.id 
-                ? 'ring-2 ring-primary bg-blue-50' 
-                : 'hover:shadow-lg'
-            }`}
-            onClick={() => !selectedJuice && handleJuiceChoice(currentComparison.optionA.id)}>
+          {gamePhase === "crafting" && (
+            <div className="space-y-6">
               <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-orange-300 to-orange-500 rounded-lg flex items-center justify-center text-2xl">
-                  🧃
-                </div>
-                <h3 className="font-bold text-[var(--text)] mb-2">{currentComparison.optionA.name}</h3>
+                <h3 className="text-xl font-semibold text-foreground mb-4">Crafting Your Smoothie...</h3>
                 <div className="space-y-2">
-                  <p className="text-2xl font-bold text-[var(--primary)]">${currentComparison.optionA.price}</p>
-                  <p className="text-[var(--subtext)]">{currentComparison.optionA.volume}ml</p>
-                  <div className="text-xs text-[var(--subtext)] bg-[var(--muted)] rounded px-2 py-1">
-                    ${calculateValuePerMl(currentComparison.optionA)} per ml
-                  </div>
-                  {currentComparison.optionA.isNewSize && (
-                    <Badge variant="mint" className="text-xs">New Size!</Badge>
-                  )}
+                  <Progress value={craftingProgress} className="w-full" />
+                  <p className="text-sm text-muted-foreground">{craftingProgress.toFixed(0)}% Complete</p>
                 </div>
               </div>
-            </Card>
-
-            {/* Option B */}
-            <Card className={`p-6 cursor-pointer transition-all ${
-              selectedJuice === currentComparison.optionB.id 
-                ? 'ring-2 ring-primary bg-blue-50' 
-                : 'hover:shadow-lg'
-            }`}
-            onClick={() => !selectedJuice && handleJuiceChoice(currentComparison.optionB.id)}>
-              <div className="text-center">
-                <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-orange-300 to-orange-500 rounded-lg flex items-center justify-center text-2xl">
-                  🧃
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center">
+                  <div className="text-4xl mb-2">🍊</div>
+                  <p className="text-sm">Fresh Oranges</p>
                 </div>
-                <h3 className="font-bold text-[var(--text)] mb-2">{currentComparison.optionB.name}</h3>
-                <div className="space-y-2">
-                  <p className="text-2xl font-bold text-[var(--primary)]">${currentComparison.optionB.price}</p>
-                  <p className="text-[var(--subtext)]">{currentComparison.optionB.volume}ml</p>
-                  <div className="text-xs text-[var(--subtext)] bg-[var(--muted)] rounded px-2 py-1">
-                    ${calculateValuePerMl(currentComparison.optionB)} per ml
-                  </div>
-                  {currentComparison.optionB.isNewSize && (
-                    <Badge variant="mint" className="text-xs">New Size!</Badge>
-                  )}
+                <div className="text-center">
+                  <div className="text-4xl mb-2">🧊</div>
+                  <p className="text-sm">Ice Cubes</p>
                 </div>
               </div>
-            </Card>
-          </div>
-
-          <div className="text-center">
-            <Button 
-              onClick={onUseScanner}
-              variant="outline"
-              className="mr-4"
-            >
-              🔍 Use Price Scanner
-            </Button>
-            <div className="mt-4">
-              <p className="text-sm text-[var(--subtext)]">
-                💡 Tip: Calculate the price per ml to find the better value!
-              </p>
-            </div>
-          </div>
-
-          {selectedJuice && (
-            <div className="mt-6 p-4 bg-[var(--muted)] rounded-lg text-center">
-              <p className="text-[var(--text)]">
-                {selectedJuice === currentComparison.correctChoice 
-                  ? "🎉 Excellent choice! You picked the better value option."
-                  : "🤔 That's not the best value. The other option gives you more juice per dollar."}
-              </p>
             </div>
           )}
+
+          {gamePhase === "decision" && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <h3 className="text-xl font-semibold text-foreground mb-2">Choose Your Juice!</h3>
+                <p className="text-muted-foreground mb-2">Which option gives you the best value for money?</p>
+                <div className="flex justify-center items-center gap-4 mb-4">
+                  <Badge 
+                    variant="outline" 
+                    className="px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-primary/10 cursor-pointer animate-pulse border-primary/30"
+                  >
+                    🎯 Round {currentRound + 1} of {comparisons.length}
+                  </Badge>
+                  <Badge 
+                    variant="outline" 
+                    className="px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-secondary/10 cursor-pointer animate-bounce border-secondary/30"
+                  >
+                    ⭐ Score: {totalScore}
+                  </Badge>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                {juiceOptions.map((juice) => (
+                  <Card 
+                    key={juice.id}
+                    className={`p-4 cursor-pointer transition-all hover:shadow-game-hover ${
+                      selectedJuice === juice.id ? "ring-2 ring-primary bg-primary/10" : ""
+                    }`}
+                    onClick={() => makeChoice(juice.id)}
+                  >
+                    <div className="text-center space-y-3">
+                      <div className="w-16 h-16 mx-auto">
+                        <img src={getJuiceImage(juice.name)} alt={juice.name} className="w-full h-full object-contain animate-bounce hover:scale-110 transition-transform duration-300" style={{ animation: 'bounce 2s infinite' }} />
+                      </div>
+                      <h4 className="font-semibold text-foreground">{juice.name}</h4>
+                      
+                      {juice.isNewSize && (
+                        <Badge variant="secondary" className="animate-pulse">
+                          <AlertTriangle className="w-3 h-3 mr-1" />
+                          New Size!
+                        </Badge>
+                      )}
+                      
+                      {!juice.isNewSize && (
+                        <Badge
+                          className="animate-pulse bg-yellow-400 text-yellow-950 hover:bg-yellow-400/90 border-transparent"
+                        >
+                          <AlertTriangle className="w-3 h-3 mr-1" />
+                          Old Size!
+                        </Badge>
+                      )}
+
+                      <div className="space-y-2">
+                        <div className="text-2xl font-bold text-primary">£{juice.price.toFixed(2)}</div>
+                        <div className="text-sm text-muted-foreground">{juice.volume}ml</div>
+                        <div className="text-xs text-muted-foreground">
+                          £{calculateUnitPrice(juice.price, juice.volume)}/100ml
+                        </div>
+                      </div>
+                      
+                      <Button 
+                        variant={selectedJuice === juice.id ? "default" : "outline"}
+                        className="w-full shadow-game hover:shadow-game-hover"
+                        disabled={!!selectedJuice}
+                      >
+                        {selectedJuice === juice.id ? (
+                          <>
+                            <Star className="w-4 h-4 mr-2" />
+                            Selected!
+                          </>
+                        ) : (
+                          "Choose This"
+                        )}
+                      </Button>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+
+              {selectedJuice && (
+                <div className="text-center">
+                  <p className="text-sm text-muted-foreground">
+                    Great choice! Momo is analyzing your selection...
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
         </Card>
-      )}
+      </div>
     </div>
   );
 };
