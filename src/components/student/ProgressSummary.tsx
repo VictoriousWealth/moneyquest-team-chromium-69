@@ -241,7 +241,7 @@ const ProgressSummary = () => {
                 <div className="flex-shrink-0 w-full lg:w-[380px] flex flex-col">
                     <div className="relative flex-grow flex flex-col" ref={gridRef}>
                         {hoveredDay && <Tooltip activity={hoveredDay} position={tooltipPos} />}
-                        <div className="grid grid-cols-7 gap-1.5 flex-grow" style={{ gridTemplateRows: `auto repeat(${numDateRows}, 1fr)` }}>
+                        <div className="grid grid-cols-7 gap-1.5 flex-grow min-h-[280px]" style={{ gridTemplateRows: `auto repeat(${numDateRows}, 1fr)` }}>
                              {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => 
                                 <div key={day} className="flex items-center justify-center text-center text-xs h-8">{day}</div>
                              )}
