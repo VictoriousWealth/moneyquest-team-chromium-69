@@ -28,8 +28,8 @@ const ChatMessage: React.FC<ChatMessageProps> = ({
 }) => {
   const isUser = role === 'user';
 
-  // Only show cards if mode is 'final' - implements consent gating
-  const shouldShowCards = mode === 'final' && cards && cards.length > 0;
+  // Always show cards if provided
+  const shouldShowCards = !!cards && cards.length > 0;
 
   return (
     <div className={`flex gap-3 mb-4 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>

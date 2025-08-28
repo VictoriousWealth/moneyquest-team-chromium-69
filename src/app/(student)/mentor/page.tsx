@@ -17,6 +17,7 @@ const StudentMentor: React.FC = () => {
   const [quickChips, setQuickChips] = useState<string[]>([]);
   const mentorState = useMentorState();
   const [shownCardIds, setShownCardIds] = useState<Set<string>>(new Set());
+  const [autoAcceptedProposals, setAutoAcceptedProposals] = useState<Set<string>>(new Set());
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { toast } = useToast();
@@ -117,25 +118,52 @@ const StudentMentor: React.FC = () => {
 
       if (error) throw error;
 
-      const mentorResponse = data;
-      setMascotMood(mentorResponse.mood || 'gentle');
-      setQuickChips(mentorResponse.chips || []);
+      let finalResponse = data;
+      setMascotMood(finalResponse.mood || 'gentle');
+      setQuickChips(finalResponse.chips || []);
       
-      // Handle state changes based on response
-      if (mentorResponse.proposal) {
-        mentorState.setPendingProposal(mentorResponse.proposal);
+      // Auto-accept quiz proposals to show questions immediately
+      if (finalResponse.proposal?.type === 'quiz' && !autoAcceptedProposals.has(finalResponse.proposal.id)) {
+        try {
+          setAutoAcceptedProposals(prev => new Set([...prev, finalResponse.proposal!.id]));
+          const { data: acceptData, error: acceptError } = await supabase.functions.invoke('mentor-chat', {
+            body: {
+              message: finalResponse.proposal.confirmChip || 'Start Quiz!',
+              conversationHistory: [
+                ...conversationHistory,
+                { role: 'assistant', content: finalResponse.text || '' }
+              ],
+              acceptProposalId: finalResponse.proposal.id
+            }
+          });
+          if (!acceptError && acceptData) {
+            finalResponse = acceptData;
+            setMascotMood(finalResponse.mood || 'gentle');
+            setQuickChips(finalResponse.chips || []);
+            // Reflect accepted proposal in local state
+            const accepted = mentorState.acceptProposal();
+            if (accepted) {
+              console.log('Auto-accepted quiz proposal:', accepted.id);
+            }
+          }
+        } catch (e) {
+          console.warn('Auto-accept quiz proposal failed:', e);
+        }
+      }
+
+      // Update pending proposal state if any
+      if (finalResponse.proposal) {
+        mentorState.setPendingProposal(finalResponse.proposal);
       } else if (acceptProposalId) {
-        // If we accepted a proposal, we're now in an activity
         const accepted = mentorState.acceptProposal();
         if (accepted) {
           console.log('Started activity:', accepted.type, accepted.id);
         }
       }
 
-      // Consent-gated + de-duplicated cards - also show cards if quiz is requested directly
-      const incomingCards = (mentorResponse.mode === 'final' && acceptProposalId) || 
-                           (mentorResponse.cards && mentorResponse.cards.length > 0 && mentorResponse.mode === 'dialog')
-        ? (mentorResponse.cards || [])
+      // Show cards if present (dialog or final)
+      const incomingCards = (finalResponse.cards && finalResponse.cards.length > 0)
+        ? (finalResponse.cards || [])
         : [];
       const filteredCards = incomingCards.filter((c: any) => c?.id && !shownCardIds.has(c.id));
       if (incomingCards.length > 0 && filteredCards.length === 0) {
@@ -144,10 +172,10 @@ const StudentMentor: React.FC = () => {
 
       const assistantMessage: Message = {
         role: 'assistant',
-        content: mentorResponse.text || '',
+        content: finalResponse.text || '',
         cards: filteredCards,
-        proposal: mentorResponse.proposal,
-        mode: mentorResponse.mode,
+        proposal: finalResponse.proposal,
+        mode: finalResponse.mode,
         timestamp: new Date()
       };
 
