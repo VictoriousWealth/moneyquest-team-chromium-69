@@ -54,7 +54,7 @@ const QuestCard: React.FC<{ quest: Quest }> = ({ quest }) => {
                 <div className="p-4">
                     {/* Header with title and status */}
                     <div className="flex justify-between items-start gap-3 mb-2">
-                      <h3 className="h3 text-foreground flex-1 min-w-0">{quest.title}</h3>
+                      <h3 className="font-semibold text-sm text-foreground flex-1 min-w-0">{quest.title}</h3>
                       <Badge variant={statusColor[status]} className="flex-shrink-0">{status}</Badge>
                     </div>
                     
@@ -369,10 +369,10 @@ const StudentPlay: React.FC = () => {
               <div className="border-l-4 border-primary pl-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-xl font-semibold text-foreground mb-1">
+                    <h2 className="text-base font-semibold text-foreground mb-1">
                       {group.section.curriculum_order}. {group.section.title}
                     </h2>
-                    <p className="text-muted-foreground text-sm mb-2">
+                    <p className="text-muted-foreground text-xs mb-2">
                       {group.section.description}
                     </p>
                   </div>
