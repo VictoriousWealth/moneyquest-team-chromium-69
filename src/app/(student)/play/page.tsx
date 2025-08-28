@@ -503,7 +503,8 @@ const StudentPlay: React.FC = () => {
                        const questUrlMap: Record<string, string> = {
                          "The Juice That Shrunk": "#/student/quest/juice-shrinkflation",
                          "Pancake Price Storm": "#/student/quest/pancake-price-storm", 
-                         "Momo Summer Job Dilemma": "#/student/quest/momo-summer-job-dilemma"
+                         "Momo Summer Job Dilemma": "#/student/quest/momo-summer-job-dilemma",
+                         "Pippa's Business Challenge": "#/student/quest/pippa-self-employment"
                        };
                        const questUrl = questUrlMap[selectedQuest.title];
                        if (questUrl) {
@@ -525,7 +526,8 @@ const StudentPlay: React.FC = () => {
                        const questUrlMap: Record<string, string> = {
                          "The Juice That Shrunk": "#/student/quest/juice-shrinkflation",
                          "Pancake Price Storm": "#/student/quest/pancake-price-storm", 
-                         "Momo Summer Job Dilemma": "#/student/quest/momo-summer-job-dilemma"
+                         "Momo Summer Job Dilemma": "#/student/quest/momo-summer-job-dilemma",
+                         "Pippa's Business Challenge": "#/student/quest/pippa-self-employment"
                        };
                        const questUrl = questUrlMap[selectedQuest.title];
                        if (questUrl) {
