@@ -16,6 +16,9 @@ import TeacherStudentDetail from './app/(teacher)/students/[id]/page';
 import TeacherAssignments from './app/(teacher)/assignments/page';
 import TeacherInsights from './app/(teacher)/insights/page';
 import TeacherSettings from './app/(teacher)/settings/page';
+import JuiceQuestPage from './pages/JuiceQuestPage';
+import PancakeQuestPage from './pages/PancakeQuestPage';
+import MomoQuestPage from './pages/MomoQuestPage';
 
 const ProtectedRoute: React.FC<{ allowedRole: Role }> = ({ allowedRole }) => {
   const [user, setUser] = useState<any>(null);
@@ -81,6 +84,10 @@ export default function App() {
             <Route path="journal" element={<StudentJournal />} />
             <Route path="mentor" element={<StudentMentor />} />
           </Route>
+          {/* Quest Routes */}
+          <Route path="quest/juice-shrinkflation" element={<JuiceQuestPage />} />
+          <Route path="quest/pancake-price-storm" element={<PancakeQuestPage />} />
+          <Route path="quest/momo-summer-job-dilemma" element={<MomoQuestPage />} />
         </Route>
 
         {/* Teacher Routes */}

@@ -499,7 +499,14 @@ const StudentPlay: React.FC = () => {
                     variant="primary"
                     size="default"
                     onClick={() => {
-                      window.open(`/quest/${selectedQuest.id}`, '_blank');
+                      // Map quest titles to URLs
+                      const questUrlMap: Record<string, string> = {
+                        "The Juice That Shrunk": "/quest/juice-shrinkflation",
+                        "Pancake Price Storm": "/quest/pancake-price-storm", 
+                        "Momo Summer Job Dilemma": "/quest/momo-summer-job-dilemma"
+                      };
+                      const questUrl = questUrlMap[selectedQuest.title] || `/quest/${selectedQuest.id}`;
+                      window.open(questUrl, '_blank');
                       setSelectedQuest(null);
                     }}
                     className="px-6 py-3 rounded-xl"
@@ -512,7 +519,14 @@ const StudentPlay: React.FC = () => {
                     variant="accent"
                     size="default"
                     onClick={() => {
-                      window.open(`/quest/${selectedQuest.id}`, '_blank');
+                      // Map quest titles to URLs
+                      const questUrlMap: Record<string, string> = {
+                        "The Juice That Shrunk": "/quest/juice-shrinkflation",
+                        "Pancake Price Storm": "/quest/pancake-price-storm", 
+                        "Momo Summer Job Dilemma": "/quest/momo-summer-job-dilemma"
+                      };
+                      const questUrl = questUrlMap[selectedQuest.title] || `/quest/${selectedQuest.id}`;
+                      window.open(questUrl, '_blank');
                       setSelectedQuest(null);
                     }}
                     className="px-6 py-3 animate-pulse rounded-xl"
