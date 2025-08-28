@@ -199,9 +199,8 @@ const TeacherStudents: React.FC = () => {
               {filteredStudents.map((student, index) => {
                 const progress = parseInt(student.masteryProgress, 10);
                 const totalQuests = allQuests.length || 37;
-                const completedQuests = (student as any).completedQuests !== undefined 
-                  ? (student as any).completedQuests 
-                  : Math.round((progress / 100) * totalQuests);
+                // Calculate completed quests based on the same progress percentage used for the bar
+                const completedQuests = Math.round((progress / 100) * totalQuests);
                 
                 return (
                   <tr 
