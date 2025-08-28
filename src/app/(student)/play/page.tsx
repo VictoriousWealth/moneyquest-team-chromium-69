@@ -269,8 +269,8 @@ const StudentPlay: React.FC = () => {
       
       {/* Search and Filter Controls */}
       <div className="mb-6 space-y-4">
-        {/* Search Bar */}
-        <div className="relative max-w-md">
+        {/* Search Bar - Full Width */}
+        <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <input
             type="text"
@@ -281,31 +281,38 @@ const StudentPlay: React.FC = () => {
           />
         </div>
         
-        {/* Status Filter Tabs */}
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex gap-2">
-            {['all', 'Not started', 'In progress', 'Completed'].map((status) => (
-              <button
-                key={status}
-                onClick={() => setStatusFilter(status)}
-                className={`px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
-                  statusFilter === status
-                    ? 'bg-blue-500 text-white shadow-sm'
-                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/40 bg-muted/20'
-                }`}
-              >
-                {status === 'all' ? 'All' : status}
-              </button>
-            ))}
+        {/* Filter Controls */}
+        <div className="flex flex-wrap items-center gap-6">
+          {/* Status Filter Group */}
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium text-foreground">Status:</span>
+            <div className="flex gap-1">
+              {['all', 'Not started', 'In progress', 'Completed'].map((status) => (
+                <button
+                  key={status}
+                  onClick={() => setStatusFilter(status)}
+                  className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    statusFilter === status
+                      ? 'bg-blue-500 text-white shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground hover:bg-blue-50 bg-gray-100'
+                  }`}
+                >
+                  {status === 'all' ? 'All' : status}
+                </button>
+              ))}
+            </div>
           </div>
           
-          {/* Section Filter */}
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Section:</span>
+          {/* Separator */}
+          <div className="h-6 w-px bg-border"></div>
+          
+          {/* Section Filter Group */}
+          <div className="flex items-center gap-3">
+            <span className="text-sm font-medium text-foreground">Section:</span>
             <select
               value={sectionFilter}
               onChange={(e) => setSectionFilter(e.target.value)}
-              className="px-4 py-2.5 rounded-xl bg-muted/20 hover:bg-muted/40 text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all cursor-pointer appearance-none"
+              className="px-4 py-2 rounded-full bg-gray-100 hover:bg-blue-50 text-foreground text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all cursor-pointer appearance-none"
             >
               <option value="all">All Sections</option>
               {groupedQuests.map(group => (
@@ -318,13 +325,16 @@ const StudentPlay: React.FC = () => {
           
           {/* Clear Filters */}
           {hasActiveFilters && (
-            <button
-              onClick={clearFilters}
-              className="flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 bg-muted/20 transition-all"
-            >
-              <X className="w-3 h-3" />
-              Clear
-            </button>
+            <>
+              <div className="h-6 w-px bg-border"></div>
+              <button
+                onClick={clearFilters}
+                className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-blue-50 bg-gray-100 transition-all"
+              >
+                <X className="w-3 h-3" />
+                Clear
+              </button>
+            </>
           )}
         </div>
         
