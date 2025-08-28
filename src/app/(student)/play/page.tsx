@@ -493,16 +493,16 @@ const StudentPlay: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex justify-center">
+              <div className="flex justify-center mt-6">
                 {selectedQuest.status === "Not started" && (
                   <Button
                     variant="primary"
-                    size="sm"
+                    size="default"
                     onClick={() => {
                       window.open(`/quest/${selectedQuest.id}`, '_blank');
                       setSelectedQuest(null);
                     }}
-                    className="px-4 rounded-xl"
+                    className="px-6 py-3 rounded-xl"
                   >
                     🚀 Start Quest
                   </Button>
@@ -510,18 +510,18 @@ const StudentPlay: React.FC = () => {
                 {selectedQuest.status === "In progress" && (
                   <Button
                     variant="accent"
-                    size="sm"
+                    size="default"
                     onClick={() => {
                       window.open(`/quest/${selectedQuest.id}`, '_blank');
                       setSelectedQuest(null);
                     }}
-                    className="px-4 animate-pulse rounded-xl"
+                    className="px-6 py-3 animate-pulse rounded-xl"
                   >
                     ⚡ Continue Quest
                   </Button>
                 )}
                 {selectedQuest.status === "Completed" && (
-                  <Button variant="muted" size="sm" disabled className="px-4 rounded-xl">
+                  <Button variant="muted" size="default" disabled className="px-6 py-3 rounded-xl">
                     ✅ Completed
                   </Button>
                 )}
