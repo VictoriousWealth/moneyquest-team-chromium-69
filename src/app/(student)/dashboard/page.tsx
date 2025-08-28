@@ -5,8 +5,8 @@ import JournalPreview from '../../../components/student/JournalPreview';
 
 const StudentDashboard: React.FC = () => {
   return (
-    // Fixed viewport layout with bottom margin - no scrolling on the page level
-    <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-6 h-[calc(100vh-180px)] overflow-hidden pb-6">
+    // Fixed viewport layout - no scrolling on the page level
+    <div className="grid grid-cols-1 lg:grid-cols-[340px_1fr] gap-6 h-[calc(100vh-140px)] overflow-hidden">
       
       {/* Left Column: Profile. Will stretch to fill its grid area height. */}
       <div>
