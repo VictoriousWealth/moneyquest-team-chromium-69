@@ -24,7 +24,6 @@ const QuestCard: React.FC<{ quest: Quest }> = ({ quest }) => {
         'Not started': 'muted',
     } as const;
 
-    // For now, default to 'Not started' - will be linked to backend later
     const status = quest.status || 'Not started';
 
     return (
@@ -92,27 +91,62 @@ const StudentPlay: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchQuests = async () => {
+    const fetchQuestsWithProgress = async () => {
       try {
-        const { data, error } = await supabase
+        // Fetch all quests
+        const { data: questsData, error: questsError } = await supabase
           .from('quests')
           .select('*')
           .order('created_at', { ascending: true });
 
-        if (error) {
-          console.error('Error fetching quests:', error);
+        if (questsError) {
+          console.error('Error fetching quests:', questsError);
           return;
         }
 
-        setQuests(data || []);
+        // Fetch user's quest progress
+        const { data: progressData, error: progressError } = await supabase
+          .from('user_quest_progress')
+          .select('quest_id, status, completed_at')
+          .eq('user_id', (await supabase.auth.getUser()).data.user?.id);
+
+        if (progressError) {
+          console.error('Error fetching progress:', progressError);
+        }
+
+        // Create a map of quest progress for quick lookup
+        const progressMap = new Map(
+          progressData?.map(p => [p.quest_id, p]) || []
+        );
+
+        // Combine quests with user progress
+        const questsWithStatus: Quest[] = (questsData || []).map(quest => {
+          const progress = progressMap.get(quest.id);
+          let status: 'Completed' | 'In progress' | 'Not started' = 'Not started';
+          
+          if (progress) {
+            if (progress.status === 'completed') {
+              status = 'Completed';
+            } else if (progress.status === 'started' || progress.status === 'in_progress') {
+              status = 'In progress';
+            }
+          }
+
+          return {
+            ...quest,
+            status
+          };
+        });
+
+        setQuests(questsWithStatus);
       } catch (error) {
-        console.error('Error fetching quests:', error);
+        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchQuests();
+    fetchQuestsWithProgress();
   }, []);
 
   if (loading) {
