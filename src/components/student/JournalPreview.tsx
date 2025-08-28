@@ -8,18 +8,18 @@ import { ArrowRight } from 'lucide-react';
 
 const JournalPreview = () => {
     return (
-        <Card className="p-3 h-full flex flex-col rounded-xl overflow-hidden min-h-0">
+        <Card className="p-3 h-full flex flex-col rounded-xl overflow-hidden">
             <div className="flex justify-between items-center mb-2 flex-shrink-0">
                 <h3 className="text-base font-semibold">Journal Preview</h3>
                 <Link to="/student/journal" className="inline-flex items-center gap-1 text-sm font-medium text-blue-500 hover:underline">
                     See all in Journal <ArrowRight size={14} />
                 </Link>
             </div>
-            <div className="space-y-2 flex-1 overflow-y-auto min-h-0">
+            <div className="space-y-2">
                 {demoJournalTop3.slice(0, 2).map(entry => (
                     <Link to={`/student/journal?entry=${entry.id}`} key={entry.id} className="block p-2 -mx-2 group hover:bg-muted/50 rounded-xl transition-colors">
                         <div className="flex justify-between items-start gap-4">
-                           <div className="flex-grow min-w-0">
+                           <div className="flex-grow">
                                 <div className="flex items-baseline gap-3 mb-1">
                                     <p className="text-sm font-medium text-text">{entry.episode}</p>
                                     <UIBadge variant={entry.result === 'Pass' ? 'mint' : 'muted'}>{entry.result}</UIBadge>
