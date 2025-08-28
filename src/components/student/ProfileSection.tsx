@@ -109,37 +109,40 @@ const ProfileSection = () => {
                 {/* Activity Ticker - Flex container ensures title and ticker are separate */}
                 <div className="flex-grow flex flex-col border-t border-muted pt-2 min-h-0">
                     <h4 className="font-medium text-xs text-subtext mb-1 flex-shrink-0">Class Activity</h4>
-                    <div className="relative flex-1 group overflow-hidden" aria-live="off">
-                        <div className="absolute top-0 w-full animate-[vertical-ticker-scroll_8s_linear_infinite] group-hover:[animation-play-state:paused]">
-                            <div className="flex w-full items-center gap-2 rounded-lg px-1 h-[24px] text-xs mb-1">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Maria" alt="Maria" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                <p className="text-subtext text-left truncate">
-                                    <span className="font-medium text-text">Maria</span> is learning "The Stock Market Maze"
-                                </p>
-                            </div>
-                            <div className="flex w-full items-center gap-2 rounded-lg px-1 h-[24px] text-xs mb-1">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sam" alt="Sam" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                <p className="text-subtext text-left truncate">
-                                    <span className="font-medium text-text">Sam</span> just earned "Budget Boss"
-                                </p>
-                            </div>
-                            <div className="flex w-full items-center gap-2 rounded-lg px-1 h-[24px] text-xs mb-1">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ava" alt="Ava" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                <p className="text-subtext text-left truncate">
-                                    <span className="font-medium text-text">Ava</span> continued a 10-day streak
-                                </p>
-                            </div>
-                            <div className="flex w-full items-center gap-2 rounded-lg px-1 h-[24px] text-xs mb-1">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jake" alt="Jake" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                <p className="text-subtext text-left truncate">
-                                    <span className="font-medium text-text">Jake</span> completed "Investment Basics"
-                                </p>
-                            </div>
-                            <div className="flex w-full items-center gap-2 rounded-lg px-1 h-[24px] text-xs mb-1">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Emma" alt="Emma" className="w-5 h-5 rounded-full flex-shrink-0" />
-                                <p className="text-subtext text-left truncate">
-                                    <span className="font-medium text-text">Emma</span> reached level 5 in Savings
-                                </p>
+                    <div className="relative flex-1 overflow-hidden h-6" aria-live="off">
+                        <div className="absolute inset-0 animate-[continuous-scroll_15s_linear_infinite] group-hover:[animation-play-state:paused]">
+                            {/* First set of activities */}
+                            <div className="space-y-1">
+                                <div className="flex w-full items-center gap-2 px-1 h-[24px] text-xs">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Maria" alt="Maria" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <p className="text-subtext text-left truncate">
+                                        <span className="font-medium text-text">Maria</span> is learning "The Stock Market Maze"
+                                    </p>
+                                </div>
+                                <div className="flex w-full items-center gap-2 px-1 h-[24px] text-xs">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Sam" alt="Sam" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <p className="text-subtext text-left truncate">
+                                        <span className="font-medium text-text">Sam</span> just earned "Budget Boss"
+                                    </p>
+                                </div>
+                                <div className="flex w-full items-center gap-2 px-1 h-[24px] text-xs">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Ava" alt="Ava" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <p className="text-subtext text-left truncate">
+                                        <span className="font-medium text-text">Ava</span> continued a 10-day streak
+                                    </p>
+                                </div>
+                                <div className="flex w-full items-center gap-2 px-1 h-[24px] text-xs">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jake" alt="Jake" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <p className="text-subtext text-left truncate">
+                                        <span className="font-medium text-text">Jake</span> completed "Investment Basics"
+                                    </p>
+                                </div>
+                                <div className="flex w-full items-center gap-2 px-1 h-[24px] text-xs">
+                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Emma" alt="Emma" className="w-5 h-5 rounded-full flex-shrink-0" />
+                                    <p className="text-subtext text-left truncate">
+                                        <span className="font-medium text-text">Emma</span> reached level 5 in Savings
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
