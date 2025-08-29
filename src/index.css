@@ -30,6 +30,7 @@
   --h3: 20px;
   --body: 14px;
   --small: 12px;
+  --gradient-sky: linear-gradient(135deg, hsl(200 75% 85%), hsl(210 85% 70%));
 }
 
 .dark {
@@ -40,6 +41,7 @@
   --subtext: #a9b3c7;
   --shadow-soft: 0 6px 20px rgba(18,23,38,0.35);
   --ring: #424f63;
+  --gradient-sky: linear-gradient(135deg, hsl(200 75% 85%), hsl(210 85% 70%));
 }
 
 * {

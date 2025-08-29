@@ -37,10 +37,9 @@ interface ScannedItem {
 interface JuiceStandProps {
   isActive: boolean;
   onComplete: (score: number, choice: string, wasCorrect: boolean) => void;
-  onUseScanner: () => void;
 }
 
-export const JuiceStand = ({ isActive, onComplete, onUseScanner }: JuiceStandProps) => {
+export const JuiceStand = ({ isActive, onComplete }: JuiceStandProps) => {
   const [gamePhase, setGamePhase] = useState<"intro" | "crafting" | "decision">("intro");
   const [totalScore, setTotalScore] = useState(0);
   const [currentRound, setCurrentRound] = useState(0);
@@ -215,17 +214,17 @@ export const JuiceStand = ({ isActive, onComplete, onUseScanner }: JuiceStandPro
   const getJuiceImage = (juiceName: string) => {
     switch (juiceName.toLowerCase()) {
       case 'orange burst':
-        return "/lovable-uploads/7f571ee2-895c-40b2-9cd8-9481cd3dbb9f.png";
+        return "/images/the-juice-that-shrunk-orange-burst.png";
       case 'citrus mix':
-        return "/lovable-uploads/a1bfc63a-8bff-46eb-a224-3d075ebdbaac.png";
+        return "/images/the-juice-that-shrunk-citrus-mix.png";
       case 'tropical blend':
-        return "/lovable-uploads/d8e8b90b-ee13-4504-9d86-8504b19db622.png";
+        return "/images/the-juice-that-shrunk-tropical-blend.png";
       case 'berry fusion':
-        return "/lovable-uploads/82870c1a-e2cb-4753-aa4d-851ee9411598.png";
+        return "/images/the-juice-that-shrunk-berry-fusion.png";
       case 'ultimate mix':
-        return "/lovable-uploads/65753fed-f484-42f8-a710-aae0e9776064.png";
+        return "/images/the-juice-that-shrunk-ultimate-mix.png";
       default:
-        return "/lovable-uploads/7f571ee2-895c-40b2-9cd8-9481cd3dbb9f.png";
+        return "/images/the-juice-that-shrunk-orange-burst.png";
     }
   };
 
@@ -258,204 +257,207 @@ export const JuiceStand = ({ isActive, onComplete, onUseScanner }: JuiceStandPro
   if (!isActive) return null;
 
   return (
-    <div className="fixed inset-0 bg-gradient-sky overflow-y-auto z-50 p-4">
-      <div className="min-h-full flex items-center justify-center py-8">
-        <Card className="w-full max-w-2xl bg-card shadow-game border-2 border-secondary">
-        <div className="p-6">
-          <div className="text-center mb-6">
-            <div className="flex items-center justify-center gap-2 mb-2">
-              <h2 className="text-2xl font-bold text-foreground">Momo's Juice Stand</h2>
-            </div>
-            <p className="text-muted-foreground mb-3">Help craft the perfect smoothie and spot the best value!</p>
-            <img src="/images/the-juice-that-shrunk-story-image.png" alt="Momo the Juice Maker" className="mx-auto mb-4 rounded-lg max-w-32" />
-          </div>
-
-          {gamePhase === "intro" && (
-            <div className="text-center space-y-6">
-              <div className="bg-card/50 border border-primary/20 rounded-lg p-4 relative">
-                <div className="absolute -top-2 -left-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">M</span>
+    <div className="fixed inset-0 bg-gradient-sky overflow-y-auto z-50 p-4 border-none">
+      <div className="min-h-full flex items-center justify-center py-8 border-none">
+        <div className="border-2 border-green-400 rounded-none">
+          <Card className="w-full max-w-2xl bg-card shadow-game border-none">
+            <div className="p-6 border-2 border-green-400 bg-white">
+              <div className="text-center mb-6 border-none">
+                <div className="flex items-center justify-center gap-2 mb-2">
+                  <h2 className="text-2xl font-bold text-foreground">Momo's Juice Stand</h2>
                 </div>
-                <div className="absolute -top-2 -right-2">
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={handleSpeakToggle}
-                    disabled={isLoading}
-                    className="w-8 h-8 p-0 rounded-full bg-background hover:bg-accent"
-                  >
-                    {isLoading ? (
-                      <div className="w-3 h-3 border border-primary border-t-transparent rounded-full animate-spin" />
-                    ) : isPlaying ? (
-                      <VolumeX className="w-3 h-3" />
-                    ) : (
-                      <Volume2 className="w-3 h-3" />
-                    )}
-                  </Button>
-                </div>
-                <div className="text-lg text-foreground">
-                  <p className="mb-2 font-medium">
-                    "
-                    {showTypewriter ? (
-                      <Typewriter 
-                        text={momoText} 
-                        speed={30}
-                        onComplete={handleTypewriterComplete}
-                      />
-                    ) : (
-                      momoText
-                    )}
-                    "
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Button
-                  onClick={startCrafting}
-                  type="button"
-                  size="lg"
-                  variant="primary"
-                  className="shadow-game hover:shadow-game-hover animate-float inline-flex items-center gap-2"
-                >
-                  <span>Okay, let's do this!</span>
-                  <img
-                    src="/lovable-uploads/7f571ee2-895c-40b2-9cd8-9481cd3dbb9f.png"
-                    alt="orange burst juice"
-                    aria-hidden="true"
-                    className="h-5 w-5 object-contain"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </Button>
-                
-                <Button
-                  onClick={startCrafting}
-                  type="button"
-                  size="lg"
-                  variant="outline"
-                  className="shadow-game hover:shadow-game-hover animate-bounce inline-flex items-center gap-2"
-                >
-                  <span>I can't wait to help!</span>
-                  <span className="text-lg">🥤</span>
-                </Button>
-              </div>
-            </div>
-          )}
-
-          {gamePhase === "crafting" && (
-            <div className="space-y-6">
-              <div className="text-center">
-                <h3 className="text-xl font-semibold text-foreground mb-4">Crafting Your Smoothie...</h3>
-                <div className="space-y-2">
-                  <Progress value={craftingProgress} className="w-full" />
-                  <p className="text-sm text-muted-foreground">{craftingProgress.toFixed(0)}% Complete</p>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center">
-                  <div className="text-4xl mb-2">🍊</div>
-                  <p className="text-sm">Fresh Oranges</p>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl mb-2">🧊</div>
-                  <p className="text-sm">Ice Cubes</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {gamePhase === "decision" && (
-            <div className="space-y-6">
-              <div className="text-center">
-                <h3 className="text-xl font-semibold text-foreground mb-2">Choose Your Juice!</h3>
-                <p className="text-muted-foreground mb-2">Which option gives you the best value for money?</p>
-                <div className="flex justify-center items-center gap-4 mb-4">
-                  <Badge 
-                    variant="blue" 
-                    className="px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-primary/10 cursor-pointer animate-pulse border-primary/30"
-                  >
-                    🎯 Round {currentRound + 1} of {comparisons.length}
-                  </Badge>
-                  <Badge 
-                    variant="teal" 
-                    className="px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-secondary/10 cursor-pointer animate-bounce border-secondary/30"
-                  >
-                    ⭐ Score: {totalScore}
-                  </Badge>
-                </div>
+                <p className="text-muted-foreground mb-3">Help craft the perfect smoothie and spot the best value!</p>
+                <img src="/images/the-juice-that-shrunk-npc.png" alt="Momo the Juice Maker" className="mx-auto mb-4 rounded-lg max-w-32" />
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                {juiceOptions.map((juice) => (
-                  <Card 
-                    key={juice.id}
-                    className={`p-4 cursor-pointer transition-all hover:shadow-game-hover ${
-                      selectedJuice === juice.id ? "ring-2 ring-primary bg-primary/10" : ""
-                    }`}
-                    onClick={() => makeChoice(juice.id)}
-                  >
-                    <div className="text-center space-y-3">
-                      <div className="w-16 h-16 mx-auto">
-                        <img src={getJuiceImage(juice.name)} alt={juice.name} className="w-full h-full object-contain animate-bounce hover:scale-110 transition-transform duration-300" style={{ animation: 'bounce 2s infinite' }} />
-                      </div>
-                      <h4 className="font-semibold text-foreground">{juice.name}</h4>
-                      
-                      {juice.isNewSize && (
-                        <Badge variant="muted" className="animate-pulse">
-                          <AlertTriangle className="w-3 h-3 mr-1" />
-                          New Size!
-                        </Badge>
-                      )}
-                      
-                      {!juice.isNewSize && (
-                        <Badge
-                          className="animate-pulse bg-yellow-400 text-yellow-950 hover:bg-yellow-400/90 border-transparent"
-                        >
-                          <AlertTriangle className="w-3 h-3 mr-1" />
-                          Old Size!
-                        </Badge>
-                      )}
-
-                      <div className="space-y-2">
-                        <div className="text-2xl font-bold text-primary">£{juice.price.toFixed(2)}</div>
-                        <div className="text-sm text-muted-foreground">{juice.volume}ml</div>
-                        <div className="text-xs text-muted-foreground">
-                          £{calculateUnitPrice(juice.price, juice.volume)}/100ml
-                        </div>
-                      </div>
-                      
-                      <Button 
-                        variant={selectedJuice === juice.id ? "primary" : "outline"}
-                        className="w-full shadow-game hover:shadow-game-hover"
-                        disabled={!!selectedJuice}
+              {gamePhase === "intro" && (
+                <div className="text-center space-y-6">
+                  <div className="bg-card/50 border border-primary/20 rounded-lg p-4 relative">
+                    <div className="absolute -top-2 -left-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">M</span>
+                    </div>
+                    <div className="absolute -top-2 -right-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={handleSpeakToggle}
+                        disabled={isLoading}
+                        className="w-8 h-8 p-0 rounded-full bg-background hover:bg-accent"
                       >
-                        {selectedJuice === juice.id ? (
-                          <>
-                            <Star className="w-4 h-4 mr-2" />
-                            Selected!
-                          </>
+                        {isLoading ? (
+                          <div className="w-3 h-3 border border-primary border-t-transparent rounded-full animate-spin" />
+                        ) : isPlaying ? (
+                          <VolumeX className="w-3 h-3" />
                         ) : (
-                          "Choose This"
+                          <Volume2 className="w-3 h-3" />
                         )}
                       </Button>
                     </div>
-                  </Card>
-                ))}
-              </div>
+                    <div className="text-lg text-foreground">
+                      <p className="mb-2 font-medium">
+                        "
+                        {showTypewriter ? (
+                          <Typewriter 
+                            text={momoText} 
+                            speed={30}
+                            onComplete={handleTypewriterComplete}
+                          />
+                        ) : (
+                          momoText
+                        )}
+                        "
+                      </p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                    <Button
+                      onClick={startCrafting}
+                      type="button"
+                      size="lg"
+                      variant="primary"
+                      className="shadow-game hover:shadow-game-hover animate-float inline-flex items-center gap-2 rounded-none"
+                    >
+                      <span>Okay, let's do this!</span>
+                      <img
+                        src="/images/the-juice-that-shrunk-orange-burst.png"
+                        alt="orange burst juice"
+                        aria-hidden="true"
+                        className="h-5 w-5 object-contain"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </Button>
+                    
+                    <Button
+                      onClick={startCrafting}
+                      type="button"
+                      size="lg"
+                      variant="outline"
+                      className="shadow-game hover:shadow-game-hover animate-bounce inline-flex items-center gap-2 rounded-none shadow-lg"
+                    >
+                      <span>I can't wait to help!</span>
+                      <span className="text-lg">🥤</span>
+                    </Button>
+                  </div>
+                </div>
+              )}
 
-              {selectedJuice && (
-                <div className="text-center">
-                  <p className="text-sm text-muted-foreground">
-                    Great choice! Momo is analyzing your selection...
-                  </p>
+              {gamePhase === "crafting" && (
+                <div className="space-y-6">
+                  <div className="text-center">
+                    <h3 className="text-xl font-semibold text-foreground mb-4">Crafting Your Smoothie...</h3>
+                    <div className="space-y-2">
+                      <Progress value={craftingProgress} className="w-full" />
+                      <p className="text-sm text-muted-foreground">{craftingProgress.toFixed(0)}% Complete</p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center">
+                      <div className="text-4xl mb-2">🍊</div>
+                      <p className="text-sm">Fresh Oranges</p>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-4xl mb-2">🧊</div>
+                      <p className="text-sm">Ice Cubes</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {gamePhase === "decision" && (
+                <div className="space-y-6">
+                  <div className="text-center">
+                    <h3 className="text-xl font-semibold text-foreground mb-2">Choose Your Juice!</h3>
+                    <p className="text-muted-foreground mb-2">Which option gives you the best value for money?</p>
+                    <div className="flex justify-center items-center gap-4 mb-4">
+                      <Badge 
+                        variant="blue" 
+                        className="px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-primary/10 cursor-pointer animate-pulse border-primary/30"
+                      >
+                        🎯 Round {currentRound + 1} of {comparisons.length}
+                      </Badge>
+                      <Badge 
+                        variant="teal" 
+                        className="px-4 py-2 text-sm font-medium transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-secondary/10 cursor-pointer animate-bounce border-secondary/30"
+                      >
+                        ⭐ Score: {totalScore}
+                      </Badge>
+                    </div>
+                  </div>
+
+                  <div className="grid md:grid-cols-2 gap-4">
+                    {juiceOptions.map((juice) => (
+                      <Card 
+                        key={juice.id}
+                        className={`p-4 cursor-pointer transition-all hover:shadow-game-hover ${
+                          selectedJuice === juice.id ? "ring-2 ring-primary bg-primary/10" : ""
+                        }`}
+                        onClick={() => makeChoice(juice.id)}
+                      >
+                        <div className="text-center space-y-3">
+                          <div className="w-16 h-16 mx-auto">
+                            <img src={getJuiceImage(juice.name)} alt={juice.name} className="w-full h-full object-contain animate-bounce hover:scale-110 transition-transform duration-300" style={{ animation: 'bounce 2s infinite' }} />
+                          </div>
+                          <h4 className="font-semibold text-foreground">{juice.name}</h4>
+                          
+                          {juice.isNewSize && (
+                            <Badge variant="muted" className="animate-pulse">
+                              <AlertTriangle className="w-3 h-3 mr-1" />
+                              New Size!
+                            </Badge>
+                          )}
+                          
+                          {!juice.isNewSize && (
+                            <Badge
+                              className="animate-pulse bg-yellow-400 text-yellow-950 hover:bg-yellow-400/90 border-transparent"
+                            >
+                              <AlertTriangle className="w-3 h-3 mr-1" />
+                              Old Size!
+                            </Badge>
+                          )}
+
+                          <div className="space-y-2">
+                            <div className="text-2xl font-bold text-primary">£{juice.price.toFixed(2)}</div>
+                            <div className="text-sm text-muted-foreground">{juice.volume}ml</div>
+                            <div className="text-xs text-muted-foreground">
+                              £{calculateUnitPrice(juice.price, juice.volume)}/100ml
+                            </div>
+                          </div>
+                          
+                          <Button 
+                            variant={selectedJuice === juice.id ? "primary" : "outline"}
+                            className="w-full shadow-game hover:shadow-game-hover"
+                            disabled={!!selectedJuice}
+                          >
+                            {selectedJuice === juice.id ? (
+                              <>
+                                <Star className="w-4 h-4 mr-2" />
+                                Selected!
+                              </>
+                            ) : (
+                              "Choose This"
+                            )}
+                          </Button>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+
+                  {selectedJuice && (
+                    <div className="text-center">
+                      <p className="text-sm text-muted-foreground">
+                        Great choice! Momo is analyzing your selection...
+                      </p>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
-          )}
+            </Card>
         </div>
-        </Card>
+        
       </div>
     </div>
   );

@@ -81,18 +81,20 @@ export default function App() {
 
         {/* Student Routes */}
         <Route element={<ProtectedRoute allowedRole={Role.STUDENT} />}>
-          <Route path="/student" element={<StudentLayout />}>
+            {/* Normal student dashboard routes (with StudentLayout) */}
+            <Route path="/student" element={<StudentLayout />}>
             <Route index element={<Navigate to="/student/play" replace />} />
             <Route path="dashboard" element={<StudentDashboard />} />
             <Route path="play" element={<StudentPlay />} />
             <Route path="achievements" element={<StudentAchievements />} />
             <Route path="journal" element={<StudentJournal />} />
             <Route path="mentor" element={<StudentMentor />} />
-            {/* Quest Routes */}
-            <Route path="quest/juice-shrinkflation" element={<JuiceQuestPage />} />
-            <Route path="quest/pancake-price-storm" element={<PancakeQuestPage />} />
-            <Route path="quest/momo-summer-job-dilemma" element={<MomoQuestPage />} />
           </Route>
+          
+          {/* 🚀 Standalone Quest Routes (no StudentLayout) */}
+          <Route path="/quest/juice-shrinkflation" element={<JuiceQuestPage />} />
+          <Route path="/quest/pancake-price-storm" element={<PancakeQuestPage />} />
+          <Route path="/quest/momo-summer-job-dilemma" element={<MomoQuestPage />} />
         </Route>
 
         {/* Teacher Routes */}
