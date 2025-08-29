@@ -89,27 +89,9 @@ export default {
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out',
-				'bounce-coin': 'bounce-coin 2s ease-in-out infinite',
-				'float': 'float 3s ease-in-out infinite',
-				'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
-				'balloon-grow': 'balloon-grow 4s ease-in-out infinite',
-				'balloon-explode': 'balloon-explode 0.5s ease-out forwards',
-				'scale-fluctuate': 'scale-fluctuate 2s ease-in-out infinite',
-				'scale-color-fluctuate': 'scale-color-fluctuate 2s ease-in-out infinite'
-			},
-			backgroundImage: {
-				'gradient-sky': 'var(--gradient-sky)',
-				'gradient-grass': 'var(--gradient-grass)',
-				'gradient-coin': 'var(--gradient-coin)',
-				'gradient-water': 'var(--gradient-water)'
-			},
-			boxShadow: {
-				'game': 'var(--game-shadow) hsl(var(--border))',
-				'game-hover': '0 6px 0 0 hsl(var(--border))',
-				'coin': '0 3px 0 0 hsl(var(--coin-shadow))'
-			},
-		},
+				'accordion-up': 'accordion-up 0.2s ease-out'
+			}
+		}
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;

@@ -501,10 +501,10 @@ const StudentPlay: React.FC = () => {
                     onClick={() => {
                        // Map quest titles to URLs for same-tab navigation
                        const questUrlMap: Record<string, string> = {
-                         "The Juice That Shrunk": "#/quest/juice-shrinkflation",
-                         "Pancake Price Storm": "#/quest/pancake-price-storm", 
-                         "Momo's Summer Job Dilemma": "#/quest/momo-summer-job-dilemma",
-                         "Pippa's Business Challenge": "#/quest/pippa-self-employment"
+                         "The Juice That Shrunk": "#/student/quest/juice-shrinkflation",
+                         "Pancake Price Storm": "#/student/quest/pancake-price-storm", 
+                         "Momo's Summer Job Dilemma": "#/student/quest/momo-summer-job-dilemma",
+                         "Pippa's Business Challenge": "#/student/quest/pippa-self-employment"
                        };
                        const questUrl = questUrlMap[selectedQuest.title];
                        if (questUrl) {
@@ -524,10 +524,10 @@ const StudentPlay: React.FC = () => {
                     onClick={() => {
                        // Map quest titles to URLs for same-tab navigation
                        const questUrlMap: Record<string, string> = {
-                         "The Juice That Shrunk": "#/quest/juice-shrinkflation",
-                         "Pancake Price Storm": "#/quest/pancake-price-storm", 
-                         "Momo's Summer Job Dilemma": "#/quest/momo-summer-job-dilemma",
-                         "Pippa's Business Challenge": "#/quest/pippa-self-employment"
+                         "The Juice That Shrunk": "#/student/quest/juice-shrinkflation",
+                         "Pancake Price Storm": "#/student/quest/pancake-price-storm", 
+                         "Momo's Summer Job Dilemma": "#/student/quest/momo-summer-job-dilemma",
+                         "Pippa's Business Challenge": "#/student/quest/pippa-self-employment"
                        };
                        const questUrl = questUrlMap[selectedQuest.title];
                        if (questUrl) {

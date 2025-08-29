@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { JuiceStand } from "@/components/game/JuiceStand";
+import { ValueScanner } from "@/components/game/ValueScanner";
 import { GameHUD } from "@/components/game/GameHUD";
 import { useGameState } from "@/hooks/useGameState";
 import { toast } from "sonner";
@@ -21,6 +22,8 @@ interface ScannedItem {
 const JuiceQuestPage = () => {
   const navigate = useNavigate();
   const { gameState, loading, updateGameState } = useGameState();
+  const [scannerOpen, setScannerOpen] = useState(false);
+  const [scannedItem, setScannedItem] = useState<ScannedItem | undefined>();
 
   useEffect(() => {
     // Show welcome message when quest page loads
@@ -69,16 +72,56 @@ const JuiceQuestPage = () => {
     }
   };
 
+  const handleScannerOpen = () => {
+    setScannerOpen(true);
+  };
+
+  const handleScannerClose = () => {
+    setScannerOpen(false);
+  };
+
+  const handleItemScanned = (item: ScannedItem) => {
+    setScannedItem(item);
+    setScannerOpen(false);
+    toast.success(`Scanned: ${item.name}`);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-sky overflow-hidden" style={{
-    background: 'linear-gradient(135deg, hsl(200 75% 85%), hsl(210 85% 70%))'
-  }} >
-      
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+      {/* Header */}
+      <div className="sticky top-0 z-10 bg-white/80 backdrop-blur-sm border-b">
+        <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/student/play")}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Quests
+          </Button>
+          <GameHUD gameState={gameState} />
+        </div>
+      </div>
+
       {/* Game Content */}
-      <JuiceStand
-        isActive={true}
-        onComplete={handleQuestComplete}
-      />
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-4xl mx-auto">
+          <JuiceStand
+            isActive={true}
+            onComplete={handleQuestComplete}
+            onUseScanner={() => setScannerOpen(true)}
+          />
+        </div>
+      </div>
+
+      {/* Scanner Modal */}
+      {scannerOpen && (
+        <ValueScanner
+          isOpen={scannerOpen}
+          onClose={handleScannerClose}
+          onItemScanned={handleItemScanned}
+        />
+      )}
     </div>
   );
 };
