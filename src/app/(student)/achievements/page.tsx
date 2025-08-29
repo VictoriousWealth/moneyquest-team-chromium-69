@@ -36,6 +36,38 @@ const formatShortDate = (isoString: string) => {
   return new Date(isoString).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 };
 
+const BadgeImageWithFallback: React.FC<{ badgeId: string; onFallback: (isFallback: boolean) => void }> = ({ badgeId, onFallback }) => {
+  const [imageError, setImageError] = useState(false);
+  const imagePath = `/images/${badgeId}.png`;
+
+  const handleImageError = () => {
+    setImageError(true);
+    onFallback(true);
+  };
+
+  const handleImageLoad = () => {
+    onFallback(false);
+  };
+
+  if (imageError) {
+    return (
+      <div className="w-full h-full rounded-md border border-dashed border-slate-300 flex items-center justify-center">
+        <Trophy className="text-slate-300" size={32}/>
+      </div>
+    );
+  }
+
+  return (
+    <img 
+      src={imagePath}
+      alt={`${badgeId} badge`}
+      className="w-full h-full object-cover rounded-md"
+      onError={handleImageError}
+      onLoad={handleImageLoad}
+    />
+  );
+};
+
 // Map achievement types to badge categories
 const typeToCategory: Record<string, BadgeCategory> = {
   milestone: 'Milestone',
@@ -69,6 +101,7 @@ const BadgePopover: React.FC<{ badge: DatabaseBadge }> = ({ badge }) => {
 const BadgeTile: React.FC<{ badge: DatabaseBadge }> = ({ badge }) => {
   const isLocked = !badge.isEarned;
   const category = typeToCategory[badge.achievement_type] || 'Skill';
+  const [showFallback, setShowFallback] = useState(false);
 
   return (
     <div tabIndex={0} className="relative group flex flex-col items-center justify-start text-center p-4 rounded-lg transition-all duration-150 ease-out bg-muted hover:shadow-lg hover:scale-[1.03] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
@@ -77,10 +110,7 @@ const BadgeTile: React.FC<{ badge: DatabaseBadge }> = ({ badge }) => {
       {/* Square Image Slot */}
       <div className={`relative w-[72px] h-[72px] sm:w-[96px] sm:h-[96px] lg:w-[120px] lg:h-[120px] flex-shrink-0 transition-all rounded-lg ring-offset-2 ring-offset-muted ${isLocked ? 'grayscale' : ''}`}>
         <div className={`w-full h-full rounded-lg bg-surface flex items-center justify-center p-1 shadow-inner`}>
-           {/* Placeholder */}
-           <div className="w-full h-full rounded-md border border-dashed border-slate-300 flex items-center justify-center">
-             <Trophy className="text-slate-300" size={32}/>
-           </div>
+           <BadgeImageWithFallback badgeId={badge.id} onFallback={setShowFallback} />
         </div>
         {isLocked && (
           <div className="absolute top-1 right-1 bg-surface/50 rounded-full p-1">
@@ -88,7 +118,7 @@ const BadgeTile: React.FC<{ badge: DatabaseBadge }> = ({ badge }) => {
           </div>
         )}
       </div>
-      <p className="text-[10px] text-subtext/70 mt-1.5">Badge art coming soon</p>
+      {showFallback && <p className="text-[10px] text-subtext/70 mt-1.5">Badge art coming soon</p>}
       
       {/* Title & Subline */}
       <div className="flex-grow flex flex-col justify-center mt-3">
